@@ -1,0 +1,8 @@
+pytest
+coverage
+
+[full]
+mpi4py
+
+[mpi]
+mpi4py

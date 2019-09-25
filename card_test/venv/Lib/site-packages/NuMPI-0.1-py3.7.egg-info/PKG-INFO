@@ -1,0 +1,11 @@
+Metadata-Version: 1.2
+Name: NuMPI
+Version: 0.1
+Summary: Numerical tools for MPI-parallelized code
+Home-page: UNKNOWN
+Author: Antoine Sanner
+Author-email: antoine.sanner@imtek.uni-freiburg.de
+License: MIT
+Description: UNKNOWN
+Platform: UNKNOWN
+Requires-Python: >3.5.0
