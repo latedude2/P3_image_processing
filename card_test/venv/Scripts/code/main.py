@@ -1,5 +1,4 @@
 from PIL import Image, ImageDraw
-from PIL import ImageFilter
 import numpy as np
 
 # calculates the values of each kernel necessary for the blur, based off the gaussian formula (its a really long formula)
@@ -16,6 +15,18 @@ def bw(img):
     image = img.convert('L')
     return image
 
+def manualGrey(img):
+    ### manual greyscaling
+    pixels = list(img.getdata())  # making a list from image data (pixel values in r,g,b)
+
+    grey = []  # new list made for storing the greyscale values as tuple
+    for R, G, B in pixels:  # goes through RGB values in the pixels list
+        color = int(R * 299 / 1000 + G * 587 / 1000 + B * 114 / 1000)  # calculating the grey color
+        value = (color, color, color)  # making a tuple
+        grey.append(value)  # adding a tuple to the list
+
+    img.putdata(grey)  # putting pixel data to the image
+    return img
 
 def main():
     filename = 'ace2.JPG'
@@ -23,15 +34,27 @@ def main():
     img = Image.open('Images/ace2.JPG')
     size = width,height = img.size
 
+    # preparing a blank canvas the image can be drawn on
+    img = manualGrey(img)
 
-    kernel = gaussian_kernel(kernelSize,1)
+    img2 = gaussian(img, kernelSize)
+
+    img.save("grey_" + filename)
+    img2.save("gaussian_grey_" + filename)
+
+    del img, img2  # deleting afterwards to save memory space
+
+
+
+def gaussian(img, kernelSize):
+    img2 = Image.new("RGB", img.size)
+    draw = ImageDraw.Draw(img2)
+
+    kernel = gaussian_kernel(kernelSize, 1)
     # the offset prevents errors from border pixels
     offset = len(kernel) // 2
     # loading the image's pixels
     input_pixels = img.load()
-    # preparing a blank canvas the image can be drawn on
-    img2 = Image.new("RGB",img.size)
-    draw = ImageDraw.Draw(img2)
 
     # cycling through the pixels one by one
     for x in range(offset, img.width - offset):
@@ -53,34 +76,9 @@ def main():
             # applying the newly calculated pixel to the canvas
             draw.point((x, y), (int(acc[0]), int(acc[1]), int(acc[2])))
 
-    # the same as above, however since this will be a grey-scale image the mode is "L"
-    input_pixels = bw(img).load()
-    img3 = Image.new("L", img.size)
-    draw = ImageDraw.Draw(img3)
-
-    # cycling through the surrounding pixels in the kernels range, to apply filter calculations
-    for x in range(offset, img.width - offset):
-        for y in range(offset, img.height - offset):
-            acc = 0 # Because each pixel has only one value, acc is no longer an array, just an integer
-
-            # cycling through the surrounding pixels in the kernels range, to apply filter calculations
-            for a in range(len(kernel)):
-                for b in range(len(kernel)):
-                    xn = x + a - offset
-                    yn = y + b - offset
-                    pixel = input_pixels[xn, yn]
-                    acc += pixel * kernel[a][b] # applying our new singular value to be drawn
-
-            # applying the newly calculated pixel to the canvas
-            draw.point((x, y), (int(acc)))
-
-    # Saving 3 different images, to compare grey-scale, blurred grey-scale and blurred color
-    img3.save("modified_grey_" + filename)
-    img2.save("modified_" + filename)
-    bw(img).save("grey_" + filename)
-    del img, img2, img3 # deleting afterwards to save memory space
 
 
+    return img2
 
 if __name__ == '__main__':
     main()
