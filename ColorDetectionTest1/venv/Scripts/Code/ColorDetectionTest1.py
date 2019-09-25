@@ -27,6 +27,9 @@ def main():
 
     # adding gaussian blur
     blurredImage = img.filter(ImageFilter.GaussianBlur(radius=5))
+
+    def pil_image_to_numpy_array(pil_image):
+        return np.asarray(pil_image)
     """
     newImage = Image.new(blurredImage.mode, blurredImage.size)
 
