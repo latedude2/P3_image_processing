@@ -1,6 +1,22 @@
 from PIL import Image, ImageDraw
 import numpy as np
 
+def main():
+    filename = 'ace2.JPG'
+    kernelSize = 5 #the size of the kernel, this must always be an uneven value of at least 3
+    img = Image.open('Images/ace2.JPG')
+    size = width,height = img.size
+
+    # preparing a blank canvas the image can be drawn on
+    img = manualGrey(img)
+
+    img2 = gaussian(img, kernelSize)
+
+    img.save("grey_" + filename)
+    img2.save("gaussian_grey_" + filename)
+
+    del img, img2  # deleting afterwards to save memory space
+
 # calculates the values of each kernel necessary for the blur, based off the gaussian formula (its a really long formula)
 def gaussian_kernel(size, sigma):
     size = int(size) // 2
@@ -27,24 +43,6 @@ def manualGrey(img):
 
     img.putdata(grey)  # putting pixel data to the image
     return img
-
-def main():
-    filename = 'ace2.JPG'
-    kernelSize = 5 #the size of the kernel, this must always be an uneven value of at least 3
-    img = Image.open('Images/ace2.JPG')
-    size = width,height = img.size
-
-    # preparing a blank canvas the image can be drawn on
-    img = manualGrey(img)
-
-    img2 = gaussian(img, kernelSize)
-
-    img.save("grey_" + filename)
-    img2.save("gaussian_grey_" + filename)
-
-    del img, img2  # deleting afterwards to save memory space
-
-
 
 def gaussian(img, kernelSize):
     img2 = Image.new("RGB", img.size)
@@ -75,8 +73,6 @@ def gaussian(img, kernelSize):
 
             # applying the newly calculated pixel to the canvas
             draw.point((x, y), (int(acc[0]), int(acc[1]), int(acc[2])))
-
-
 
     return img2
 
