@@ -1,21 +1,47 @@
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
+import matplotlib.pyplot as plt
+from scipy import ndimage
 import numpy as np
+import cv2
+from numba import vectorize
 
+@vectorize(['float32(float32, float32)'], target='cuda')
 def main():
-    filename = 'ace2.JPG'
+    """filename = 'ace2.JPG'
     kernelSize = 5 #the size of the kernel, this must always be an uneven value of at least 3
     img = Image.open('Images/ace2.JPG')
     size = width,height = img.size
-
+    """
+    print("START")
+    img = cv2.imread('Images/ace2.JPG')
+    print("Reading done")
+    img2 = gaussianOpenCVPixels(img, 5)
+    print("Gaussian done")
+    cv2.imshow('Processed image', img2)
+    print("image shown")
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    """
     # preparing a blank canvas the image can be drawn on
     img = manualGrey(img)
 
     img2 = gaussian(img, kernelSize)
 
-    img.save("grey_" + filename)
-    img2.save("gaussian_grey_" + filename)
+    img2.show()
+    #img.save("grey_" + filename)
+    #img2.save("gaussian_grey_" + filename)
 
-    del img, img2  # deleting afterwards to save memory space
+    del img2  # deleting afterwards to save memory space
+    """
+
+
+def pil_image_to_numpy_array(pil_image):
+    return np.asarray(pil_image)
+
+def gaussianBlur(img):
+    # adding gaussian blur
+    blurredImage = img.filter(ImageFilter.GaussianBlur(radius=5))
+    return blurredImage
 
 # calculates the values of each kernel necessary for the blur, based off the gaussian formula (its a really long formula)
 def gaussian_kernel(size, sigma):
@@ -27,7 +53,7 @@ def gaussian_kernel(size, sigma):
     return g
 
 # this currently just runs the automated conversion to a grey-scale
-def bw(img):
+def autoGrey(img):
     image = img.convert('L')
     return image
 
@@ -44,6 +70,40 @@ def manualGrey(img):
     img.putdata(grey)  # putting pixel data to the image
     return img
 
+#######################################################################################################
+
+def gaussianOpenCVPixels(img, kernelSize):
+    kernel = gaussian_kernel(kernelSize, 1)
+
+    # the offset prevents errors from border pixels
+    offset = len(kernel) // 2
+    # loading the image's pixels
+    pixels = width, height = img.shape[0], img.shape[1]
+
+    # cycling through the pixels one by one
+    for x in range(offset, width - offset):
+        for y in range(offset, height - offset):
+            acc = R, G, B = (int(0), int(0), int(0)) # setting a base pixel that wil be drawn one by one, depending on its' current value
+
+            # cycling through the surrounding pixels in the kernels range, to apply filter calculations
+            for a in range(len(kernel)):
+                for b in range(len(kernel)):
+                    xn = x + a - offset
+                    yn = y + b - offset
+                    pixel = img[xn, yn]
+
+                    # applying the new value for each color to the new pixels
+                    R += pixel[0] * kernel[a][b]
+                    G += pixel[1] * kernel[a][b]
+                    B += pixel[2] * kernel[a][b]
+
+            # applying the newly calculated pixel to the canvas
+            img[x, y] = (int(R), int(G), int(B))
+
+    return img
+
+##################################################################################################
+
 def gaussian(img, kernelSize):
     img2 = Image.new("RGB", img.size)
     draw = ImageDraw.Draw(img2)
@@ -57,7 +117,7 @@ def gaussian(img, kernelSize):
     # cycling through the pixels one by one
     for x in range(offset, img.width - offset):
         for y in range(offset, img.height - offset):
-            acc = [0, 0, 0] # setting a base pixel that wil be drawn one by one, depending on its' current value
+            acc = R, G, B = (0, 0, 0) # setting a base pixel that wil be drawn one by one, depending on its' current value
 
             # cycling through the surrounding pixels in the kernels range, to apply filter calculations
             for a in range(len(kernel)):
@@ -67,12 +127,12 @@ def gaussian(img, kernelSize):
                     pixel = input_pixels[xn, yn]
 
                     # applying the new value for each color to the new pixels
-                    acc[0] += pixel[0] * kernel[a][b]
-                    acc[1] += pixel[1] * kernel[a][b]
-                    acc[2] += pixel[2] * kernel[a][b]
+                    R += pixel[0] * kernel[a][b]
+                    G += pixel[1] * kernel[a][b]
+                    B += pixel[2] * kernel[a][b]
 
             # applying the newly calculated pixel to the canvas
-            draw.point((x, y), (int(acc[0]), int(acc[1]), int(acc[2])))
+            draw.point((x, y), (int(R), int(G), int(B)))
 
     return img2
 
