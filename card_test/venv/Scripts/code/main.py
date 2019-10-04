@@ -1,5 +1,8 @@
 from PIL import Image, ImageDraw
 import numpy as np
+import cardCounter
+import deck
+
 
 def main():
     filename = 'ace2.JPG'
@@ -16,6 +19,8 @@ def main():
     img2.save("gaussian_grey_" + filename)
 
     del img, img2  # deleting afterwards to save memory space
+
+    deck1 = deck.Deck(["clubs", "diamonds", "hearts", "spades"], ["2", "3", "4", "5", "6", "7", "8", "9", "10", "knight", "queen", "king", "ace"])
 
 # calculates the values of each kernel necessary for the blur, based off the gaussian formula (its a really long formula)
 def gaussian_kernel(size, sigma):
@@ -75,6 +80,7 @@ def gaussian(img, kernelSize):
             draw.point((x, y), (int(acc[0]), int(acc[1]), int(acc[2])))
 
     return img2
+
 
 if __name__ == '__main__':
     main()
