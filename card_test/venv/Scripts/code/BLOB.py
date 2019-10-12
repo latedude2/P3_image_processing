@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw
 import numpy as np
 import sys  # We need this in order to change the max recursion
+import random
 
 
 def main():
@@ -8,11 +9,11 @@ def main():
     sys.setrecursionlimit(10 ** 6)  # Changing the max recursion to 10^6
     img = Image.open('Images/ace2.JPG')
 
-    img2 = binary(img)  # Converting to a binary image, based on some given benchmarks for RGB values
-    img3 = detectBlobs(img2)  # Applying the BLOB detection, which converts "burned" pixels to pink and counts big BLOBs
+    binaryImg = binary(img)  # Converting to a binary image, based on some given benchmarks for RGB values
+    blobImg = detectBlobs(binaryImg)  # Applying the BLOB detection, which converts "burned" pixels to pink and counts big BLOBs
 
-    img3.show()
-    del img, img2, img3  # Deleting the temporary image files to save memory, since we have already shown the output
+    blobImg.show()
+    del img, binaryImg, blobImg  # Deleting the temporary image files to save memory, since we have already shown the output
 
 
 
@@ -21,6 +22,7 @@ def detectBlobs(img):  # This function goes through finding each BLOB and counti
     width, height = img.size  # Setting the values for width and height based on the dimensions of the image
     pos = 0  # The position, of the current pixel, in the list
     counter = Counter()  # Creating an object from the Counter class (which can be found further down)
+    generateColors(counter.colorList)  # Creates a list of 100 colors as (r, g, b) tuples, so we can give each BLOB a color
 
     for R, G, B in pixels:  # A for loop where we can work with the values of R, G & B, for the length of the pixels list
 
@@ -55,7 +57,8 @@ def detectBlobs(img):  # This function goes through finding each BLOB and counti
 # Some of these could probable be avoided with some type of global variables since they don't change during the recursion
 def grassFire(pos, pixels, width, height, counter, burnWidth, burnHeight):
     counter.pixelCount += 1  # Adding 1 to the counter for how many pixels the current BLOB persists of
-    pixels[pos] = (200, 10, 150)  # Changing the color of the pixel we are "burning", so we don't count it twice
+    # Changing the color of the pixel we are "burning" to one of the random colors we have generated
+    pixels[pos] = counter.colorList[counter.blobCount]  # We change the color so that we don't end up counting it twice
 
     # Checking that the x position of the pixel to the right of the currently burning one is within the image width
     if (burnWidth + 1 < width):
@@ -113,6 +116,19 @@ class Counter:
     blobCount = 0  # Is used to keep track of how many bigger BLOBs we find
     widthCount = 0  # Is used to keep track of our current x position in the image
     heightCount = 0  # Is used to track our current y position in the image
+    colorList = []  # A list for storing colors to give the different BLOBs
+
+
+def generateColors(colorList):  # Generates a list of 100 colors
+
+    for i in range(100):  # A for loop that run 100 times through values of i from 0 to 99
+        # Assigning a random int value between 0 and 255 to each color
+        r = random.randint(0, 255)
+        g = random.randint(0, 255)
+        b = random.randint(0, 255)
+
+        color = (r, g, b)  # Collecting the three random values in a tuple
+        colorList.append(color)  # Adding the tuple/color to our list of colors
 
 
 if __name__ == '__main__':
