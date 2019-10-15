@@ -7,13 +7,14 @@ import random
 def main():
     # Python normally only allows a function to call itself 10^4 times, which is not enough for larger BLOBs
     sys.setrecursionlimit(10 ** 9)  # Changing the max recursion to 10^6
-    img = Image.open('Images/eight.JPG')
+    image = Image.open('Images/nine.JPG')
 
-    binaryImg = binary(img.filter(ImageFilter.SHARPEN))  # Converting to a binary image, based on some given benchmarks for RGB values
-    blobImg = detectBlobs(binaryImg.filter(ImageFilter.MedianFilter))  # Applying the BLOB detection, which converts "burned" pixels to pink and counts big BLOBs
+    binaryImg = binary(image)  # Converting to a binary image, based on some given benchmarks for RGB values
+    medianImg = medianFilter(binaryImg)
+    blobImg = detectBlobs(medianImg)  # Applying the BLOB detection, which converts "burned" pixels to pink and counts big BLOBs
 
     blobImg.show()
-    del img, binaryImg, blobImg  # Deleting the temporary image files to save memory, since we have already shown the output
+    del image, binaryImg, medianImg, blobImg  # Deleting the temporary image files to save memory, since we have already shown the output
 
 
 
@@ -38,7 +39,7 @@ def detectBlobs(img):  # This function goes through finding each BLOB and counti
             # Starting a fire from our current position, making all the pixels red, so we know they have been counted
             grassFire8(pos, pixels, width, height, counter, burnWidth, burnHeight, whiteColor, baseColor)
 
-            if (counter.pixelCount > 400):  # Checking if the BLOB we just burned is big enough to be counted
+            if (counter.pixelCount > 350):  # Checking if the BLOB we just burned is big enough to be counted
                 counter.blobCount += 1  # Counting the bigger BLOBs
                 # Calling the fire again, this time changing red pixels to a color from our list, so they can be handled individually later
                 grassFire8(pos, pixels, width, height, counter, burnWidth, burnHeight, baseColor, counter.colorList[counter.blobCount])
@@ -138,6 +139,75 @@ def binary(img):
             color = 0  # making it black
         value = (color, color, color)  # making a tuple with three identical values
         newPixels.append(value)  # adding the current tuple to the list we have created
+
+    img.putdata(newPixels)  # Constructing a new image from the tuple values in our list
+    return img  # Returning the newly constructed image
+
+
+# A median filter for clearing out noise in the binary image
+def medianFilter(img):
+    pixels = list(img.getdata()) # making a list from image data (pixel values in r,g,b)
+    width, height = img.size  # Setting the values for width and height based on the dimensions of the image
+
+    newPixels = []  # new list made for storing the color values as tuples (data points with more than one value: (10, 2))
+    whiteCounter = 0  # Since it is a binary image, we just need to count if there are more white or black pixels in the vicinity
+    listPos = 0  # Current pixel in the image list of pixels
+    xPos = 0  # Current x position in the image
+    yPos = 0  # current y position in the image
+    value = 0  # Used to assigning a color to the new list of pixels
+
+    for R, G, B in pixels:  # looping through the image's RGB-values
+        if (xPos >= width):  # Checking if we have reached the edge of the image
+            xPos = 0  # resetting our x position when we cross the edge
+            yPos += 1  # adding to our y position, since we are now in the next row of pixels
+
+        if (xPos - 1 >= 0 and yPos - 1 >= 0):  # Checking that we aren't looking for a pixel outside the image
+            if (pixels[listPos - 1 - width] == (255, 255, 255)):  # Checking if the pixel above to the left is white
+                whiteCounter += 1  # counting the white pixel
+
+        if (yPos - 1 >= 0):  # Checking that we aren't looking for a pixel outside the image
+            if (pixels[listPos - width] == (255, 255, 255)):  # Checking if the pixel above is white
+                whiteCounter += 1  # counting the white pixel
+
+        if (yPos - 1 >= 0 and xPos + 1 < width):  # Checking that we aren't looking for a pixel outside the image
+            if (pixels[listPos + 1 - width] == (255, 255, 255)):  # Checking if the pixel above to the right is white
+                whiteCounter += 1  # counting the white pixel
+
+        if (xPos - 1 >= 0):  # Checking that we aren't looking for a pixel outside the image
+            if (pixels[listPos - 1] == (255, 255, 255)):  # Checking if the pixel to the left is white
+                whiteCounter += 1  # counting the white pixel
+
+        # We don't need to check if we are outside the image, since this is just our current pixel
+        if (pixels[listPos] == (255, 255, 255)):  # Checking if the current pixel is white
+                whiteCounter += 1  # counting the white pixel
+
+        if (xPos + 1 < width):  # Checking that we aren't looking for a pixel outside the image
+            if (pixels[listPos + 1] == (255, 255, 255)):  # Checking if the pixel to the right is white
+                whiteCounter += 1  # counting the white pixel
+
+        if (yPos + 1 < height and xPos - 1 >= 0):  # Checking that we aren't looking for a pixel outside the image
+            if (pixels[listPos - 1 + width] == (255, 255, 255)):  # Checking if the pixel below to the left is white
+                whiteCounter += 1  # counting the white pixel
+
+        if (yPos + 1 < height):  # Checking that we aren't looking for a pixel outside the image
+            if (pixels[listPos + width] == (255, 255, 255)):  # Checking if the pixel below is white
+                whiteCounter += 1  # counting the white pixel
+
+        if (xPos + 1 < width and yPos + 1 < height):  # Checking that we aren't looking for a pixel outside the image
+            if (pixels[listPos + 1 + width] == (255, 255, 255)):  # Checking if the pixel below to the right is white
+                whiteCounter += 1  # counting the white pixel
+
+        if (whiteCounter >= 5):  # Checking if more than half of the pixels where white
+            value = 255
+        else:
+            value = 0
+
+        color = (value, value, value)
+        newPixels.append(color)  # Adding the calculated color to the list of pixels for the new image
+
+        listPos += 1
+        xPos += 1
+        whiteCounter = 0  # Resetting our counter for the nest pixel
 
     img.putdata(newPixels)  # Constructing a new image from the tuple values in our list
     return img  # Returning the newly constructed image
