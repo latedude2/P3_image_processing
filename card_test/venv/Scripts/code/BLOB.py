@@ -1,4 +1,4 @@
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 import numpy as np
 import sys  # We need this in order to change the max recursion
 import random
@@ -6,11 +6,11 @@ import random
 
 def main():
     # Python normally only allows a function to call itself 10^4 times, which is not enough for larger BLOBs
-    sys.setrecursionlimit(10 ** 6)  # Changing the max recursion to 10^6
-    img = Image.open('Images/ace2.JPG')
+    sys.setrecursionlimit(10 ** 9)  # Changing the max recursion to 10^6
+    img = Image.open('Images/eight.JPG')
 
-    binaryImg = binary(img)  # Converting to a binary image, based on some given benchmarks for RGB values
-    blobImg = detectBlobs(binaryImg)  # Applying the BLOB detection, which converts "burned" pixels to pink and counts big BLOBs
+    binaryImg = binary(img.filter(ImageFilter.SHARPEN))  # Converting to a binary image, based on some given benchmarks for RGB values
+    blobImg = detectBlobs(binaryImg.filter(ImageFilter.MedianFilter))  # Applying the BLOB detection, which converts "burned" pixels to pink and counts big BLOBs
 
     blobImg.show()
     del img, binaryImg, blobImg  # Deleting the temporary image files to save memory, since we have already shown the output
@@ -23,6 +23,8 @@ def detectBlobs(img):  # This function goes through finding each BLOB and counti
     pos = 0  # The position, of the current pixel, in the list
     counter = Counter()  # Creating an object from the Counter class (which can be found further down)
     generateColors(counter.colorList)  # Creates a list of 100 colors as (r, g, b) tuples, so we can give each BLOB a color
+    baseColor = (255, 0, 0)  # The color initially given to BLOBs, before we know if they are big enough
+    whiteColor = (255, 255, 255)  # Defined here so we can use the fire to search for other colors as well
 
     for R, G, B in pixels:  # A for loop where we can work with the values of R, G & B, for the length of the pixels list
 
@@ -33,11 +35,13 @@ def detectBlobs(img):  # This function goes through finding each BLOB and counti
         burnHeight = counter.heightCount  # Setting the burning position to the current y position in the image
 
         if (R == 255):  # Since it is a binary image, we can test if it is white using only R
-            grassFire(pos, pixels, width, height, counter, burnWidth,
-                      burnHeight)  # Starting a fire from our current position
+            # Starting a fire from our current position, making all the pixels red, so we know they have been counted
+            grassFire8(pos, pixels, width, height, counter, burnWidth, burnHeight, whiteColor, baseColor)
 
-            if (counter.pixelCount > 200):  # Checking if the BLOB we just burned is big enough to be counted
-                counter.blobCount += 1  # Counting the BLOB
+            if (counter.pixelCount > 400):  # Checking if the BLOB we just burned is big enough to be counted
+                counter.blobCount += 1  # Counting the bigger BLOBs
+                # Calling the fire again, this time changing red pixels to a color from our list, so they can be handled individually later
+                grassFire8(pos, pixels, width, height, counter, burnWidth, burnHeight, baseColor, counter.colorList[counter.blobCount])
             counter.pixelCount = 0  # Resetting the pixel counter, so we are ready to count the size of the next BLOB
 
         counter.widthCount += 1  # Adding 1 to our current x position
@@ -55,38 +59,66 @@ def detectBlobs(img):  # This function goes through finding each BLOB and counti
 
 # Even though we take a lot of variables, this method has to be on its own, since it will be calling itself
 # Some of these could probable be avoided with some type of global variables since they don't change during the recursion
-def grassFire(pos, pixels, width, height, counter, burnWidth, burnHeight):
+def grassFire8(pos, pixels, width, height, counter, burnWidth, burnHeight, detectColor, burnColor):  # The 8 indicates an eight point conection
     counter.pixelCount += 1  # Adding 1 to the counter for how many pixels the current BLOB persists of
     # Changing the color of the pixel we are "burning" to one of the random colors we have generated
-    pixels[pos] = counter.colorList[counter.blobCount]  # We change the color so that we don't end up counting it twice
+    pixels[pos] = burnColor  # We change the color so that we don't end up counting it twice
 
     # Checking that the x position of the pixel to the right of the currently burning one is within the image width
     if (burnWidth + 1 < width):
         # Checking that the pixel to the right of the currently burning one is white
-        if (pixels[pos + 1] == (255, 255, 255)):
+        if (pixels[pos + 1] == detectColor):
             # "Setting fire" to the white pixel to the right of the currently burning one
-            grassFire(pos + 1, pixels, width, height, counter, burnWidth + 1, burnHeight)
+            grassFire8(pos + 1, pixels, width, height, counter, burnWidth + 1, burnHeight, detectColor, burnColor)
+
+    # Checking that the x and y positions of the pixel below to the right of the currently burning one is within the image width
+    if (burnWidth + 1 < width and burnHeight + 1 < height):
+        # Checking that the pixel below to the right of the currently burning one is white
+        if (pixels[pos + 1 + width] == detectColor):
+            # "Setting fire" to the white pixel below to the right of the currently burning one
+            grassFire8(pos + 1 + width, pixels, width, height, counter, burnWidth + 1, burnHeight + 1, detectColor, burnColor)
 
     # Checking that the y position of the pixel below the currently burning one is within the image height
     if (burnHeight + 1 < height):
         # Checking that the pixel below the currently burning one is white
-        if (pixels[pos + width] == (255, 255, 255)):
+        if (pixels[pos + width] == detectColor):
             # "Setting fire" to the white pixel below the currently burning one
-            grassFire(pos + width, pixels, width, height, counter, burnWidth, burnHeight + 1)
+            grassFire8(pos + width, pixels, width, height, counter, burnWidth, burnHeight + 1, detectColor, burnColor)
+
+    # Checking that the x and y positions of the pixel below to the left the currently burning one is within the image height
+    if (burnHeight + 1 < height and burnWidth - 1 >= 0):
+        # Checking that the pixel below to the left the currently burning one is white
+        if (pixels[pos + width - 1] == detectColor):
+            # "Setting fire" to the white pixel below to the left the currently burning one
+            grassFire8(pos + width - 1, pixels, width, height, counter, burnWidth - 1, burnHeight + 1, detectColor, burnColor)
 
     # Checking that the x position of the pixel to the left of the currently burning one is'nt less than 0
     if (burnWidth - 1 >= 0):
         # Checking that the pixel to the left of the currently burning one is white
-        if (pixels[pos - 1] == (255, 255, 255)):
+        if (pixels[pos - 1] == detectColor):
             # "Setting fire" to the white pixel to the left of the currently burning one
-            grassFire(pos - 1, pixels, width, height, counter, burnWidth - 1, burnHeight)
+            grassFire8(pos - 1, pixels, width, height, counter, burnWidth - 1, burnHeight, detectColor, burnColor)
+
+    # Checking that the x and y positions of the pixel above to the left of the currently burning one is'nt less than 0
+    if (burnWidth - 1 >= 0 and burnHeight - 1 >= 0):
+        # Checking that the pixel above to the left of the currently burning one is white
+        if (pixels[pos - 1 - width] == detectColor):
+            # "Setting fire" to the white pixel above to the left of the currently burning one
+            grassFire8(pos - 1 - width, pixels, width, height, counter, burnWidth - 1, burnHeight - 1, detectColor, burnColor)
 
     # Checking that the y position of the pixel above the currently burning one is'nt less than 0
     if (burnHeight - 1 >= 0):
         # Checking that the pixel above currently burning one is white
-        if (pixels[pos - width] == (255, 255, 255)):
+        if (pixels[pos - width] == detectColor):
             # "Setting fire" to the white pixel above currently burning one
-            grassFire(pos - width, pixels, width, height, counter, burnWidth, burnHeight - 1)
+            grassFire8(pos - width, pixels, width, height, counter, burnWidth, burnHeight - 1, detectColor, burnColor)
+
+    # Checking that the x and y positions of the pixel above to the right the currently burning one is'nt less than 0
+    if (burnHeight - 1 >= 0 and burnWidth + 1 < width):
+        # Checking that the pixel above to the right currently burning one is white
+        if (pixels[pos - width + 1] == detectColor):
+            # "Setting fire" to the white pixel above to the right currently burning one
+            grassFire8(pos - width + 1, pixels, width, height, counter, burnWidth + 1, burnHeight - 1, detectColor, burnColor)
 
     return pixels  # Returning the now changed values of the list, where some of the pixels have changed color
 
@@ -99,6 +131,8 @@ def binary(img):
     newPixels = []  # new list made for storing the color values as tuples (data points with more than one value: (10, 2))
     for R, G, B in pixels:  # goes through RGB values in the pixels list
         if (R > 120 and G < 100 and B < 100):  # Checking if the RGB values of the current pixel match the thresholds (here looking for red)
+            color = 255  # making it red
+        elif (R < 40 and G < 35 and B < 30):  # Checking if the RGB values of the current pixel match the thresholds (here looking for black)
             color = 255  # making it white
         else:
             color = 0  # making it black
@@ -121,7 +155,7 @@ class Counter:
 
 def generateColors(colorList):  # Generates a list of 100 colors
 
-    for i in range(100):  # A for loop that run 100 times through values of i from 0 to 99
+    for i in range(1000):  # A for loop that run 100 times through values of i from 0 to 99
         # Assigning a random int value between 0 and 255 to each color
         r = random.randint(0, 255)
         g = random.randint(0, 255)
