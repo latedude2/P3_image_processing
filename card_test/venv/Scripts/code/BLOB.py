@@ -7,22 +7,26 @@ import random
 def main():
     # Python normally only allows a function to call itself 10^4 times, which is not enough for larger BLOBs
     sys.setrecursionlimit(10 ** 9)  # Changing the max recursion to 10^6
-    img = Image.open('Images/eight.JPG')
+    imgName = "Images/ace.JPG"  # Defining the name, since we are currently using it twice
+    img = Image.open(imgName)
+    counter = Counter()  # Creating an object from the Counter class (which can be found further down)
 
-    binaryImg = binary(image)  # Converting to a binary image, based on some given benchmarks for RGB values
+    binaryImg = binary(img)  # Converting to a binary image, based on some given benchmarks for RGB values
     medianImg = medianFilter(binaryImg)
-    blobImg = detectBlobs(medianImg)  # Applying the BLOB detection, which converts "burned" pixels to pink and counts big BLOBs
+    blobImg = detectBlobs(medianImg, counter)  # Applying the BLOB detection, which converts "burned" pixels to pink and counts big BLOBs
+
+    img = Image.open (imgName)  # Opening the original image again, cause we have accidentally changed it along the way
+    detectColor(counter, img, blobImg, 3)  # Detecting the color of a given BLOB
 
     blobImg.show()
-    del image, binaryImg, medianImg, blobImg  # Deleting the temporary image files to save memory, since we have already shown the output
+    del img, binaryImg, medianImg, blobImg  # Deleting the temporary image files to save memory, since we have already shown the output
 
 
 
-def detectBlobs(img):  # This function goes through finding each BLOB and counting them
+def detectBlobs(img, counter):  # This function goes through finding each BLOB and counting them
     pixels = list(img.getdata())  # Creates a 1D list of RGB values for each pixel in the image
     width, height = img.size  # Setting the values for width and height based on the dimensions of the image
     pos = 0  # The position, of the current pixel, in the list
-    counter = Counter()  # Creating an object from the Counter class (which can be found further down)
     generateColors(counter.colorList)  # Creates a list of 100 colors as (r, g, b) tuples, so we can give each BLOB a color
     baseColor = (255, 0, 0)  # The color initially given to BLOBs, before we know if they are big enough
     whiteColor = (255, 255, 255)  # Defined here so we can use the fire to search for other colors as well
@@ -148,6 +152,7 @@ def binary(img):
 def medianFilter(img):
     pixels = list(img.getdata()) # making a list from image data (pixel values in r,g,b)
     width, height = img.size  # Setting the values for width and height based on the dimensions of the image
+    newImg = img
 
     newPixels = []  # new list made for storing the color values as tuples (data points with more than one value: (10, 2))
     whiteCounter = 0  # Since it is a binary image, we just need to count if there are more white or black pixels in the vicinity
@@ -209,8 +214,8 @@ def medianFilter(img):
         xPos += 1
         whiteCounter = 0  # Resetting our counter for the nest pixel
 
-    img.putdata(newPixels)  # Constructing a new image from the tuple values in our list
-    return img  # Returning the newly constructed image
+    newImg.putdata(newPixels)  # Constructing a new image from the tuple values in our list
+    return newImg  # Returning the newly constructed image
 
 
 # This class contain a bunch of variables that, in other programs would simply be global variables
@@ -223,8 +228,7 @@ class Counter:
     colorList = []  # A list for storing colors to give the different BLOBs
 
 
-def generateColors(colorList):  # Generates a list of 100 colors
-
+def generateColors(colorList):  # Generates a list of 75 colors
     r = 0
     g = 0
     b = 250
@@ -241,9 +245,47 @@ def generateColors(colorList):  # Generates a list of 100 colors
             r -= 10
             b += 10
 
-
         color = (r, g, b)  # Collecting the three  values in a tuple
         colorList.append(color)  # Adding the tuple/color to our list of colors
+
+
+def detectColor (counter, originalImg, blobImg, blobNum):
+    originalPixels = list(originalImg.getdata())  # Creates a 1D list of RGB values for each pixel in the original image
+    blobPixels = list(blobImg.getdata())  # Creates a 1D list of RGB values for each pixel in the BLOB image
+    pos = 0  # tracking the position in the pixel lists, so we know which pixels to check in the original image
+    pixelsToCheck = []  # Saving a list of the position of the pixels we are checking
+
+    # Will be used to find the average color of the BLOB
+    redTotal = 0
+    greenTotal = 0
+    blueTotal = 0
+    blobSize = 0
+
+    for R, G, B in blobPixels:
+        pos += 1
+        if ((R, G, B) == counter.colorList[blobNum]):  # Finding the pixels matching the color of the BLOB we are checking
+            pixelsToCheck.append(pos)  # saving the pixel positions
+            blobSize += 1  # Counting the BLOB size to calculate average color
+
+    pos = 0  # Resetting position so we can go though the new image, since we have saved the ones we need in a list
+    for R, G, B in originalPixels:
+        pos += 1
+        if (pos in pixelsToCheck):  # Finding the pixels matching our saved positions
+            # Adding up the colors of all the pixels in the BLOB
+            redTotal += R
+            greenTotal += G
+            blueTotal += B
+
+    # calculating the average for each color
+    averageRed = redTotal/blobSize
+    averageGreen = greenTotal/blobSize
+    averageBlue = blueTotal/blobSize
+
+    # Checking for red with the same parameters as in the binary function
+    if (averageRed > 120 and averageGreen < 100 and averageBlue < 100):
+        print("The card is red")
+    else:  # Since this area was detected in the binary function, the only other option than red is black
+        print("The card is black")
 
 
 if __name__ == '__main__':
