@@ -6,8 +6,8 @@ import random
 
 def main():
     # Python normally only allows a function to call itself 10^4 times, which is not enough for larger BLOBs
-    sys.setrecursionlimit(10 ** 6)  # Changing the max recursion to 10^6
-    img = Image.open('Images/ace2.JPG')
+    sys.setrecursionlimit(10 ** 9)  # Changing the max recursion to 10^6
+    img = Image.open('Images/eight.JPG')
 
     binaryImg = binary(img)  # Converting to a binary image, based on some given benchmarks for RGB values
     blobImg = detectBlobs(binaryImg)  # Applying the BLOB detection, which converts "burned" pixels to pink and counts big BLOBs
@@ -121,13 +121,24 @@ class Counter:
 
 def generateColors(colorList):  # Generates a list of 100 colors
 
-    for i in range(100):  # A for loop that run 100 times through values of i from 0 to 99
-        # Assigning a random int value between 0 and 255 to each color
-        r = random.randint(0, 255)
-        g = random.randint(0, 255)
-        b = random.randint(0, 255)
+    r = 0
+    g = 0
+    b = 250
 
-        color = (r, g, b)  # Collecting the three random values in a tuple
+    for i in range(75):  # A for loop that run 100 times through values of i from 0 to 99
+        # Assigning slowly changing color values for the different BLOBS
+        if (i < 25):
+            b -= 10
+            g += 10
+        elif (25 >= i < 50):
+            g -= 10
+            r += 10
+        else:
+            r -= 10
+            b += 10
+
+
+        color = (r, g, b)  # Collecting the three  values in a tuple
         colorList.append(color)  # Adding the tuple/color to our list of colors
 
 
