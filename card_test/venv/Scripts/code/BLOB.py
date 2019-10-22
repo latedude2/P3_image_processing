@@ -7,7 +7,7 @@ import random
 def main():
     # Python normally only allows a function to call itself 10^4 times, which is not enough for larger BLOBs
     sys.setrecursionlimit(10 ** 9)  # Changing the max recursion to 10^6
-    imgName = "Images/ace.JPG"  # Defining the name, since we are currently using it twice
+    imgName = "Images/nine.JPG"  # Defining the name, since we are currently using it twice
     img = Image.open(imgName)
     counter = Counter()  # Creating an object from the Counter class (which can be found further down)
 
