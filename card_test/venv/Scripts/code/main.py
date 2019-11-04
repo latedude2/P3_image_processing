@@ -4,7 +4,7 @@ import numpy as np
 def main():
 
     kernelSize = 5 #the size of the kernel, this must always be an uneven value of at least 3
-    img = Image.open('Images/ace.JPG')
+    img = Image.open('Images/eight.JPG')
     size = width,height = img.size
 
     sobel_kernel1 = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]]
