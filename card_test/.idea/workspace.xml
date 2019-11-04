@@ -46,7 +46,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.BLOB">
+  <component name="RunManager" selected="Python.main">
     <configuration name="BLOB" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="card_test" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -92,8 +92,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.BLOB" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.BLOB" />
       </list>
     </recent_temporary>
   </component>
