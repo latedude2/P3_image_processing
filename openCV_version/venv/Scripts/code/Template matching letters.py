@@ -2,9 +2,9 @@ import cv2
 import numpy as np
 
 #read the image
-img_gray = cv2.imread("background_with_cards.png", cv2.IMREAD_GRAYSCALE)
+img_gray = cv2.imread("Images/background_with_cards.png", cv2.IMREAD_GRAYSCALE)
 
-template = cv2.imread('j.png',0)
+template = cv2.imread('Images/j_colors.png',0)
 w, h = template.shape[::-1]
 
 res = cv2.matchTemplate(img_gray,template,cv2.TM_CCOEFF_NORMED)

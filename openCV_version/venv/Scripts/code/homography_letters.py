@@ -5,19 +5,14 @@ import matplotlib.pyplot as plt
 
 #im1 = cv2.imread('Images/face3.png')
 #im1 = cv2.imread('Images/j2.png',0)
-im1 = cv2.imread('Images/k.png')
 #im1 = cv2.imread('Images/kingface.jpg')
-#im1 = cv2.imread('Images/9.png')
-
-
 
 #im2 = cv2.imread('Images/background_with_cards.png')
 #im2 = cv2.imread('Images/all_cards.jpg')
-im2 = cv2.imread('Images/king2.png')
-#im2 = cv2.imread('Images/binary_9.png')
+#im2 = cv2.imread('Images/king2.png')
 
 img1 = cv2.imread("Images/kingface_rotated.png", cv2.IMREAD_GRAYSCALE) #gray template image
-img2 = cv2.imread("Images/king2.png", cv2.IMREAD_GRAYSCALE) #gray original iamge
+img2 = cv2.imread("Images/king.jpg", cv2.IMREAD_GRAYSCALE) #gray original iamge
 
 orb = cv2.ORB_create() #initiate ORB object with undefined list of keypoints,
 
