@@ -19,19 +19,21 @@
     <ImageView
         android:id="@+id/back_disk"
         android:layout_width="fill_parent"
+        android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
         android:adjustViewBounds="true"
+        android:contentDescription="the white circle at the back"
         android:scaleType="centerInside"
         app:layout_constraintBottom_toTopOf="@id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/back_disk"
-        android:contentDescription="the white circle at the back" />
+        app:srcCompat="@drawable/back_disk" />
 
     <ImageView
         android:id="@+id/arrow_disk"
         android:layout_width="fill_parent"
+        android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
         android:adjustViewBounds="true"
         android:scaleType="centerInside"
@@ -45,6 +47,7 @@
 
     <ImageView
         android:id="@+id/overlay_disk"
+        android:layout_height="0dp"
         android:layout_width="fill_parent"
         android:layout_gravity="center_horizontal"
         android:adjustViewBounds="true"
