@@ -3,7 +3,7 @@ import cv2
 import numpy as np;
 
 #read the image
-im = cv2.imread("Images/ace.JPG", cv2.IMREAD_GRAYSCALE)
+im = cv2.imread("../Images/ace.JPG", cv2.IMREAD_GRAYSCALE)
 
 cv2.imshow('sample image', im)
 

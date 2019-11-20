@@ -1,7 +1,7 @@
 import cv2
 
-original = cv2.imread('Images/Templates/K.png')
-template = cv2.imread('Images/Templates/K.png')
+original = cv2.imread('../Images/Templates/K.png')
+template = cv2.imread('../Images/Templates/K.png')
 
 image1 = original.shape #gives information about size and channels of the images (3 for b g r). Optional.
 image2 = template.shape
