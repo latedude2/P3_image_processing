@@ -4,10 +4,10 @@ import PIL
 
 
 def getSuit():
-    img = cv2.imread("Images\\spade.png", 0)
-    img2 = cv2.imread("Images\\club.png", 0)
-    img3 = cv2.imread("Images\\heart.png", 0)
-    img4 = cv2.imread("Images\\diamond.png", 0)
+    img = cv2.imread("../Images\\spade.png", 0)
+    img2 = cv2.imread("../Images\\club.png", 0)
+    img3 = cv2.imread("../Images\\heart.png", 0)
+    img4 = cv2.imread("../Images\\diamond.png", 0)
 
     newImg = doStuff(img)
     newImg2 = doStuff(img2)
