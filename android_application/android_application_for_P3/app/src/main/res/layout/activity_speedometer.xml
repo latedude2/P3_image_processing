@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    tools:context=".ActivitySpeedometer">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline"
+        app:layout_constraintGuide_percent="2"
+        android:orientation="horizontal"
+        />
+
+    <ImageView
+        android:id="@+id/back_disk"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:adjustViewBounds="true"
+        android:contentDescription="the white circle at the back"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/back_disk" />
+
+    <ImageView
+        android:id="@+id/arrow_disk"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:rotation="0"
+        app:srcCompat="@drawable/arrow_display"
+
+        android:contentDescription="layer with arrow and green bar to be rotated"/>
+
+    <ImageView
+        android:id="@+id/overlay_disk"
+        android:layout_height="0dp"
+        android:layout_width="fill_parent"
+        android:layout_gravity="center_horizontal"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/disk_overlay"
+        android:contentDescription="top layer with the indication knobs"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
