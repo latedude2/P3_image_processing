@@ -9,6 +9,21 @@ public class CombinationChecker {
     String[] possibleCombinations = {"High Card", "Pair", "Two Pairs", "Three of a Kind",
             "Straight", "Flush", "Full House", "Four of a Kind", "Straight Flush", "Royal Flush"};
 
+    /*
+   The combinations are numbered as such:
+
+   0 = High card
+   1 = Pair
+   2 = two pairs
+   3 = three of a kind
+   4 = straight
+   5 = flush
+   6 = full house
+   7 = four of a kind
+   8 = straight flush
+   9 = royal flush
+     */
+
     int cardAmount; // this is used to see how many cards make up the given combination
     String currentCombination; //The name of the current combination
     String[] currentCards; // The signatures of the cards in the combination
