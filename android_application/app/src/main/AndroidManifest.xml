@@ -16,7 +16,6 @@
         <activity android:name=".ActivitySpeedometer"
             android:screenOrientation="landscape"></activity>
         <activity
-            android:screenOrientation="landscape"
             android:name=".ActivitySuits"
             android:screenOrientation="landscape"
             android:label="@string/title_activity_suits"
