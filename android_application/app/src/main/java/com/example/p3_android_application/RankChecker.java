@@ -4,8 +4,8 @@ public class RankChecker {
 
     int combinationRank; //rank of the combination, where 1 is Royal Flush and 7642 is worst possible
     int combinationAngle; // rank translated to the angle in the speedometer
-    String combinationText = ""; // combination text which should look like "straight 5S 6C 7S 8H 9D 2254"
-    // this means: "combination name - cards - rank
+    String combinationText; // combination text which should look like "6 5S 6C 7S 8H 9D 2254"
+    // this means: "combination number - cards - rank
 
     RankChecker(String combinationText) {
         this.combinationText = combinationText;
