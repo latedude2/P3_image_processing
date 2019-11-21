@@ -6,4 +6,6 @@
     <color name="backgroundColor">#2C3A2B</color>
     <color name="almostWhite">#EEEEEE</color>
     <color name="someRed">#871B1B</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>
