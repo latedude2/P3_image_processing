@@ -3,35 +3,35 @@
 3    package="com.example.p3_android_application.test" >
 4
 5    <uses-sdk
-5-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger8578447960504527184.xml:5:5-74
+5-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger6261678911037260752.xml:5:5-74
 6        android:minSdkVersion="15"
-6-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger8578447960504527184.xml:5:15-41
+6-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger6261678911037260752.xml:5:15-41
 7        android:targetSdkVersion="29" />
-7-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger8578447960504527184.xml:5:42-71
+7-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger6261678911037260752.xml:5:42-71
 8
 9    <instrumentation
-9-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger8578447960504527184.xml:11:5-15:84
+9-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger6261678911037260752.xml:11:5-15:84
 10        android:name="androidx.test.runner.AndroidJUnitRunner"
-10-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger8578447960504527184.xml:11:22-76
+10-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger6261678911037260752.xml:11:22-76
 11        android:functionalTest="false"
-11-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger8578447960504527184.xml:14:22-52
+11-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger6261678911037260752.xml:14:22-52
 12        android:handleProfiling="false"
-12-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger8578447960504527184.xml:13:22-53
+12-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger6261678911037260752.xml:13:22-53
 13        android:label="Tests for com.example.p3_android_application"
-13-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger8578447960504527184.xml:15:22-82
+13-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger6261678911037260752.xml:15:22-82
 14        android:targetPackage="com.example.p3_android_application" />
-14-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger8578447960504527184.xml:12:22-80
+14-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger6261678911037260752.xml:12:22-80
 15
 16    <uses-permission android:name="android.permission.REORDER_TASKS" />
 16-->[androidx.test:core:1.1.0] C:\Users\sara8\.gradle\caches\transforms-2\files-2.1\b700bfc0f9180812ac817088e66c00b6\core-1.1.0\AndroidManifest.xml:24:5-72
 16-->[androidx.test:core:1.1.0] C:\Users\sara8\.gradle\caches\transforms-2\files-2.1\b700bfc0f9180812ac817088e66c00b6\core-1.1.0\AndroidManifest.xml:24:22-69
 17
 18    <application android:debuggable="true" >
-18-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger8578447960504527184.xml:7:5-9:19
-18-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger8578447960504527184.xml:7:18-43
+18-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger6261678911037260752.xml:7:5-9:19
+18-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger6261678911037260752.xml:7:18-43
 19        <uses-library android:name="android.test.runner" />
-19-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger8578447960504527184.xml:8:9-60
-19-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger8578447960504527184.xml:8:23-57
+19-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger6261678911037260752.xml:8:9-60
+19-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger6261678911037260752.xml:8:23-57
 20
 21        <activity
 21-->[androidx.test:core:1.1.0] C:\Users\sara8\.gradle\caches\transforms-2\files-2.1\b700bfc0f9180812ac817088e66c00b6\core-1.1.0\AndroidManifest.xml:27:9-33:20
