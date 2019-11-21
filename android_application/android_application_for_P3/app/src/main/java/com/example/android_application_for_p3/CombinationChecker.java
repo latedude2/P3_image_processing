@@ -1,5 +1,7 @@
 package com.example.android_application_for_p3;
 
+import java.util.LinkedList;
+
 public class CombinationChecker {
     //Used to translate the received number into the corresponding combination
     private String[] possibleCombinations = {"HIGH CARD", "PAIR", "TWO PAIRS", "THREE OF A KIND",
@@ -7,9 +9,11 @@ public class CombinationChecker {
 
     private int cardAmount; // this is used to see how many cards make up the given combination
     private String currentCombination; //The name of the current combination
-    private String[] currentCards; // The signatures of the cards in the combination
-    private String combinationText; // combination text which should look like "6 5S 6C 7S 8H 9D 2254"
+    //private String[] currentCards; // The signatures of the cards in the combination
+    private String combinationText; // combination text which should look like "6 5S6C7S8H9D 2254"
     // this means: "combination number - cards - rank
+
+    LinkedList<String> currentCards = new LinkedList<>();
 
     CombinationChecker(String combinationText){
         this.combinationText = combinationText;
@@ -23,19 +27,21 @@ public class CombinationChecker {
 
         //Finding the corresponding combination name from a list of names in order
         currentCombination = possibleCombinations[Integer.valueOf(array[0])];
-
-        //setting the amount of cards based on how many cards were sent
-        cardAmount = array.length - 2;
-
-        //initializing the array with a length, so that we can add elements to it
-        currentCards = new String[cardAmount];
-
-        for (int i = 0; i < cardAmount; i++){
-            //Saving the current cards on separate list
-            currentCards[i] = array[i+1]; //we add one for the array, since the first element is the combo
+        int i = 0;
+        while(i < array[1].length()-1){
+            String temp = String.valueOf(array[1].charAt(i+1)); //first
+            temp += String.valueOf(array[1].charAt(i)); // plus second
+            i += 2;
+            currentCards.add(temp);
         }
+
+        cardAmount = currentCards.size();
     }
 
+    String cardNameToViewName(int index){
+         // it could be like "6H", but need to make it to h6
+        return currentCards.get(index);
+    }
 
     //--------------------------------------------//
     //-------------- GETTERS ----------------//
@@ -48,8 +54,7 @@ public class CombinationChecker {
         return currentCombination;
     }
 
-    public String[] getCurrentCards() {
+    public LinkedList<String> getCurrentCards() {
         return currentCards;
     }
-
 }

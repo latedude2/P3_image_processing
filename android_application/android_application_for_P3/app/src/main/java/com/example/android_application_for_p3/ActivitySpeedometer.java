@@ -92,10 +92,9 @@ public class ActivitySpeedometer extends AppCompatActivity {
                     //if it's something else, message is sent to the CombinationChecker and RankChecker and stuff done to display the info
                     final String message = input.readLine();
                     if (!message.equals("nothin")) {
-                        combinationChecker = new CombinationChecker("4 5S6H7D8S9C 2510");
-                        rankChecker = new RankChecker("4 5S6H7D8S9C 2510");
+                        combinationChecker = new CombinationChecker("4 5s6h7d8s9c 2510");
+                        rankChecker = new RankChecker("4 5s6h7d8s9c 2510");
                         System.out.println("THIS IS AN ANGLE ----->>> " + rankChecker.getCombinationAngle());
-                        System.out.println("THIS IS A RANK ----->>> " + rankChecker.getCombinationRank());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -103,6 +102,14 @@ public class ActivitySpeedometer extends AppCompatActivity {
                                 // probably display the rank stuff and combination stuff in the views
                                 speedometerView.setRotation(rankChecker.getCombinationAngle());
                                 combinationTextView.setText(combinationChecker.getCurrentCombination());
+                                for(int i = 1; i < combinationChecker.getCardAmount()+1; i++){
+                                    String viewName = "card" + i;
+                                    int idOfView = getResources().getIdentifier(viewName, "id", getPackageName());
+                                    ImageView view = findViewById(idOfView);
+                                    String cardName = combinationChecker.cardNameToViewName(i-1);
+                                    int idOfImage = getResources().getIdentifier(cardName, "drawable", getPackageName());
+                                    view.setImageResource(idOfImage);
+                                }
                             }
                         });
                     } else {

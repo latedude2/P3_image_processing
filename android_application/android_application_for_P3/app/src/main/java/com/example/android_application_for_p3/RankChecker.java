@@ -9,7 +9,7 @@ public class RankChecker {
     RankChecker(String combinationText) {
         this.combinationText = combinationText;
         combinationRank = findRank(combinationText);
-        combinationAngle = findAngle(combinationRank);
+        combinationAngle = findAngle(7643 - combinationRank);
     }
 
     private int findRank (String text) {
