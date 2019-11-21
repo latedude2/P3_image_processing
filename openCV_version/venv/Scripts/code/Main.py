@@ -5,6 +5,7 @@ import imutils
 import treys
 from treys import Evaluator
 from treys import Card
+import math
 
 #Face card detection constants
 blue = low_blue, up_blue = ([100, 165, 105], [132, 255, 255])
@@ -37,9 +38,10 @@ def main():
 
         #for each card looking object
         for i in range(len(images)):
-            print("Card " + str(i))
-            cv2.imshow("Card" + str(i), images[i])
-            analyseCard(images[i])
+            if(images[i].shape[0] > 50):
+                print("Card " + str(i))
+                cv2.imshow("Card" + str(i), images[i])
+                analyseCard(images[i])
 
 
 
@@ -55,6 +57,116 @@ def main():
 
     video_capture.release()
     cv2.destroyAllWindows()
+
+
+def analyseCard(frame):
+
+    #gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    ## convert to hsv
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+    ## mask of green (36,25,25) ~ (86, 255,255)
+    mask = cv2.inRange(hsv, (36, 25, 25), (70, 255, 255))
+
+    ## slice the green
+    imask = mask > 0
+    green = np.zeros_like(frame, np.uint8)
+    green[imask] = frame[imask]
+
+    thresh_frame = cv2.threshold(green, 0, 255, cv2.THRESH_BINARY)
+
+    card = ""
+
+    # Rotate cards - ABA BLYAT
+    rotatedCardImage = cv2.imread("../Images/ace.jpg")
+
+    cv2.imshow("Rotated ace image", rotatedCardImage)
+    #cv2.imshow("Rotated Image", rotated)
+    # Get corner image - ABA BLYAT
+    TM = np.float32([[1, 0, 0], [0, 1, - rotatedCardImage.shape[0]/4*3]])
+    corner = cv2.warpAffine(rotatedCardImage, TM, (int(rotatedCardImage.shape[1]/4), int(rotatedCardImage.shape[0]/5)))
+
+    cv2.imshow("Corner image", corner)
+
+    # Seperate into suit and number
+
+
+
+    # suitImage =
+    # numberImage =
+
+    # Detect if red/Black
+    #isRed = checkRed(frame, gray_frame)
+
+    #gaussianCard = cv2.GaussianBlur(gray_frame, (5, 5), 0)
+    '''
+    cardSuit = DetermineSuit(gaussianCard, isRed)
+
+    '''
+
+    # Template match letter
+
+    # Detect if face card
+
+    # if not faceCard:
+    # Count blobs
+
+    return card
+
+
+'''
+def rotate(img, original):
+
+    grayScale = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    grayScale = cv2.GaussianBlur(grayScale, (9, 9), 0)
+
+    c = cv2.findContours(grayScale.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    c = imutils.grab_contours(c)
+    angle = 0
+
+
+    for i in range(len(c)):
+        perimeter = cv2.arcLength(c[i], True)
+        if perimeter > 200:
+            extLeft = tuple(c[i][c[i][:, :, 0].argmin()][0])
+            extRight = tuple(c[i][c[i][:, :, 0].argmax()][0])
+            extTop = tuple(c[i][c[i][:, :, 1].argmin()][0])
+            extBot = tuple(c[i][c[i][:, :, 1].argmax()][0])
+
+            if extLeft[1] > img.shape[0]/2:
+                print("Rotated right")
+                try:
+                    #if not math.isnan(math.tan(extTop[0] / extLeft[1] ) / math.pi * -180):
+                    angle = math.tan(extTop[0] / extLeft[1] ) / math.pi * -180
+                    print(angle)
+
+                except:
+                    print("math fail")
+
+            else:
+                print("Rotated left")
+                try:
+                    #if not  math.isnan(math.tan(extLeft[1]/ extTop[0]) / math.pi * 180):
+                    angle = math.tan(extLeft[1]/ extTop[0]) / math.pi * 180
+                    print(angle)
+                except:
+                    print("math fail")
+            cv2.imshow("Before rotate", original)
+            if extLeft[0] - extTop[0] < 10 and extLeft[0] - extTop[0] > -10:
+                angle = 0
+            rotated = imutils.rotate_bound(original, angle)
+            # TM = np.float32([[1, 0, -extLeft[0]], [0, 1, -extTop[1]]])
+            # Matrix = cv2.getRotationMatrix2D((original.shape[1]/2, original.shape[0]/2), -angle, 1.0)
+            # rotated = cv2.warpAffine(original, Matrix, (original.shape[1], original.shape[0]))
+            cv2.imshow("After rotate", rotated)
+            return rotated
+    
+'''
+
+
+
 
 def splitIntoCardImages(img):
     images = []
@@ -72,17 +184,6 @@ def splitIntoCardImages(img):
 
     memes, threshImg = cv2.threshold(green, 0, 255, cv2.THRESH_BINARY_INV)
 
-    params = cv2.SimpleBlobDetector_Params()
-
-    # Filter by Area.
-    params.filterByArea = True
-
-    # Disable unwanted filter criteria params
-    params.filterByCircularity = False  # to not care about circularity (more circular = bigger angles)
-    params.filterByColor = False  # to not care about the color
-    params.filterByConvexity = False  # to not care about convexity (idk actually how to explain it)
-    params.filterByInertia = False  # doesn't care how much like a circle it is (difference in radiusw)
-
     grayScale = cv2.cvtColor(threshImg, cv2.COLOR_BGR2GRAY)
 
     grayScale = cv2.GaussianBlur(grayScale, (9, 9), 0)
@@ -99,48 +200,15 @@ def splitIntoCardImages(img):
             extTop = tuple(c[i][c[i][:, :, 1].argmin()][0])
             extBot = tuple(c[i][c[i][:, :, 1].argmax()][0])
 
-            # draws boundary of contours.
             # Used to flatted the array containing the co-ordinates of the vertices.
 
             TM = np.float32([[1, 0, -extLeft[0]], [0, 1, -extTop[1]]])
             imgT = cv2.warpAffine(img, TM, ((extRight[0] - extLeft[0]), (extBot[1] - extTop[1])))
-
-            images.append(imgT)
+            if imgT.shape[0] > 200:
+                images.append(imgT)
             #cv2.imshow("Single card pls" + str(i), imgT)
 
     return images
-
-def analyseCard(frame):
-
-    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    card = ""
-    # Rotate cards - ABA BLYAT
-
-
-    # Get corner image - ABA BLYAT
-
-    # Seperate into suit and number
-
-    # suitImage =
-    # numberImage =
-
-    # Detect if red/Black
-    isRed = checkRed(frame, gray_frame)
-
-    gaussianCard = cv2.GaussianBlur(gray_frame, (5, 5), 0)
-    '''
-    cardSuit = DetermineSuit(gaussianCard, isRed)
-
-    '''
-
-    # Template match letter
-
-    # Detect if face card
-
-    # if not faceCard:
-    # Count blobs
-
-    return card
 
 def evaluateCards(board, hand):
     board = [
