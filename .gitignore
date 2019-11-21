@@ -21,3 +21,4 @@ android_application/.idea/workspace.xml
 *.txt
 *.bin
 *.lock
+*.xml
