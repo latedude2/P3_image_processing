@@ -6,9 +6,6 @@ template = cv2.imread('../Images/Templates/K.png')
 image1 = original.shape #gives information about size and channels of the images (3 for b g r). Optional.
 image2 = template.shape
 
-print(image1)
-print(image2)
-
 if original.shape == template.shape: #checks if the size and amount of channels in the images match. Optional.
     print("same size and channels")
 
