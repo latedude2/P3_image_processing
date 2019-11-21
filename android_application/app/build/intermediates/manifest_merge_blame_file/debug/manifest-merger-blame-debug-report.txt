@@ -21,7 +21,7 @@
 13-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:7:22-73
 14
 15    <application
-15-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:9:5-30:19
+15-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:9:5-32:19
 16        android:allowBackup="true"
 16-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:10:9-35
 17        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
@@ -35,36 +35,42 @@
 21-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:13:9-54
 22        android:supportsRtl="true"
 22-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:14:9-35
-23        android:theme="@style/AppTheme" >
-23-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:15:9-40
-24        <activity android:name="com.example.p3_android_application.ActivitySpeedometer" />
-24-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:16:9-66
-24-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:16:19-54
+23        android:testOnly="true"
+24        android:theme="@style/AppTheme" >
+24-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:15:9-40
 25        <activity
-25-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:17:9-20:47
-26            android:name="com.example.p3_android_application.ActivitySuits"
-26-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:18:13-42
-27            android:label="@string/title_activity_suits"
-27-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:19:13-57
-28            android:theme="@style/AppTheme" />
-28-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:20:13-44
-29        <activity
-29-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:21:9-29:20
-30            android:name="com.example.p3_android_application.MainActivity"
-30-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:22:13-41
-31            android:screenOrientation="landscape" >
-31-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:23:13-50
-32            <intent-filter>
-32-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:24:13-28:29
-33                <action android:name="android.intent.action.MAIN" />
-33-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:25:17-69
-33-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:25:25-66
-34
-35                <category android:name="android.intent.category.LAUNCHER" />
-35-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:27:17-77
-35-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:27:27-74
-36            </intent-filter>
-37        </activity>
-38    </application>
-39
-40</manifest>
+25-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:16:9-17:62
+26            android:name="com.example.p3_android_application.ActivitySpeedometer"
+26-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:16:19-54
+27            android:screenOrientation="landscape" />
+27-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:17:13-50
+28        <activity
+28-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:18:9-22:47
+29            android:name="com.example.p3_android_application.ActivitySuits"
+29-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:19:13-42
+30            android:label="@string/title_activity_suits"
+30-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:21:13-57
+31            android:screenOrientation="landscape"
+31-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:20:13-50
+32            android:theme="@style/AppTheme" />
+32-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:22:13-44
+33        <activity
+33-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:23:9-31:20
+34            android:name="com.example.p3_android_application.MainActivity"
+34-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:24:13-41
+35            android:screenOrientation="landscape" >
+35-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:25:13-50
+36            <intent-filter>
+36-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:26:13-30:29
+37                <action android:name="android.intent.action.MAIN" />
+37-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:27:17-69
+37-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:27:25-66
+38
+39                <category android:name="android.intent.category.LAUNCHER" />
+39-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:29:17-77
+39-->C:\Users\sara8\Documents\GitHub\P3_image_processing\android_application\app\src\main\AndroidManifest.xml:29:27-74
+40            </intent-filter>
+41        </activity>
+42    </application>
+43
+44</manifest>

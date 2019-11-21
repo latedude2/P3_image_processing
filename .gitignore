@@ -16,3 +16,8 @@ card_test/.vs/slnx.sqlite
 card_test/.vs/VSWorkspaceState.json
 android_application/.idea/workspace.xml
 *.xml
+*.xml
+*.txt
+*.txt
+*.bin
+*.lock
