@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import PIL
+import imutils
 import treys
 from treys import Evaluator
 from treys import Card
@@ -15,7 +16,7 @@ red_uppart = low_up_red, up_up_red = [(170, 183, 122), (180, 255, 255)]
 black = low_black, up_black = [(0, 0, 0), (180, 255, 56)]
 
 def main():
-    video_capture = cv2.VideoCapture(0)
+    video_capture = cv2.VideoCapture('http://192.168.43.117:4747/mjpegfeed')
 
     first_gaussian = backgroundSubtractSetup(video_capture)
 
@@ -29,19 +30,23 @@ def main():
         gaussian_frame = cv2.GaussianBlur(gray_frame, (5, 5), 0)
 
         #Background subtraction to only have cards
-        difference = backgroundSubtract(gaussian_frame, first_gaussian)
+        #difference = backgroundSubtract(first_gaussian, gaussian_frame)
 
-        # Seperate cards into seperate images
+        # Separate cards into separate images
+        images = splitIntoCardImages(frame)
 
-        # For each card:
-        # analyseCard(cardFrame, greyCardFrame)
+        #for each card looking object
+        for i in range(len(images)):
+            print("Card " + str(i))
+            cv2.imshow("Card" + str(i), images[i])
+            analyseCard(images[i])
 
 
 
         # For debbuging:
         #'''
         cv2.imshow("Frame", frame)
-        cv2.imshow("difference", difference)
+        #cv2.imshow("difference", difference)
         #cv2.imshow("Contour", DetermineSuit(gaussian_frame))
         #'''
 
@@ -51,12 +56,68 @@ def main():
     video_capture.release()
     cv2.destroyAllWindows()
 
-def analyseCard(frame, gray_frame):
+def splitIntoCardImages(img):
+    images = []
 
+    ## convert to hsv
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+    ## mask of green (36,25,25) ~ (86, 255,255)
+    mask = cv2.inRange(hsv, (36, 25, 25), (70, 255, 255))
+
+    ## slice the green
+    imask = mask > 0
+    green = np.zeros_like(img, np.uint8)
+    green[imask] = img[imask]
+
+    memes, threshImg = cv2.threshold(green, 0, 255, cv2.THRESH_BINARY_INV)
+
+    params = cv2.SimpleBlobDetector_Params()
+
+    # Filter by Area.
+    params.filterByArea = True
+
+    # Disable unwanted filter criteria params
+    params.filterByCircularity = False  # to not care about circularity (more circular = bigger angles)
+    params.filterByColor = False  # to not care about the color
+    params.filterByConvexity = False  # to not care about convexity (idk actually how to explain it)
+    params.filterByInertia = False  # doesn't care how much like a circle it is (difference in radiusw)
+
+    grayScale = cv2.cvtColor(threshImg, cv2.COLOR_BGR2GRAY)
+
+    grayScale = cv2.GaussianBlur(grayScale, (9, 9), 0)
+
+
+    c = cv2.findContours(grayScale.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    c = imutils.grab_contours(c)
+
+    for i in range(len(c)):
+        perimeter = cv2.arcLength(c[i], True)
+        if perimeter > 500:
+            extLeft = tuple(c[i][c[i][:, :, 0].argmin()][0])
+            extRight = tuple(c[i][c[i][:, :, 0].argmax()][0])
+            extTop = tuple(c[i][c[i][:, :, 1].argmin()][0])
+            extBot = tuple(c[i][c[i][:, :, 1].argmax()][0])
+
+            # draws boundary of contours.
+            # Used to flatted the array containing the co-ordinates of the vertices.
+
+            TM = np.float32([[1, 0, -extLeft[0]], [0, 1, -extTop[1]]])
+            imgT = cv2.warpAffine(img, TM, ((extRight[0] - extLeft[0]), (extBot[1] - extTop[1])))
+
+            images.append(imgT)
+            #cv2.imshow("Single card pls" + str(i), imgT)
+
+    return images
+
+def analyseCard(frame):
+
+    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     card = ""
-    # Rotate cards
+    # Rotate cards - ABA BLYAT
 
-    # Get corner image
+
+    # Get corner image - ABA BLYAT
 
     # Seperate into suit and number
 
@@ -107,7 +168,7 @@ def backgroundSubtractSetup(video_capture):
 
 def backgroundSubtract(gaussian_frame, first_gaussian):
     difference = cv2.absdiff(first_gaussian, gaussian_frame)
-    _, difference = cv2.threshold(difference, 25, 255, cv2.THRESH_BINARY)
+    _, difference = cv2.threshold(difference, 25, 255, cv2.THRESH_BINARY_INV)
     return difference
 
 def checkRed(original, greyImage):
