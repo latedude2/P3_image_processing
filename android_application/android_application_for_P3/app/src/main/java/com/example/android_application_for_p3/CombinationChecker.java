@@ -2,13 +2,13 @@ package com.example.android_application_for_p3;
 
 public class CombinationChecker {
     //Used to translate the received number into the corresponding combination
-    String[] possibleCombinations = {"High Card", "Pair", "Two Pairs", "Three of a Kind",
-            "Straight", "Flush", "Full House", "Four of a Kind", "Straight Flush", "Royal Flush"};
+    private String[] possibleCombinations = {"HIGH CARD", "PAIR", "TWO PAIRS", "THREE OF A KIND",
+            "STRAIGHT", "FLUSH", "FULL HOUSE", "FOUR OF A KIND", "STRAIGHT FLUSH", "ROYAL FLUSH"};
 
-    int cardAmount; // this is used to see how many cards make up the given combination
-    String currentCombination; //The name of the current combination
-    String[] currentCards; // The signatures of the cards in the combination
-    String combinationText; // combination text which should look like "6 5S 6C 7S 8H 9D 2254"
+    private int cardAmount; // this is used to see how many cards make up the given combination
+    private String currentCombination; //The name of the current combination
+    private String[] currentCards; // The signatures of the cards in the combination
+    private String combinationText; // combination text which should look like "6 5S 6C 7S 8H 9D 2254"
     // this means: "combination number - cards - rank
 
     CombinationChecker(String combinationText){
@@ -22,7 +22,7 @@ public class CombinationChecker {
         String[] array = text.split(" ");
 
         //Finding the corresponding combination name from a list of names in order
-        currentCombination = possibleCombinations[Integer.parseInt(array[0])];
+        currentCombination = possibleCombinations[Integer.valueOf(array[0])];
 
         //setting the amount of cards based on how many cards were sent
         cardAmount = array.length - 2;

@@ -1,29 +1,17 @@
 package com.example.android_application_for_p3;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+
 import android.view.View;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class ActivitySetSuits extends Activity {
 
-    final Handler handler = new Handler(); // to handle threads to go from other threads to the main thread
-
-    private PrintWriter output;
-    private BufferedReader input;
 
     String handCards = ""; //hand cards to send to the server (e.g. "5S8H", which is 5 of spades and 8 of hearts)
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,29 +28,12 @@ public class ActivitySetSuits extends Activity {
         handCards = handCards + value;
 
         if (handCards.length() == 4) {
-            new Thread(new ConnectToServerThread()).start();
-
-            Timer timer = new Timer(); // timer for handling the time delays and periods to send messages each 1 second
-            timer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            // message sent each 1 second to the server
-                            if (handCards.length() == 4) //if handCards string is already 4, then it sends the message with this string to the server
-                                new Thread(new SendMessageThread(handCards)).start();
-                            else
-                                new Thread(new SendMessageThread("nothing")).start();
-                        }
-                    });
-                }
-            }, 1000, 1000);
             Intent intent = new Intent(this, ActivitySpeedometer.class);
-            new Thread(new ThreadForIntent(intent)).start();
+            intent.putExtra("handCards", handCards);
+            startActivity(intent);
         } else {
             //goes to the "select suit" activity
             Intent intent = new Intent(this, MainActivity.class);
-            // new thread is needed, because other stuff still need to continue working in MainActivity
             intent.putExtra("handCards", handCards);
             startActivity(intent);
         }
@@ -72,13 +43,24 @@ public class ActivitySetSuits extends Activity {
     //----------------------------- CLASSES FOR THREADS -----------------------//
     //-----------------------------------------------------------------------------------//
 
-    class ThreadForIntent implements Runnable {
+    /*class ThreadForIntent implements Runnable {
         private Intent intent;
+        private int angle;
+        private String combination;
+        private String[] cards;
 
-        ThreadForIntent(Intent intent){ this.intent = intent; }
+        ThreadForIntent(Intent intent, int angle, String combination, String[] cards){
+            this.intent = intent;
+            this.angle = angle;
+            this.combination = combination;
+            this.cards = cards;
+        }
 
         @Override
         public void run() {
+            intent.putExtra("angle", angle);
+            intent.putExtra("combination", combination);
+            intent.putExtra("cards", cards);
             startActivity(intent);
         }
     }
@@ -113,8 +95,10 @@ public class ActivitySetSuits extends Activity {
                     //if it's something else, message is sent to the CombinationChecker and RankChecker and stuff done to display the info
                     final String message = input.readLine();
                     if (!message.equals("nothing")) {
-                        CombinationChecker combinationChecker = new CombinationChecker(message);
-                        RankChecker rankChecker = new RankChecker(message);
+                        combinationChecker = new CombinationChecker(message);
+                        rankChecker = new RankChecker(message);
+                        System.out.println("THIS IS AN ANGLE ----->>> " + rankChecker.getCombinationAngle());
+                        System.out.println("THIS IS A RANK ----->>> " + rankChecker.getCombinationRank());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -145,5 +129,5 @@ public class ActivitySetSuits extends Activity {
             output.flush();
             System.out.println("THE HAND IS SENT"); // for us to know when it happens
         }
-    }
+    }*/
 }
