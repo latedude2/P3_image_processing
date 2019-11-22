@@ -13,17 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ActivityCardInput"
-            android:screenOrientation="landscape">
-        </activity>
         <activity
-            android:name=".ActivitySpeedometer"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".ActivitySetSuits"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".ActivityCardInput"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,6 +22,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ActivitySetSuits"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".ActivitySetValue"
+            android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".ActivitySpeedometer"
+            android:screenOrientation="landscape" />
+
     </application>
 
 </manifest>

@@ -36,7 +36,7 @@ public class ActivitySetSuits extends AppCompatActivity {
             startActivity(intent);
         } else {
             //goes to the "select suit" activity
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, ActivitySetValue.class);
             intent.putExtra("handCards", handCards);
             startActivity(intent);
         }

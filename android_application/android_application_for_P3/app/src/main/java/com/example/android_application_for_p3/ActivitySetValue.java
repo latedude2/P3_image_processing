@@ -1,28 +1,19 @@
 package com.example.android_application_for_p3;
 
-import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.Activity;
-import android.content.Intent;
-import android.os.*;
-import android.view.View;
-import android.widget.*;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.*;
-import java.net.Socket;
-import java.util.*;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
 
-@SuppressLint("SetTextI18n")    //This line is used to avoid IDE complaining about setText method
-// MainActivity is for taking the value
-public class MainActivity extends AppCompatActivity {
+public class ActivitySetValue extends AppCompatActivity {
+
     String handCards = ""; //hand cards to send to the server (e.g. "5S8H", which is 5 of spades and 8 of hearts)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_set_value);
 
         // setup the style to hide not needed bars and fill the background color
         new StyleSetup(this, getSupportActionBar());

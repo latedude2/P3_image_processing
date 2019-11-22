@@ -11,5 +11,9 @@ public class ActivityCardInput extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_input);
 
+        // setup the style to hide not needed bars and fill the background color
+        new StyleSetup(this, getSupportActionBar());
+
+
     }
 }

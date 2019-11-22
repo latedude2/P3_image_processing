@@ -1,6 +1,8 @@
 package com.example.android_application_for_p3;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Matrix;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import java.net.Socket;
 import java.util.Timer;
 import java.util.TimerTask;
 
+@SuppressLint("SetTextI18n")    //This line is used to avoid IDE complaining about setText method
 public class ActivitySpeedometer extends AppCompatActivity {
 
     final Handler handler = new Handler(); // to handle threads to go from other threads to the main thread
