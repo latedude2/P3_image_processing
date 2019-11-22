@@ -1,9 +1,11 @@
 import cv2
 import numpy as np
 import PIL
+import imutils
 import treys
 from treys import Evaluator
 from treys import Card
+import math
 
 #Face card detection constants
 blue = low_blue, up_blue = ([100, 165, 105], [132, 255, 255])
@@ -15,7 +17,7 @@ red_uppart = low_up_red, up_up_red = [(170, 183, 122), (180, 255, 255)]
 black = low_black, up_black = [(0, 0, 0), (180, 255, 56)]
 
 def main():
-    video_capture = cv2.VideoCapture(0)
+    video_capture = cv2.VideoCapture('http://192.168.43.117:4747/mjpegfeed')
 
     first_gaussian = backgroundSubtractSetup(video_capture)
 
@@ -29,19 +31,24 @@ def main():
         gaussian_frame = cv2.GaussianBlur(gray_frame, (5, 5), 0)
 
         #Background subtraction to only have cards
-        difference = backgroundSubtract(gaussian_frame, first_gaussian)
+        #difference = backgroundSubtract(first_gaussian, gaussian_frame)
 
-        # Seperate cards into seperate images
+        # Separate cards into separate images
+        images = splitIntoCardImages(frame)
 
-        # For each card:
-        # analyseCard(cardFrame, greyCardFrame)
+        #for each card looking object
+        for i in range(len(images)):
+            if(images[i].shape[0] > 50):
+                print("Card " + str(i))
+                cv2.imshow("Card" + str(i), images[i])
+                analyseCard(images[i])
 
 
 
         # For debbuging:
         #'''
         cv2.imshow("Frame", frame)
-        cv2.imshow("difference", difference)
+        #cv2.imshow("difference", difference)
         #cv2.imshow("Contour", DetermineSuit(gaussian_frame))
         #'''
 
@@ -51,22 +58,48 @@ def main():
     video_capture.release()
     cv2.destroyAllWindows()
 
-def analyseCard(frame, gray_frame):
+
+def analyseCard(frame):
+
+    #gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    ## convert to hsv
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+    ## mask of green (36,25,25) ~ (86, 255,255)
+    mask = cv2.inRange(hsv, (36, 25, 25), (70, 255, 255))
+
+    ## slice the green
+    imask = mask > 0
+    green = np.zeros_like(frame, np.uint8)
+    green[imask] = frame[imask]
+
+    thresh_frame = cv2.threshold(green, 0, 255, cv2.THRESH_BINARY)
 
     card = ""
-    # Rotate cards
 
-    # Get corner image
+    # Rotate cards - ABA BLYAT
+    rotatedCardImage = cv2.imread("../Images/ace.jpg")
+
+    cv2.imshow("Rotated ace image", rotatedCardImage)
+    #cv2.imshow("Rotated Image", rotated)
+    # Get corner image - ABA BLYAT
+    TM = np.float32([[1, 0, 0], [0, 1, - rotatedCardImage.shape[0]/4*3]])
+    corner = cv2.warpAffine(rotatedCardImage, TM, (int(rotatedCardImage.shape[1]/4), int(rotatedCardImage.shape[0]/5)))
+
+    cv2.imshow("Corner image", corner)
 
     # Seperate into suit and number
+
+
 
     # suitImage =
     # numberImage =
 
     # Detect if red/Black
-    isRed = checkRed(frame, gray_frame)
+    #isRed = checkRed(frame, gray_frame)
 
-    gaussianCard = cv2.GaussianBlur(gray_frame, (5, 5), 0)
+    #gaussianCard = cv2.GaussianBlur(gray_frame, (5, 5), 0)
     '''
     cardSuit = DetermineSuit(gaussianCard, isRed)
 
@@ -80,6 +113,102 @@ def analyseCard(frame, gray_frame):
     # Count blobs
 
     return card
+
+
+'''
+def rotate(img, original):
+
+    grayScale = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    grayScale = cv2.GaussianBlur(grayScale, (9, 9), 0)
+
+    c = cv2.findContours(grayScale.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    c = imutils.grab_contours(c)
+    angle = 0
+
+
+    for i in range(len(c)):
+        perimeter = cv2.arcLength(c[i], True)
+        if perimeter > 200:
+            extLeft = tuple(c[i][c[i][:, :, 0].argmin()][0])
+            extRight = tuple(c[i][c[i][:, :, 0].argmax()][0])
+            extTop = tuple(c[i][c[i][:, :, 1].argmin()][0])
+            extBot = tuple(c[i][c[i][:, :, 1].argmax()][0])
+
+            if extLeft[1] > img.shape[0]/2:
+                print("Rotated right")
+                try:
+                    #if not math.isnan(math.tan(extTop[0] / extLeft[1] ) / math.pi * -180):
+                    angle = math.tan(extTop[0] / extLeft[1] ) / math.pi * -180
+                    print(angle)
+
+                except:
+                    print("math fail")
+
+            else:
+                print("Rotated left")
+                try:
+                    #if not  math.isnan(math.tan(extLeft[1]/ extTop[0]) / math.pi * 180):
+                    angle = math.tan(extLeft[1]/ extTop[0]) / math.pi * 180
+                    print(angle)
+                except:
+                    print("math fail")
+            cv2.imshow("Before rotate", original)
+            if extLeft[0] - extTop[0] < 10 and extLeft[0] - extTop[0] > -10:
+                angle = 0
+            rotated = imutils.rotate_bound(original, angle)
+            # TM = np.float32([[1, 0, -extLeft[0]], [0, 1, -extTop[1]]])
+            # Matrix = cv2.getRotationMatrix2D((original.shape[1]/2, original.shape[0]/2), -angle, 1.0)
+            # rotated = cv2.warpAffine(original, Matrix, (original.shape[1], original.shape[0]))
+            cv2.imshow("After rotate", rotated)
+            return rotated
+    
+'''
+
+
+
+
+def splitIntoCardImages(img):
+    images = []
+
+    ## convert to hsv
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+    ## mask of green (36,25,25) ~ (86, 255,255)
+    mask = cv2.inRange(hsv, (36, 25, 25), (70, 255, 255))
+
+    ## slice the green
+    imask = mask > 0
+    green = np.zeros_like(img, np.uint8)
+    green[imask] = img[imask]
+
+    memes, threshImg = cv2.threshold(green, 0, 255, cv2.THRESH_BINARY_INV)
+
+    grayScale = cv2.cvtColor(threshImg, cv2.COLOR_BGR2GRAY)
+
+    grayScale = cv2.GaussianBlur(grayScale, (9, 9), 0)
+
+
+    c = cv2.findContours(grayScale.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    c = imutils.grab_contours(c)
+
+    for i in range(len(c)):
+        perimeter = cv2.arcLength(c[i], True)
+        if perimeter > 500:
+            extLeft = tuple(c[i][c[i][:, :, 0].argmin()][0])
+            extRight = tuple(c[i][c[i][:, :, 0].argmax()][0])
+            extTop = tuple(c[i][c[i][:, :, 1].argmin()][0])
+            extBot = tuple(c[i][c[i][:, :, 1].argmax()][0])
+
+            # Used to flatted the array containing the co-ordinates of the vertices.
+
+            TM = np.float32([[1, 0, -extLeft[0]], [0, 1, -extTop[1]]])
+            imgT = cv2.warpAffine(img, TM, ((extRight[0] - extLeft[0]), (extBot[1] - extTop[1])))
+            if imgT.shape[0] > 200:
+                images.append(imgT)
+            #cv2.imshow("Single card pls" + str(i), imgT)
+
+    return images
 
 def evaluateCards(board, hand):
     board = [
@@ -107,7 +236,7 @@ def backgroundSubtractSetup(video_capture):
 
 def backgroundSubtract(gaussian_frame, first_gaussian):
     difference = cv2.absdiff(first_gaussian, gaussian_frame)
-    _, difference = cv2.threshold(difference, 25, 255, cv2.THRESH_BINARY)
+    _, difference = cv2.threshold(difference, 25, 255, cv2.THRESH_BINARY_INV)
     return difference
 
 def checkRed(original, greyImage):
