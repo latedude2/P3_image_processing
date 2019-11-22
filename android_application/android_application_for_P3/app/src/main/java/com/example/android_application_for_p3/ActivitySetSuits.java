@@ -1,13 +1,14 @@
 package com.example.android_application_for_p3;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
 
-public class ActivitySetSuits extends Activity {
+
+public class ActivitySetSuits extends AppCompatActivity {
 
     String handCards = ""; //hand cards to send to the server (e.g. "5S8H", which is 5 of spades and 8 of hearts)
 
@@ -15,6 +16,13 @@ public class ActivitySetSuits extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_suits);
+
+        try {
+            getSupportActionBar().hide();
+        } catch (Exception e){
+            System.out.println("No action bar found to hide");
+        }
+
         handCards = getIntent().getStringExtra("handCards"); // take the string from the previous activity
     }
 

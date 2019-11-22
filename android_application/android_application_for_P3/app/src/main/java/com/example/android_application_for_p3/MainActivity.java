@@ -6,19 +6,28 @@ import android.content.Intent;
 import android.os.*;
 import android.view.View;
 import android.widget.*;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.*;
 
 @SuppressLint("SetTextI18n")    //This line is used to avoid IDE complaining about setText method
 // MainActivity is for taking the value
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     String handCards = ""; //hand cards to send to the server (e.g. "5S8H", which is 5 of spades and 8 of hearts)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        try {
+            getSupportActionBar().hide();
+        } catch (Exception e){
+            System.out.println("No action bar found to hide");
+        }
 
         // if it was made from the intent (another activity called it), then take the info about handCards
         if (getIntent() != null){

@@ -92,8 +92,8 @@ public class ActivitySpeedometer extends AppCompatActivity {
                     //if it's something else, message is sent to the CombinationChecker and RankChecker and stuff done to display the info
                     final String message = input.readLine();
                     if (!message.equals("nothin")) {
-                        combinationChecker = new CombinationChecker("4 5s6h7d8s9c 2510");
-                        rankChecker = new RankChecker("4 5s6h7d8s9c 2510");
+                        combinationChecker = new CombinationChecker("7 5s5d9stdjc 900");
+                        rankChecker = new RankChecker("7 5s5d9stdjc 900");
                         System.out.println("THIS IS AN ANGLE ----->>> " + rankChecker.getCombinationAngle());
                         runOnUiThread(new Runnable() {
                             @Override
