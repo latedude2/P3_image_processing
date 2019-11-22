@@ -17,11 +17,8 @@ public class ActivitySetSuits extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_suits);
 
-        try {
-            getSupportActionBar().hide();
-        } catch (Exception e){
-            System.out.println("No action bar found to hide");
-        }
+        // setup the style to hide not needed bars and fill the background color
+        new StyleSetup(this, getSupportActionBar());
 
         handCards = getIntent().getStringExtra("handCards"); // take the string from the previous activity
     }

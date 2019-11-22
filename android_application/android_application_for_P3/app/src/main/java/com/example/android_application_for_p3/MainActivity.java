@@ -1,6 +1,7 @@
 package com.example.android_application_for_p3;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.*;
@@ -23,11 +24,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        try {
-            getSupportActionBar().hide();
-        } catch (Exception e){
-            System.out.println("No action bar found to hide");
-        }
+        // setup the style to hide not needed bars and fill the background color
+        new StyleSetup(this, getSupportActionBar());
 
         // if it was made from the intent (another activity called it), then take the info about handCards
         if (getIntent() != null){

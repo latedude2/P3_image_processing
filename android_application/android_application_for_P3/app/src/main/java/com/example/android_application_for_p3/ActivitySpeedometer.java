@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,11 +36,9 @@ public class ActivitySpeedometer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speedometer);
-        try {
-            getSupportActionBar().hide();
-        } catch (Exception e){
-            System.out.println("No action bar found to hide");
-        }
+
+        // setup the style to hide not needed bars and fill the background color
+        new StyleSetup(this, getSupportActionBar());
 
         speedometerView = findViewById(R.id.arrow_disk);
         combinationTextView = findViewById(R.id.combination_text);
@@ -67,7 +66,7 @@ public class ActivitySpeedometer extends AppCompatActivity {
             Socket socket;
             try {
                 //create a socket
-                socket = new Socket("10.0.2.2", 12345);
+                socket = new Socket("192.168.43.18", 12345);
                 //create input and output streams
                 output = new PrintWriter(socket.getOutputStream());
                 input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -92,9 +91,8 @@ public class ActivitySpeedometer extends AppCompatActivity {
                     //if it's something else, message is sent to the CombinationChecker and RankChecker and stuff done to display the info
                     final String message = input.readLine();
                     if (!message.equals("nothin")) {
-                        combinationChecker = new CombinationChecker(" thjhqhkhah 1");
-                        rankChecker = new RankChecker("9 thjhqhkhah 1");
-                        System.out.println("THIS IS AN ANGLE ----->>> " + rankChecker.getCombinationAngle());
+                        combinationChecker = new CombinationChecker("5 2S5S6S8SjS 1800");
+                        rankChecker = new RankChecker("5 2S5S6S8SjS 1800");
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -133,7 +131,6 @@ public class ActivitySpeedometer extends AppCompatActivity {
         public void run() {
             output.write(handName);
             output.flush();
-            //System.out.println(handName); // for us to know when it happens
         }
     }
 }
