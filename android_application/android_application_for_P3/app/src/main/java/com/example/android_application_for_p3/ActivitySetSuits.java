@@ -2,11 +2,8 @@ package com.example.android_application_for_p3;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.view.View;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 
 public class ActivitySetSuits extends AppCompatActivity {
 
@@ -24,22 +21,20 @@ public class ActivitySetSuits extends AppCompatActivity {
         // setup the style to hide not needed bars and fill the background color
         new StyleSetup(this, getSupportActionBar());
 
-        if (getIntent() != null){
-            cardIndex = getIntent().getStringExtra("cardIndex");
-            card1 = getIntent().getStringExtra("card1");
-            card2 = getIntent().getStringExtra("card2");
-        }
+        cardIndex = getIntent().getStringExtra("cardIndex");
+        card1 = getIntent().getStringExtra("card1");
+        card2 = getIntent().getStringExtra("card2");
     }
 
     public void onSuitClick(View view){
-        //get the name of that button (e.g. "button_1")
-        String buttonName = getResources().getResourceName(view.getId());
-        //get the number of the button
-
         Intent intent = new Intent(this, ActivitySetValue.class);
-        intent.putExtra("cardIndex", cardIndex);
+        intent.putExtra("cardIndex", cardIndex); //current card taken
         intent.putExtra("card1", card1);
         intent.putExtra("card2", card2);
+
+        //get the name of that button (e.g. "suith", which is suit button for hearts)
+        String buttonName = getResources().getResourceName(view.getId());
+        //get the number of the button and send the last letter, because at first it's always empty
         intent.putExtra("cards", String.valueOf(buttonName.charAt(buttonName.length() - 1)));
         startActivity(intent);
     }

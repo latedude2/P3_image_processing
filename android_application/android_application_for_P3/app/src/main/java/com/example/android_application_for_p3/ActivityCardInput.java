@@ -11,13 +11,10 @@ import android.widget.ImageView;
 public class ActivityCardInput extends AppCompatActivity {
 
     ImageButton confirmButton;
-
     String handCards = "";
-
     String cards = "";
     String card1 = "";
     String card2 = "";
-
     String cardIndex = "";
 
     @Override
