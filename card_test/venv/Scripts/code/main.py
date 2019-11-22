@@ -10,22 +10,17 @@ def main():
     sobel_kernel1 = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]]
     sobel_kernel2 = [[1, 2, 1], [0, 0, 0], [-1, -2, -1]]
 
-    sobel_kernel3 = [[1, 0, -1], [2, 0, -2], [1, 0, -1]]
-    sobel_kernel4 = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]]
-
     # preparing a blank canvas the image can be drawn on
     img1 = manualGrey(img)
 
     img2 = applySingleKernel(img1, gaussian_kernel(kernelSize,1))
 
     img3 = applyDoubleKernel(img2, sobel_kernel1, sobel_kernel2)
-    img4 = applyDoubleKernel(img2, sobel_kernel3, sobel_kernel4)
 
-    img5 = combineEdges(img3, img4)
 
-    img5.show()
+    img3.show()
 
-    del img, img2, img3, img4, img5  # deleting afterwards to save memory space
+    del img, img2, img3  # deleting afterwards to save memory space
 
 # calculates the values of each kernel necessary for the blur, based off the gaussian formula (its a really long formula)
 def gaussian_kernel(size, sigma):
@@ -88,11 +83,8 @@ def applySingleKernel(img, kernel):
 def applyDoubleKernel(img, kernel1, kernel2):
     img2 = Image.new("RGB", img.size)
     draw = ImageDraw.Draw(img2)
-
-    # the offset prevents errors from border pixels
-    offset = len(kernel1) // 2
-    # loading the image's pixels
-    input_pixels = img.load()
+    offset = len(kernel1) // 2  # the offset prevents errors from border pixels
+    input_pixels = img.load()  # loading the image's pixels
 
     # cycling through the pixels one by one
     for x in range(offset, img.width - offset):
@@ -111,9 +103,12 @@ def applyDoubleKernel(img, kernel1, kernel2):
                     acc[1] += pixel[1] * (kernel1[a][b] + kernel2[a][b])
                     acc[2] += pixel[2] * (kernel1[a][b] + kernel2[a][b])
 
+                    # Correcting for negative values, for when the edge goes opposite
+                    for i in range(3):
+                        if (acc[i] < 0):
+                            acc[i] = -acc[i]
             # applying the newly calculated pixel to the canvas
             draw.point((x, y), (int(acc[0]), int(acc[1]), int(acc[2])))
-
     return img2
 
 def combineEdges(img1, img2):
