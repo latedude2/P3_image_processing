@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/guideline_card_top"
-        app:layout_constraintGuide_percent="0.665"
+        app:layout_constraintGuide_percent="0.69"
         android:orientation="horizontal"
         />
 
@@ -124,7 +124,8 @@
         app:layout_constraintBottom_toBottomOf="@id/guideline_card_bottom"
         app:layout_constraintEnd_toEndOf="@id/guideline_card_one_two"
         app:layout_constraintStart_toStartOf="@id/guideline_card_left"
-        app:layout_constraintTop_toTopOf="@+id/guideline_card_top" />
+        app:layout_constraintTop_toTopOf="@+id/guideline_card_top"
+        android:src="@drawable/d3"/>
 
     <ImageView
         android:id="@+id/card2"
@@ -133,7 +134,8 @@
         app:layout_constraintBottom_toBottomOf="@id/guideline_card_bottom"
         app:layout_constraintEnd_toEndOf="@id/guideline_two_three"
         app:layout_constraintStart_toStartOf="@id/guideline_card_one_two"
-        app:layout_constraintTop_toTopOf="@id/guideline_card_top" />
+        app:layout_constraintTop_toTopOf="@id/guideline_card_top"
+        android:src="@drawable/d3"/>
 
     <ImageView
         android:id="@+id/card3"
@@ -142,7 +144,8 @@
         app:layout_constraintBottom_toBottomOf="@id/guideline_card_bottom"
         app:layout_constraintEnd_toEndOf="@id/guideline_three_four"
         app:layout_constraintStart_toStartOf="@id/guideline_two_three"
-        app:layout_constraintTop_toTopOf="@id/guideline_card_top" />
+        app:layout_constraintTop_toTopOf="@id/guideline_card_top"
+        android:src="@drawable/d3"/>
 
     <ImageView
         android:id="@+id/card4"
@@ -151,7 +154,8 @@
         app:layout_constraintBottom_toBottomOf="@id/guideline_card_bottom"
         app:layout_constraintEnd_toEndOf="@id/guideline_card_four_five"
         app:layout_constraintStart_toEndOf="@id/guideline_three_four"
-        app:layout_constraintTop_toTopOf="@id/guideline_card_top" />
+        app:layout_constraintTop_toTopOf="@id/guideline_card_top"
+        android:src="@drawable/d3"/>
 
     <ImageView
         android:id="@+id/card5"
@@ -160,7 +164,8 @@
         app:layout_constraintBottom_toBottomOf="@id/guideline_card_bottom"
         app:layout_constraintEnd_toStartOf="@id/guideline_card_right"
         app:layout_constraintStart_toEndOf="@id/guideline_card_four_five"
-        app:layout_constraintTop_toTopOf="@+id/guideline_card_top" />
+        app:layout_constraintTop_toTopOf="@+id/guideline_card_top"
+        android:src="@drawable/d3"/>
 
     <TextView
         android:id="@+id/combination_text"
