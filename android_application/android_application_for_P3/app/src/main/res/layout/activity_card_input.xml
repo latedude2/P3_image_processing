@@ -29,6 +29,13 @@
         android:orientation="horizontal" />
 
     <androidx.constraintlayout.widget.Guideline
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline_button_top"
+        app:layout_constraintGuide_percent="0.7"
+        android:orientation="horizontal" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_vertical_left"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,6 +56,13 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.8" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_vertical_button_right"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.91" />
+
     <TextView
         android:id="@+id/InstructionText"
         android:layout_width="wrap_content"
@@ -65,21 +79,34 @@
         android:id="@+id/card1"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:onClick="onCardClick"
+        android:src="@drawable/card_back"
         app:layout_constraintBottom_toTopOf="@+id/guideline_card_bottom"
         app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_middle"
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical_left"
-        app:layout_constraintTop_toTopOf="@+id/guideline_card_top"
-        app:srcCompat="@drawable/c2" />
+        app:layout_constraintTop_toTopOf="@+id/guideline_card_top" />
 
     <ImageView
         android:id="@+id/card2"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:onClick="onCardClick"
+        android:src="@drawable/card_back"
         app:layout_constraintBottom_toTopOf="@+id/guideline_card_bottom"
         app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_right"
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical_middle"
-        app:layout_constraintTop_toTopOf="@+id/guideline_card_top"
-        app:srcCompat="@drawable/c3" />
+        app:layout_constraintTop_toTopOf="@+id/guideline_card_top" />
+
+    <ImageButton
+        android:id="@+id/confirm_button"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="onConfirmClick"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_card_bottom"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_vertical_button_right"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical_right"
+        app:layout_constraintTop_toTopOf="@+id/guideline_button_top"
+        app:srcCompat="@android:drawable/ic_menu_send" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

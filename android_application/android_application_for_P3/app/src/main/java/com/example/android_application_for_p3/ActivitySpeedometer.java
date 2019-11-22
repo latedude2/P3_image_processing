@@ -94,8 +94,8 @@ public class ActivitySpeedometer extends AppCompatActivity {
                     //if it's something else, message is sent to the CombinationChecker and RankChecker and stuff done to display the info
                     final String message = input.readLine();
                     if (!message.equals("nothin")) {
-                        combinationChecker = new CombinationChecker("5 2S5S6S8SjS 1800");
-                        rankChecker = new RankChecker("5 2S5S6S8SjS 1800");
+                        combinationChecker = new CombinationChecker("5 2S5S6S8SJS 1800");
+                        rankChecker = new RankChecker("5 2S5S6S8SJS 1800");
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

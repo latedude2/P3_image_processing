@@ -8,8 +8,10 @@ import android.view.View;
 
 public class ActivitySetValue extends AppCompatActivity {
 
-    String handCards = ""; //hand cards to send to the server (e.g. "5S8H", which is 5 of spades and 8 of hearts)
-
+    String card1 = "";
+    String card2 = "";
+    String cards = ""; //hand cards to send to the server (e.g. "5S8H", which is 5 of spades and 8 of hearts)
+    String cardIndex = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,23 +23,25 @@ public class ActivitySetValue extends AppCompatActivity {
         // if it was made from the intent (another activity called it), then take the info about handCards
         if (getIntent() != null){
             Intent intentBefore = getIntent();
-            handCards = intentBefore.getStringExtra("handCards");
+            cards = intentBefore.getStringExtra("cards");
+            card1 = getIntent().getStringExtra("card1");
+            card2 = getIntent().getStringExtra("card2");
+            cardIndex = intentBefore.getStringExtra("cardIndex");
         }
-
     }
     public void onValueButtonClick(View view){
         //get the name of that button (e.g. "button_1")
         String buttonName = getResources().getResourceName(view.getId());
         //get the number of the button
         String value = String.valueOf(buttonName.charAt(buttonName.length() - 1));
-        if (handCards == null)
-            handCards = value;
-        else
-            handCards += value;
+        cards += value;
+
+        Intent intent = new Intent(this, ActivityCardInput.class);
         //goes to the "select suit" activity
-        startActivity(
-                new Intent(this, ActivitySetSuits.class)
-                        .putExtra("handCards", handCards)
-        );
+        intent.putExtra("cards", cards);
+        intent.putExtra("card1", card1);
+        intent.putExtra("card2", card2);
+        intent.putExtra("cardIndex", cardIndex);
+        startActivity(intent);
     }
 }
