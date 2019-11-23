@@ -31,6 +31,7 @@ public class ActivityCardInput extends AppCompatActivity {
             Intent intentBefore = getIntent();
             cards = intentBefore.getStringExtra("cards");
             cardIndex = intentBefore.getStringExtra("cardIndex");
+            assert cardIndex != null;
             if (cardIndex.equals("1")){
                 card1 = cards;
                 card2 = intentBefore.getStringExtra("card2");

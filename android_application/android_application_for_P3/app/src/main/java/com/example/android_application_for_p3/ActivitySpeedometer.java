@@ -3,11 +3,8 @@ package com.example.android_application_for_p3;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
