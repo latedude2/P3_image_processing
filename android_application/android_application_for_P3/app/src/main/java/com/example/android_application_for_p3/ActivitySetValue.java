@@ -20,7 +20,7 @@ public class ActivitySetValue extends AppCompatActivity {
         // setup the style to hide not needed bars and fill the background color
         new StyleSetup(this, getSupportActionBar());
 
-        // if it was made from the intent (another activity called it), then take the info about handCards
+        // take the extras from the previous activity
         Intent intentBefore = getIntent();
         cards = intentBefore.getStringExtra("cards");
         card1 = intentBefore.getStringExtra("card1");
@@ -31,7 +31,7 @@ public class ActivitySetValue extends AppCompatActivity {
     public void onValueButtonClick(View view){
         //get the name of that button (e.g. "button_j")
         String buttonName = getResources().getResourceName(view.getId());
-        //get the number of the button
+        //get the number of the button and add to what is now there
         cards += String.valueOf(buttonName.charAt(buttonName.length() - 1));
 
         Intent intent = new Intent(this, ActivityCardInput.class);

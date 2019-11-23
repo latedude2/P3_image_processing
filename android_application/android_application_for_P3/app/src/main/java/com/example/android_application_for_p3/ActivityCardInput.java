@@ -5,8 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.*;
 
 public class ActivityCardInput extends AppCompatActivity {
 
@@ -29,52 +28,66 @@ public class ActivityCardInput extends AppCompatActivity {
 
         if (getIntent().getStringExtra("cards") != null){
             Intent intentBefore = getIntent();
-            cards = intentBefore.getStringExtra("cards");
-            cardIndex = intentBefore.getStringExtra("cardIndex");
-            assert cardIndex != null;
-            if (cardIndex.equals("1")){
-                card1 = cards;
-                card2 = intentBefore.getStringExtra("card2");
-                if(!card2.equals(""))
+            cards = intentBefore.getStringExtra("cards"); // takes the name of currently chosen card
+            cardIndex = intentBefore.getStringExtra("cardIndex"); // takes the card, which should be changed
+            if (cardIndex.equals("1")){ // checks if that card is on the left
+                //card1 = cards; // if yes, card on the left takes the name of the chosen card
+                card2 = intentBefore.getStringExtra("card2"); // card's on the right value is taken
+                if(!card2.equals("")) // if card on the right is not empty it displays the card which was there before
                     displayCard("2", card2);
-                displayCard(cardIndex, card1);
-                handCards = card1 + card2;
+                if(cards.equals(card2)){
+                    displayCard(cardIndex, "card_back");
+                    Toast.makeText(this, "Incorrect choice. Try again", Toast.LENGTH_LONG).show();
+                } else {
+                    card1 = cards;
+                    displayCard(cardIndex, card1); // the card which was now chosen is displayed
+                    handCards = card1 + card2; // handCards is updated
+                }
+
+                // kind of explained but from the other card above ^^^^^^^^^^^^
             } else if (cardIndex.equals("2")){
-                card2 = cards;
                 card1 = intentBefore.getStringExtra("card1");
                 if(!card1.equals(""))
                     displayCard("1", card1);
-                displayCard(cardIndex, card2);
-                handCards = card1 + card2;
+                if (cards.equals(card1)){
+                    displayCard(cardIndex, "card_back");
+                    Toast.makeText(this, "Incorrect choice. Try again", Toast.LENGTH_LONG).show();
+                } else {
+                    card2 = cards;
+                    displayCard(cardIndex, card2);
+                    handCards = card1 + card2;
+                }
+
             }
         }
-
         if (handCards.length() == 4){
             confirmButton.setVisibility(View.VISIBLE);
         }
     }
 
     void displayCard(String cardIndex, String card){
-        String viewName = "card" + cardIndex;
-        int idOfView = getResources().getIdentifier(viewName, "id", getPackageName());
-        ImageView imageView = findViewById(idOfView);
-        int idOfImage = getResources().getIdentifier(card, "drawable", getPackageName());
-        imageView.setImageResource(idOfImage);
+        //take the view by it's name and index
+        ImageView imageView = findViewById(
+                getResources().getIdentifier("card" + cardIndex, "id", getPackageName()));
+        //display the given card image
+        imageView.setImageResource(
+                getResources().getIdentifier(card, "drawable", getPackageName()));
     }
 
     public void onCardClick(View view){
         Intent intent = new Intent(this, ActivitySetSuits.class);
         String viewName = getResources().getResourceName(view.getId());
         cardIndex = String.valueOf(viewName.charAt(viewName.length()-1));
-        intent.putExtra("cardIndex", cardIndex);
-        intent.putExtra("card1", card1);
-        intent.putExtra("card2", card2);
-        startActivity(intent);
+        //sending to the other activity
+        intent.putExtra("cardIndex", cardIndex); // card index, which was chosen by the user
+        intent.putExtra("card1", card1); // info about card on the left
+        intent.putExtra("card2", card2); // info about card on the right
+        startActivity(intent); // go to the next activity
     }
 
     public void onConfirmClick(View view){
         Intent intent = new Intent(this, ActivitySpeedometer.class);
-        intent.putExtra("handCards", handCards);
+        intent.putExtra("handCards", handCards); // send the hand card to the speedometer activity
         startActivity(intent);
     }
 }

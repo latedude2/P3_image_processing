@@ -9,8 +9,6 @@ public class ActivitySetSuits extends AppCompatActivity {
 
     String card1 = "";
     String card2 = "";
-
-    String card = ""; //hand cards to send to the server (e.g. "5S8H", which is 5 of spades and 8 of hearts)
     String cardIndex = "";
 
     @Override
@@ -21,6 +19,7 @@ public class ActivitySetSuits extends AppCompatActivity {
         // setup the style to hide not needed bars and fill the background color
         new StyleSetup(this, getSupportActionBar());
 
+        //get the Extras from the previous activity
         cardIndex = getIntent().getStringExtra("cardIndex");
         card1 = getIntent().getStringExtra("card1");
         card2 = getIntent().getStringExtra("card2");
@@ -35,7 +34,8 @@ public class ActivitySetSuits extends AppCompatActivity {
         //get the name of that button (e.g. "suith", which is suit button for hearts)
         String buttonName = getResources().getResourceName(view.getId());
         //get the number of the button and send the last letter, because at first it's always empty
-        intent.putExtra("cards", String.valueOf(buttonName.charAt(buttonName.length() - 1)));
+        intent.putExtra("cards", String.valueOf(
+                buttonName.charAt(buttonName.length() - 1)));
         startActivity(intent);
     }
 }

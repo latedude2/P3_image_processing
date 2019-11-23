@@ -3,34 +3,34 @@ package com.example.android_application_for_p3;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.os.Bundle;
-import android.os.Handler;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.content.*;
+import android.os.*;
+import android.view.View;
+import android.widget.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 @SuppressLint("SetTextI18n")    //This line is used to avoid IDE complaining about setText method
 public class ActivitySpeedometer extends AppCompatActivity {
+    // to handle threads to go from other threads to the main thread
+    final Handler handler = new Handler();
 
-    final Handler handler = new Handler(); // to handle threads to go from other threads to the main thread
-
+    //input and output to communicate to the server
     private PrintWriter output;
     private BufferedReader input;
 
     String handCards = ""; //hand cards to send to the server (e.g. "5S8H", which is 5 of spades and 8 of hearts)
 
-    CombinationChecker combinationChecker;
-    RankChecker rankChecker;
+    // used to decrypt the string sent from server
+    CombinationChecker combinationChecker; // gives the combination and cards to display
+    RankChecker rankChecker; // gives an angle of how much the speedometer should be rotated
 
     ImageView speedometerView;
     TextView combinationTextView;
+
+    boolean roundIsOn; // used to control the threads, so when the round needs to repeat, all threads should be killed
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +39,12 @@ public class ActivitySpeedometer extends AppCompatActivity {
 
         // setup the style to hide not needed bars and fill the background color
         new StyleSetup(this, getSupportActionBar());
+        roundIsOn = true;
 
         speedometerView = findViewById(R.id.arrow_disk);
         combinationTextView = findViewById(R.id.combination_text);
 
+        // connect to the server
         new Thread(new ConnectToServerThread()).start();
 
         handCards = getIntent().getStringExtra("handCards"); // use for taking the info to here
@@ -53,66 +55,96 @@ public class ActivitySpeedometer extends AppCompatActivity {
             public void run() {
                 handler.post(new Runnable() {
                     public void run() {
-                        // message sent each 1 second to the server
-                            new Thread(new SendMessageThread(handCards)).start();
+                        // message sent each 1 second to the server if the round is still on
+                        if (roundIsOn) {
+                            new Thread(new SendMessageThread()).start();
+                        }
                     }
                 });
             }
         }, 1000, 1000);
     }
 
+    // when the "next round" button is clicked
+    public void onNextRoundClick(View view){
+        roundIsOn = false; //destroys all of the threads
+        new Thread(new NextRoundThread(this)).start(); // creates new thread to start a new round
+    }
+
+    //---------------------------------------------------------------------------//
+        //---------------------- CLASSES FOR THREADS ----------------------//
+    // --------------------------------------------------------------------------//
+
+    class NextRoundThread implements Runnable {
+        Context context;
+        NextRoundThread(Context context){ this.context = context; }
+        @Override
+        public void run() {
+            startActivity(new Intent(context, ActivityCardInput.class));
+        }
+    }
+
     class ConnectToServerThread implements Runnable {
         public void run() {
-            Socket socket;
-            try {
-                //create a socket
-                socket = new Socket("192.168.43.18", 12345);
-                //create input and output streams
-                output = new PrintWriter(socket.getOutputStream());
-                input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // do whatever you need with the layout views immediately after connection
-                    }
-                });
-                new Thread(new ReceiveMessageThread()).start();
-            } catch (IOException e) { System.out.println("Connection to the server failed"); }
+            if (roundIsOn) {
+                Socket socket;
+                try {
+                    //create a socket
+                    socket = new Socket("192.168.43.18", 12345);
+                    //create input and output streams
+                    output = new PrintWriter(socket.getOutputStream());
+                    input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    new Thread(new ReceiveMessageThread()).start();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // do whatever you need with the layout views immediately after connection
+                            // probably not needed
+                        }
+                    });
+                } catch (IOException e) { System.out.println("Connection to the server failed"); }
+            }
         }
     }
 
     class ReceiveMessageThread implements Runnable {
         @Override
         public void run() {
-            while (true) {
+            while (roundIsOn) {
                 try {
                     //receiving messages from the server
-                    //if message is "nothing", connection renewed to continuously check for the messages
+                    //if message is "nothing", thread is repeated to continuously check for the messages
                     //if it's something else, message is sent to the CombinationChecker and RankChecker and stuff done to display the info
-                    final String message = input.readLine();
-                    if (!message.equals("nothin")) {
-                        combinationChecker = new CombinationChecker("5 2S5S6S8SJS 1800");
-                        rankChecker = new RankChecker("5 2S5S6S8SJS 1800");
+                    String message = input.readLine();
+                    if (!message.equals("nothing")) {
+                        combinationChecker = new CombinationChecker(message); //check what is the combination and the cards to display
+                        rankChecker = new RankChecker(message); //check what is the the angle that the speedometer should be turned around
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 //do whatever needed with the views each time the message is received
-                                // probably display the rank stuff and combination stuff in the views
-                                speedometerView.setRotation(rankChecker.getCombinationAngle());
-                                combinationTextView.setText(combinationChecker.getCurrentCombination());
+                                // that should be displaying the rank, combination name and cards in the views
+                                speedometerView.setRotation(rankChecker.getCombinationAngle()); // rotate the speedometer
+                                combinationTextView.setText(combinationChecker.getCurrentCombination()); // set combination text
+
                                 for(int i = 1; i < combinationChecker.getCardAmount()+1; i++){
-                                    String viewName = "card" + i;
-                                    int idOfView = getResources().getIdentifier(viewName, "id", getPackageName());
-                                    ImageView view = findViewById(idOfView);
-                                    String cardName = combinationChecker.cardNameToViewName(i-1);
-                                    int idOfImage = getResources().getIdentifier(cardName, "drawable", getPackageName());
-                                    view.setImageResource(idOfImage);
+                                    // take the card id (from 1 up to 5) make id from it and take the needed view
+                                    ImageView view = findViewById(
+                                            getResources().getIdentifier("card" + i,
+                                                    "id",
+                                                    getPackageName()));
+                                    //display the image of the card
+                                    view.setImageResource(
+                                            getResources().getIdentifier(
+                                                    combinationChecker.cardNameToViewName(i-1),
+                                                    "drawable",
+                                                    getPackageName()));
                                 }
                             }
                         });
                     } else {
-                        System.out.println(message);
-                        new Thread(new ConnectToServerThread()).start();
+                        // if message was "nothing", then try to receive thread again
+                        new Thread(new ReceiveMessageThread()).start();
                         return;
                     }
                 } catch (IOException e) { System.out.println("Receiving message failed"); }
@@ -123,14 +155,12 @@ public class ActivitySpeedometer extends AppCompatActivity {
     //this sends initially selected cards as a String
     //first char of value + first char of suit 2x(e.g."5S7D")
     class SendMessageThread implements Runnable {
-        private String handName;
-
-        SendMessageThread(String handName) { this.handName = handName; }
-
         @Override
         public void run() {
-            output.write(handName);
-            output.flush();
+            if (roundIsOn) {
+                output.write(handCards);
+                output.flush();
+            }
         }
     }
 }

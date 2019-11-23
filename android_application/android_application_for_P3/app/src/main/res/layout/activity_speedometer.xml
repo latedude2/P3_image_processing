@@ -18,6 +18,14 @@
     <androidx.constraintlayout.widget.Guideline
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/guideline_next_round_button"
+        app:layout_constraintGuide_percent="0.2"
+        android:orientation="horizontal"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/guideline_card_top"
         app:layout_constraintGuide_percent="0.69"
         android:orientation="horizontal"
@@ -171,5 +179,15 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline_card_top"
         app:layout_constraintEnd_toStartOf="@+id/guideline_card_four_five"
         app:layout_constraintStart_toStartOf="@+id/guideline_card_one_two" />
+
+    <Button
+        android:id="@+id/next_round_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onNextRoundClick"
+        android:text="Next round"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_next_round_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline_card_right" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
