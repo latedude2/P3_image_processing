@@ -26,14 +26,12 @@ def splitIntoCardImages(img):
 
     grayScale = cv2.cvtColor(threshImg, cv2.COLOR_BGR2GRAY)
 
-    #cv2.imshow("GrayScale", grayScale)
-
     c = cv2.findContours(grayScale.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     c = imutils.grab_contours(c)
 
     for i in range(len(c)):
         perimeter = cv2.arcLength(c[i], True)
-        if perimeter > 800:
+        if perimeter > 500:
             extLeft = tuple(c[i][c[i][:, :, 0].argmin()][0])
             extRight = tuple(c[i][c[i][:, :, 0].argmax()][0])
             extTop = tuple(c[i][c[i][:, :, 1].argmin()][0])
@@ -51,14 +49,14 @@ def splitIntoCardImages(img):
 
 #returns 2 thresholded images suit, number of the card
 #has to be given colored image of the corner with the suit blob on the left and number blob on right side of image
-def splitCornerToSuitAndNumber(img):
+def splitCornerToSuitAndNumber(img, isRed):
 
     images = []
     ## convert to hsv
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    if checkRed(img, grey):
+    if isRed:
         minSaturation = 100
         maxSaturation = 255
         mask1 = cv2.inRange(hsv, (170, minSaturation, 25), (180, maxSaturation, 255))
@@ -73,17 +71,18 @@ def splitCornerToSuitAndNumber(img):
         memes, threshImg = cv2.threshold(red, 0, 255, cv2.THRESH_BINARY_INV)
         threshImg = cv2.bitwise_not(threshImg)
 
+        #cv2.imshow("Red Thresh",threshImg)
+
     else:
         memes, threshImg = cv2.threshold(grey, 70, 255, cv2.THRESH_BINARY_INV)
         threshImg = cv2.cvtColor(threshImg, cv2.COLOR_GRAY2BGR)
 
-    #cv2.imshow("Corner threshold", threshImg)
+    cv2.imshow("Corner threshold", threshImg)
 
     grayScale = cv2.cvtColor(threshImg, cv2.COLOR_BGR2GRAY)
 
     c = cv2.findContours(grayScale.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     c = imutils.grab_contours(c)
-    #print(len(c))
     for i in range(len(c)):
         perimeter = cv2.arcLength(c[i], True)
         if perimeter > 30 and perimeter < 500:
@@ -92,12 +91,15 @@ def splitCornerToSuitAndNumber(img):
             extTop = tuple(c[i][c[i][:, :, 1].argmin()][0])
             extBot = tuple(c[i][c[i][:, :, 1].argmax()][0])
 
-            # Used to flatted the array containing the co-ordinates of the vertices.
-            TM = np.float32([[1, 0, -extLeft[0]], [0, 1, -extTop[1]]])
-            imgT = cv2.warpAffine(threshImg, TM, ((extRight[0] - extLeft[0]) + 2, (extBot[1] - extTop[1]) + 2))
+            if(extTop[1] > 2):      #we dont want objects that are touching image top - this causes problems with cards like 9 and 10
+                #print("contourTop: " + str(extTop[1]) + " image top: " + str(img.shape[1]))
 
-            #cv2.imshow("Single card pls" + str(i), imgT)
-            images.append(imgT)
+                # Used to flatted the array containing the co-ordinates of the vertices.
+                TM = np.float32([[1, 0, -extLeft[0]], [0, 1, -extTop[1]]])
+                imgT = cv2.warpAffine(threshImg, TM, ((extRight[0] - extLeft[0]) + 2, (extBot[1] - extTop[1]) + 2))
+
+                #cv2.imshow("Single card pls" + str(i), imgT)
+                images.append(imgT)
 
     return findTwoBiggestImages(images)
 

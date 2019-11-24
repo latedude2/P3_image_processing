@@ -16,7 +16,7 @@ def countBlobs(original, isRed):
     params.minArea = 500  # min and max areas of pixels for 1 blob
     params.maxArea = 10000
 
-    params.filterByColor = True  # to not care about the color
+    params.filterByColor = True  # care about the color
     params.filterByCircularity = False  # to not care about circularity (more circular = bigger angles)
     params.filterByConvexity = False  # to not care about convexity
     params.filterByInertia = False  # doesn't care how much like a circle it is (difference in radiusw)
@@ -45,9 +45,26 @@ def countBlobs(original, isRed):
         im_with_keypoints = cv2.drawKeypoints(threshImg, keypoints, np.array([]), (0, 0, 255),
                                               cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
-        cv2.imshow("Detected Blobs: ", im_with_keypoints)
+        cv2.imshow("Detected red  Blobs: ", im_with_keypoints)
 
         blobCount = len(keypoints)
 
+    else:
+        memes, threshImg = cv2.threshold(original, 100, 255, cv2.THRESH_BINARY_INV)
 
-    return blobCount
+        grayScale = cv2.cvtColor(threshImg, cv2.COLOR_BGR2GRAY)
+        params.blobColor = 255
+
+        detector = cv2.SimpleBlobDetector_create(params)  # making the detector by the parameters set before
+        keypoints = detector.detect(threshImg)  # detecting the blobs
+
+        im_with_keypoints = cv2.drawKeypoints(threshImg, keypoints, np.array([]), (0, 0, 255),
+                                              cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
+        cv2.imshow("Detected black Blobs: ", im_with_keypoints)
+
+        blobCount = len(keypoints)
+
+    print(blobCount)
+
+    return str(blobCount)
