@@ -1,4 +1,4 @@
-#This file is for testing if web cam setup is not available
+#This file is for testing if web cam setup is not available, way OUTDATED
 import cv2
 import numpy as np
 from ImageSplit import *
