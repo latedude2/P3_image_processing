@@ -24,7 +24,7 @@ def templateMatch(original, template):
 
         # print(cv2.countNonZero(b)) #the difference in blue channel
 
-        cv2.imshow("subtracted images", difference)
+        #cv2.imshow("subtracted images", difference)
 
         # countNonZero - counts the empty spots in the array of pixels (determines white pixels)
         # less white pixels means pictures are more likely to be equal
@@ -38,25 +38,27 @@ def templateMatch(original, template):
     print("Error: wrong image given to template match")
 
 
-def determineNumber(numberImage):
+def determineNumber(numberImage, isFaceCard):
     templateA = cv2.imread("../Images/Templates/A.png")
     templateK = cv2.imread("../Images/Templates/K.png")
     templateQ = cv2.imread("../Images/Templates/Q.png")
     templateJ = cv2.imread("../Images/Templates/J.png")
     number = "CARD NUMBER NOT FOUND "
     negativeProbability = 999999
-    if (templateMatch(numberImage, templateA) < negativeProbability):
-        negativeProbability  = templateMatch(numberImage, templateA)
-        number = "A"
-    if (templateMatch(numberImage, templateK) < negativeProbability):
-        negativeProbability = templateMatch(numberImage, templateK)
-        number = "K"
-    if (templateMatch(numberImage, templateQ) < negativeProbability):
-        negativeProbability = templateMatch(numberImage, templateQ)
-        number = "Q"
-    if (templateMatch(numberImage, templateJ) < negativeProbability):
-        negativeProbability = templateMatch(numberImage, templateJ)
-        number = "J"
+    if not isFaceCard:
+        if (templateMatch(numberImage, templateA) < negativeProbability):
+            negativeProbability  = templateMatch(numberImage, templateA)
+            number = "A"
+    else:
+        if (templateMatch(numberImage, templateK) < negativeProbability):
+            negativeProbability = templateMatch(numberImage, templateK)
+            number = "K"
+        if (templateMatch(numberImage, templateQ) < negativeProbability):
+            negativeProbability = templateMatch(numberImage, templateQ)
+            number = "Q"
+        if (templateMatch(numberImage, templateJ) < negativeProbability):
+            negativeProbability = templateMatch(numberImage, templateJ)
+            number = "J"
 
     return number
 
@@ -89,7 +91,7 @@ def prepareImageForTemplateMatching(suitImage, numberImage):
         #print("This should be 1: " + str(len(c)))
         for i in range(len(c)):
             perimeter = cv2.arcLength(c[i], True)
-            if perimeter > 30 and perimeter < 500:
+            if perimeter > 30 and perimeter < 500:      #These are important to avoid holes in letters (A, Q)
                 extLeft = tuple(c[i][c[i][:, :, 0].argmin()][0])
                 extRight = tuple(c[i][c[i][:, :, 0].argmax()][0])
                 extTop = tuple(c[i][c[i][:, :, 1].argmin()][0])
@@ -99,9 +101,9 @@ def prepareImageForTemplateMatching(suitImage, numberImage):
                 TM = np.float32([[1, 0, -extLeft[0]], [0, 1, -extTop[1]]])
                 imgT = cv2.warpAffine(images[j], TM, ((extRight[0] - extLeft[0]), (extBot[1] - extTop[1])))
 
-                # cv2.imshow("Single card pls" + str(i), imgT)
+                #cv2.imshow("Single card pls" + str(i), imgT)
                 newImages.append(imgT)
-                #cv2.imshow("Image: " + str(j) + " " + str(i) ,imgT)
+                cv2.imshow("Image: " + str(j) + " " + str(i) ,imgT)
 
     return findTwoBiggestImages(newImages)
 

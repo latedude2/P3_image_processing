@@ -9,11 +9,13 @@ from openCV_version.venv.Scripts.finalCode.DetectRed import checkRed
 def splitIntoCardImages(img):
     images = []
 
+    blur = cv2.GaussianBlur(img, (9, 9), 0)
+
     ## convert to hsv
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    hsv = cv2.cvtColor(blur, cv2.COLOR_BGR2HSV)
 
     ## mask of green (36,25,25) ~ (86, 255,255)
-    mask = cv2.inRange(hsv, (36, 25, 25), (70, 255, 255))
+    mask = cv2.inRange(hsv, (36, 25, 5), (70, 255, 255))
 
     ## slice the green
     imask = mask > 0
@@ -24,14 +26,14 @@ def splitIntoCardImages(img):
 
     grayScale = cv2.cvtColor(threshImg, cv2.COLOR_BGR2GRAY)
 
-    grayScale = cv2.GaussianBlur(grayScale, (9, 9), 0)
+    #cv2.imshow("GrayScale", grayScale)
 
     c = cv2.findContours(grayScale.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     c = imutils.grab_contours(c)
 
     for i in range(len(c)):
         perimeter = cv2.arcLength(c[i], True)
-        if perimeter > 500:
+        if perimeter > 800:
             extLeft = tuple(c[i][c[i][:, :, 0].argmin()][0])
             extRight = tuple(c[i][c[i][:, :, 0].argmax()][0])
             extTop = tuple(c[i][c[i][:, :, 1].argmin()][0])
@@ -50,6 +52,7 @@ def splitIntoCardImages(img):
 #returns 2 thresholded images suit, number of the card
 #has to be given colored image of the corner with the suit blob on the left and number blob on right side of image
 def splitCornerToSuitAndNumber(img):
+
     images = []
     ## convert to hsv
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -115,10 +118,27 @@ def findTwoBiggestImages(images):
     images.remove(biggestImage1)
     #print(len(images))
 
-    biggestImage2 = images[0]
-    for i in range(len(images)):
-        if (images[i].shape[0] * images[i].shape[1] > biggestImage2.shape[0] * biggestImage2.shape[1]):
-            biggestImage2 = images[i]
+    imagesToCheck = []
+    try:
+        for i in range(len(images)):
+            centerPixel = images[i][int(images[i].shape[1] / 2), int(images[i].shape[0] / 2)]
+            #print(centerPixel[0])
+            if(centerPixel[0]  > 0):
+                imagesToCheck.append(images[i])
+    except:
+        if False:
+            print("Failed to remove")
+
+
+
+
+    biggestImage2 = imagesToCheck[0]
+    #cv2.imshow("What is left", biggestImage2)
+    for i in range(len(imagesToCheck)):
+        centerPixel = imagesToCheck[i][int(imagesToCheck[i].shape[0]/2), int(imagesToCheck[i].shape[1]/2)]
+        #print(centerPixel[0])
+        if (imagesToCheck[i].shape[0] * imagesToCheck[i].shape[1] > biggestImage2.shape[0] * biggestImage2.shape[1]):
+            biggestImage2 = imagesToCheck[i]
 
     return biggestImage2, biggestImage1
 

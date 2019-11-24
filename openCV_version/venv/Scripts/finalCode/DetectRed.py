@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 # HSV margins for the color detection
-red_lowpart = low_low_red, up_low_red = [(0, 183, 122), (16, 255, 255)]
-red_uppart = low_up_red, up_up_red = [(170, 183, 122), (180, 255, 255)]
+red_lowpart = low_low_red, up_low_red = [(0, 40, 122), (25, 255, 255)]
+red_uppart = low_up_red, up_up_red = [(170, 40, 122), (180, 255, 255)]
 black = low_black, up_black = [(0, 0, 0), (180, 255, 56)]
 
 def checkRed(original, greyImage):
@@ -53,6 +53,8 @@ def checkColour(colour):
     # make lower and upper colour value to identify red
     low = np.array(low_low_red, dtype="uint8")
     up = np.array(up_low_red, dtype="uint8")
+
+    #print(colour)
 
     # this function scans through the image and finds the defined colour
     # all this line needed because of HSV (need to consider each part separately)

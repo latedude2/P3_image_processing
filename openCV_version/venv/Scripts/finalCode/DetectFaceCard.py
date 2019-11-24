@@ -14,6 +14,8 @@ def find_face_card(image):
     # .any() returns a boolean True if the colour is found and False if not
     if (cv2.inRange(image, low, up).any()):
         print("it's a face card because blue")
+        print(cv2.inRange(image, low, up).any())
+        return True
     else:
         # do the same with yellow colour
         low = np.array(low_yellow, dtype="uint8")
@@ -21,6 +23,8 @@ def find_face_card(image):
 
         if (cv2.inRange(image, low, up).any()):
             print("it's a face card because yellow")
+            return True
         else:
             # if non of those colours are found it means that it's not a face card
             print("not a face card")
+            return False

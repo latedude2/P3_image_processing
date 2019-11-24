@@ -92,33 +92,23 @@ def cardCropped(rotated):
 
     ## convert to hsv
     hsv = cv2.cvtColor(rotated, cv2.COLOR_BGR2HSV)
-
+    #This code seems to break finding of suit and number.
     ## mask of green (36,25,25) ~ (86, 255,255)
     mask = cv2.inRange(hsv, (36, 25, 25), (70, 255, 255))
 
-    ## slice the green
+    ## slice the green, we don't want the background be kept in the image, but it should not exist in contour finding
     imask = mask > 0
     green = np.zeros_like(rotated, np.uint8)
     green[imask] = rotated[imask]
 
-    rotated = rotated - green
+    rotatedNoGreen = rotated - green
 
-    #cv2.imshow("After green remove", rotated)
-
-    gray = cv2.cvtColor(rotated, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(rotatedNoGreen, cv2.COLOR_BGR2GRAY)
 
     memes, threshImg = cv2.threshold(gray, 5, 255, cv2.THRESH_BINARY)
 
-    #cv2.imshow("After green remove  + thresh ", threshImg)
-
-    #edge = cv2.Canny(threshImg, retval, retval)
-
-    #cv2.imshow("After Canny", edge)
-
     # finding the countours based on the edges
     c, hierchy = cv2.findContours(threshImg, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-
-
 
     for i in range(len(c)):
         perimeter = cv2.arcLength(c[i], True)
