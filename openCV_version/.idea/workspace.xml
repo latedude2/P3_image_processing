@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1bc7527a-0f74-48fe-bb4d-5de6390c1ff6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/venv/Scripts/Images/corner1.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/code/compare_images.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/code/compare_images.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,7 +24,8 @@
   </component>
   <component name="ProjectId" id="1T9FHxNxpcHmWHQiKw4MDTAIpnr" />
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -46,8 +49,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1572864518527</updated>
+      <workItem from="1574686670907" duration="12000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
