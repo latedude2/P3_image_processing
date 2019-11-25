@@ -13,9 +13,9 @@ for i in glob.glob("../Images/Templates/*"): #Return a list of path names in the
     template_img = cv2.imread(i)
     all_templates.append(template_img)
 
-for template, card_name in zip(all_templates, card_name):  # zip allows to work with more than 1 array at a time
+for template, card_name in zip(all_templates, card_name):  #zip allows to work with more than 1 array/list at a time
 
-    image1 = original.shape  # gives information about size and channels of the images (3 for b g r). Optional.
+    image1 = original.shape  #gives information about size and channels of the images (3 for b g r). Optional.
     image2 = template.shape
 
     print(image1)
@@ -33,7 +33,10 @@ for template, card_name in zip(all_templates, card_name):  # zip allows to work 
 
         #countNonZero - counts the empty spots in the array of pixels (determines white pixels)
         #less white pixels means pictures are more likely to be equal
-        if cv2.countNonZero(b) <= 2000: #only needs info from one channel
+
+        whitePixelThreshold = 2000;
+
+        if cv2.countNonZero(b) <= whitePixelThreshold: #only needs info from one channel, the images are binary
             print("equal")
             print("Matching card " + card_name)
             card = card_name
