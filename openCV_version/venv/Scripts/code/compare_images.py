@@ -2,7 +2,8 @@ import cv2
 import glob #library that look for a list of files on the filesystem with names matching a pattern - template images
 
 
-original = cv2.imread('../Images/Templates/Q.png') #captured image, got from the camera
+original_resized = cv2.imread('../Images/corner1.png') #captured image, got from the camera
+original = cv2.resize(original_resized,(75, 110))
 
 all_templates = [] #array to store template images
 card_name = ["A", "J", "K", "Q"]
@@ -12,10 +13,9 @@ for i in glob.glob("../Images/Templates/*"): #Return a list of path names in the
     template_img = cv2.imread(i)
     all_templates.append(template_img)
 
+for template, card_name in zip(all_templates, card_name):  # zip allows to work with more than 1 array at a time
 
-for template, card_name in zip(all_templates, card_name): #zip allows to work with more than 1 array at a time
-
-    image1 = original.shape #gives information about size and channels of the images (3 for b g r). Optional.
+    image1 = original.shape  # gives information about size and channels of the images (3 for b g r). Optional.
     image2 = template.shape
 
     print(image1)
@@ -33,7 +33,7 @@ for template, card_name in zip(all_templates, card_name): #zip allows to work wi
 
         #countNonZero - counts the empty spots in the array of pixels (determines white pixels)
         #less white pixels means pictures are more likely to be equal
-        if cv2.countNonZero(b) <= 700: #only needs info from one channel
+        if cv2.countNonZero(b) <= 2000: #only needs info from one channel
             print("equal")
             print("Matching card " + card_name)
             card = card_name
