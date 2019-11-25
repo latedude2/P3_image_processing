@@ -6,6 +6,8 @@ red_uppart = low_up_red, up_up_red = [(170, 40, 122), (180, 255, 255)]
 black = low_black, up_black = [(0, 0, 0), (180, 255, 56)]
 
 def checkRed(original):
+#Returns true if image has red BLOBs
+
     median = cv2.medianBlur(original, 5)
 
     # making an object to hold parameters of the blob detection
@@ -43,7 +45,6 @@ def checkRed(original):
     keypoints = detector.detect(threshImg)  # detecting the blobs
 
     #im_with_keypoints = cv2.drawKeypoints(threshImg, keypoints, np.array([]), (0, 0, 255),cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-
     #cv2.imshow("Detected red  Blobs: ", im_with_keypoints)
 
     blobCount = len(keypoints)

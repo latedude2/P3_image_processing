@@ -4,8 +4,7 @@ import numpy as np
 from ImageSplit import *
 
 def templateMatch(original, template):
-    image1 = original.shape  # gives information about size and channels of the images (3 for b g r). Optional.
-    image2 = template.shape
+#returns how many pixels don't match
 
     width = int(template.shape[1])
     height = int(template.shape[0])
@@ -28,17 +27,14 @@ def templateMatch(original, template):
 
         # countNonZero - counts the empty spots in the array of pixels (determines white pixels)
         # less white pixels means pictures are more likely to be equal
-        nonMatchingPixelMax = 1500
         return cv2.countNonZero(b)
-        if cv2.countNonZero(b) <= nonMatchingPixelMax and cv2.countNonZero(g) <= nonMatchingPixelMax and cv2.countNonZero(r) <= nonMatchingPixelMax:
-            return True
-        else:
-            return False
 
     print("Error: wrong image given to template match")
 
 
 def determineNumber(numberImage, isFaceCard):
+#Finds which of the four letters the card is based on amount of pixels that don't match
+
     templateA = cv2.imread("../Images/Templates/A.png")
     templateK = cv2.imread("../Images/Templates/K.png")
     templateQ = cv2.imread("../Images/Templates/Q.png")
@@ -63,25 +59,26 @@ def determineNumber(numberImage, isFaceCard):
     return number
 
 def prepareImageForTemplateMatching(suitImage, numberImage):
+#prepares images for template matching and suit analysis by rotating and cropping them
+
     images = []
     newImages = []
     #cv2.imshow("Suit image", suitImage)
     #cv2.imshow("Number image", numberImage)
 
+    #rotate nubmer image
     TM = cv2.getRotationMatrix2D((numberImage.shape[0] / 2, numberImage.shape[1] / 2), -90, 1)
     rotated = cv2.warpAffine(numberImage, TM, (numberImage.shape[0] * 2, numberImage.shape[1] * 2))
 
-    #cv2.imshow("Rotated number image", rotated)
-
     images.append(rotated)
 
+    # rotate suit image
     TM = cv2.getRotationMatrix2D((suitImage.shape[0] / 2, suitImage.shape[1] / 2), -90, 1.0)
     rotated = cv2.warpAffine(suitImage, TM, (suitImage.shape[1], suitImage.shape[1]))
 
-    #cv2.imshow("Rotated image 2", rotated)
-
     images.append(rotated)
 
+    #Crop both images
     for j in range(len(images)):
         grayScale = cv2.cvtColor(images[j], cv2.COLOR_BGR2GRAY)
 
@@ -103,7 +100,9 @@ def prepareImageForTemplateMatching(suitImage, numberImage):
 
                 #cv2.imshow("Single card pls" + str(i), imgT)
                 newImages.append(imgT)
-                cv2.imshow("Image: " + str(j) + " " + str(i) ,imgT)
+                #cv2.imshow("Image: " + str(j) + " " + str(i) ,imgT)
 
+
+    #We return the bigger image first
     return findTwoBiggestImages(newImages)
 

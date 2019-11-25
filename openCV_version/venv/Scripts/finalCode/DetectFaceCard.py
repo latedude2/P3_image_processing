@@ -2,6 +2,8 @@ import numpy as np
 import cv2
 
 def find_face_card(image):
+#Returns true if image has yellow BLOBs
+
     # making an object to hold parameters of the blob detection
     params = cv2.SimpleBlobDetector_Params()
 

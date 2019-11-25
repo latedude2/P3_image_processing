@@ -14,44 +14,46 @@ def main():
     video_capture = cv2.VideoCapture('http://192.168.43.117:4747/mjpegfeed')
     print("Connected to camera")
 
-    foundCards = []
+    foundCards = []     #List of all detected cards, this list will have the same card repeating many times as it keeps cards from many frames
 
     frameCount = 0
     frameSkip = 10 #how many frames from camera we skip
+    minCardHeight = 200
+    minCardWidth = 150
 
     #Main loop
     while True:
         ret, frame = video_capture.read()
-        frameCount = frameCount + 1
-        if(frameCount % frameSkip == 0):
+        frameCount = frameCount + 1 #we iterate frame count for frame skipping
+        if(frameCount % frameSkip == 0):        #we skip frames so the camera feed does not lag behind
             cv2.imshow("Camera footage", frame)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
-            gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
             # Separate cards into separate images
             images = splitIntoCardImages(frame)
-            detectedCards = []
-            cardCount = 0
+
+            detectedCards = []  #list for keeping cards that were detected this video frame
+            cardCount = 0   #amount of cards in frame
 
             #for each card looking object
             for i in range(len(images)):
-                if(images[i].shape[0] > 200 and images[i].shape[1] > 150):  #This has to be set based on card size on the screen (in pixels)
-                    cardCount = cardCount + 1
+                if(images[i].shape[0] > minCardHeight and images[i].shape[1] > minCardWidth):  #This has to be set based on card size on the screen (in pixels)
+                    cardCount = cardCount + 1       #We found a potential card
                     #print("Card " + str(i))
                     #cv2.imshow("Card" + str(i), images[i])
 
                     cv2.imshow("Card" + str(i), images[i])
-                    detectedCard = analyseCard(images[i])
-                    if (detectedCard != "Error"):
-                        detectedCards.append(detectedCard)
+                    detectedCard = analyseCard(images[i])    #Analyse card to see what card it is
+                    if (detectedCard != "Error"):            #If we found a valid card
+                        detectedCards.append(detectedCard)   #Add to list of cards detected this frame
 
+            #Add cards detected this frame to all detected cards
             for i in range(len(detectedCards)):
                 foundCards.append(detectedCards[i])
 
-            #Remove empty cards (" ")
+            #Remove empty cards (" "), because analyseCards returns an empty card sometimes
             foundLength = len(foundCards)
             j = 0
             while (j < foundLength):
@@ -67,7 +69,7 @@ def main():
                 j = j + 1
 
             while(len(foundCards) > 30): #remove old cards, we only need recently detected cards
-                foundCards.pop(1)
+                foundCards.pop(1)   #remove first card in list
 
             print(findMostCommonCards(cardCount, foundCards))
 
@@ -78,6 +80,8 @@ def main():
     cv2.destroyAllWindows()
 
 def analyseCard(frame):
+#analyse what card was found
+#frame - image of the card
 
     try:
         ## convert to hsv
@@ -86,7 +90,7 @@ def analyseCard(frame):
         ## mask of green (36,25,25) ~ (86, 255,255)
         mask = cv2.inRange(hsv, (36, 25, 25), (70, 255, 255))
 
-        ## slice the green
+        ## remove the green
         imask = mask > 0
         green = np.zeros_like(frame, np.uint8)
         green[imask] = frame[imask]
@@ -102,37 +106,48 @@ def analyseCard(frame):
             return "Error"
 
 def afterRotation(rotated, stringAdd):
+#Continue analysis of card after rotation
+#rotated - image of rotated card
+#stringAdd - Adding string to distinguish which rotation algorithm has produced the images (Debugging)
+
     #cv2.imshow("Rotated image " + stringAdd, rotated)
 
-
+    #We crop the rotated card
     rotatedCardImage = cardCropped(rotated)
+
     #cv2.imshow("Cropped image " +  stringAdd, rotatedCardImage)
 
+    #get the corner image
     TM = np.float32([[1, 0, 0], [0, 1, - rotatedCardImage.shape[0] / 6 * 4.8]])
     corner = cv2.warpAffine(rotatedCardImage, TM,
                             (int(rotatedCardImage.shape[1] / 3.5), int(rotatedCardImage.shape[0] / 5.5)))   #Size of corner image
 
-    cv2.imshow("Corner image " +  stringAdd, corner)
+    #cv2.imshow("Corner image " +  stringAdd, corner)
 
+    #Detect if card is red, we pass corner here as all face cards have red in them
     isRed = checkRed(corner)
 
+    #split corner image to suit and number
     suitImage, numberImage = splitCornerToSuitAndNumber(corner, isRed)
 
+    #Rotate images for template matching and suit analysis
     suitImage, numberImage = prepareImageForTemplateMatching(suitImage, numberImage)
 
     #cv2.imshow("Suit image " + stringAdd, suitImage)
     #cv2.imshow("Number image " + stringAdd, numberImage)
 
+    #add border to suit image for suit analysis
     border = 5
     suitImage = cv2.copyMakeBorder(suitImage, border, border, border, border, cv2.BORDER_CONSTANT,
                                    value=[0, 0, 0])
 
+    #Suit analysis
     suitImage = cv2.cvtColor(suitImage, cv2.COLOR_BGR2GRAY)
     blurredSuit = cv2.GaussianBlur(suitImage, (5, 5), 0)
     cardSuit = determineSuit(blurredSuit, checkRed(corner))
 
     if(find_face_card(rotated)):
-        print("Found face")
+        #print("Found face")
         cardNumber = determineNumber(numberImage, True)
     else:
         cardNumber = countBlobs(rotated, isRed)
@@ -143,12 +158,18 @@ def afterRotation(rotated, stringAdd):
     return cardNumber + cardSuit
 
 def findMostCommonCards(cardCount, foundCards):
+#Returns cardCount different most common cards
+#foundCards - list of cards to look through
+#cardCount - amount of cards on the table
+
     # Create new list for finding most common cards
     tempFoundCards = []
     for i in range(len(foundCards)):
         tempFoundCards.append(foundCards[i])
 
     tableCards = []
+
+    #find most common cards in list
     for k in range(cardCount):
         mostCommonNow = mostFrequent(tempFoundCards)
         tableCards.append(mostCommonNow)
