@@ -17,6 +17,31 @@ red_uppart = low_up_red, up_up_red = [(170, 183, 122), (180, 255, 255)]
 black = low_black, up_black = [(0, 0, 0), (180, 255, 56)]
 
 def main():
+    rotatedCardImage = cv2.imread("../Images/ace.jpg")
+    #rotatedCardImage = cv2.GaussianBlur(rotatedCardImage, (5, 5), 0)
+    cv2.imshow("Rotated ace image", rotatedCardImage)
+
+    # cv2.imshow("Rotated Image", rotated)
+    # Get corner image - ABA BLYAT
+    TM = np.float32([[1, 0, 0], [0, 1, - rotatedCardImage.shape[0] / 4 * 3]])
+    corner = cv2.warpAffine(rotatedCardImage, TM,
+                            (int(rotatedCardImage.shape[1] / 4), int(rotatedCardImage.shape[0] / 5)))
+
+    cv2.imshow("Corner image", corner)
+
+    gray_corner = cv2.cvtColor(corner, cv2.COLOR_BGR2GRAY)
+
+    isRed = checkRed(corner, gray_corner)
+
+    print(isRed)
+
+    splitCornerToSuitAndNumber(corner)
+
+    while True:
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            return
+
+
     video_capture = cv2.VideoCapture('http://192.168.43.117:4747/mjpegfeed')
 
     first_gaussian = backgroundSubtractSetup(video_capture)
@@ -79,7 +104,8 @@ def analyseCard(frame):
     card = ""
 
     # Rotate cards - ABA BLYAT
-    rotatedCardImage = cv2.imread("../Images/ace.jpg")
+    rotatedCardImage = cv2.imread("../Images/testImage5.jpg")
+    rotatedCardImage = rotatedCardImage
 
     cv2.imshow("Rotated ace image", rotatedCardImage)
     #cv2.imshow("Rotated Image", rotated)
@@ -102,7 +128,6 @@ def analyseCard(frame):
     #gaussianCard = cv2.GaussianBlur(gray_frame, (5, 5), 0)
     '''
     cardSuit = DetermineSuit(gaussianCard, isRed)
-
     '''
 
     # Template match letter
@@ -116,6 +141,7 @@ def analyseCard(frame):
 
 
 '''
+#BROKEN AF
 def rotate(img, original):
 
     grayScale = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -165,9 +191,6 @@ def rotate(img, original):
     
 '''
 
-
-
-
 def splitIntoCardImages(img):
     images = []
 
@@ -209,6 +232,53 @@ def splitIntoCardImages(img):
             #cv2.imshow("Single card pls" + str(i), imgT)
 
     return images
+
+def splitCornerToSuitAndNumber(img):
+    ## convert to hsv
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+    ## mask of green (36,25,25) ~ (86, 255,255)
+    minSaturation = 100
+    maxSaturation = 255
+    mask1 = cv2.inRange(hsv, (170, minSaturation, 25), (180, maxSaturation, 255))
+    mask2 = cv2.inRange(hsv, (0, minSaturation, 25), (10, maxSaturation, 255))
+    mask = mask1 | mask2
+
+    ## slice the green
+    imask = mask > 0
+    red = np.zeros_like(img, np.uint8)
+    red[imask] = img[imask]
+
+    memes, threshImg = cv2.threshold(red, 0, 255, cv2.THRESH_BINARY_INV)
+
+    cv2.imshow("Red corner threshold", threshImg)
+    '''
+    grayScale = cv2.cvtColor(threshImg, cv2.COLOR_BGR2GRAY)
+
+    grayScale = cv2.GaussianBlur(grayScale, (9, 9), 0)
+
+
+    c = cv2.findContours(grayScale.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    c = imutils.grab_contours(c)
+
+    for i in range(len(c)):
+        perimeter = cv2.arcLength(c[i], True)
+        if perimeter > 500:
+            extLeft = tuple(c[i][c[i][:, :, 0].argmin()][0])
+            extRight = tuple(c[i][c[i][:, :, 0].argmax()][0])
+            extTop = tuple(c[i][c[i][:, :, 1].argmin()][0])
+            extBot = tuple(c[i][c[i][:, :, 1].argmax()][0])
+
+            # Used to flatted the array containing the co-ordinates of the vertices.
+
+            TM = np.float32([[1, 0, -extLeft[0]], [0, 1, -extTop[1]]])
+            imgT = cv2.warpAffine(img, TM, ((extRight[0] - extLeft[0]), (extBot[1] - extTop[1])))
+            if imgT.shape[0] > 200:
+                images.append(imgT)
+            #cv2.imshow("Single card pls" + str(i), imgT)
+
+    return images
+    '''
 
 def evaluateCards(board, hand):
     board = [
