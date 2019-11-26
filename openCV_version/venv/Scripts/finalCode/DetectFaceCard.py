@@ -8,10 +8,10 @@ def find_face_card(image):
     params = cv2.SimpleBlobDetector_Params()
 
     # define parameters for the blob detector
-    params.filterByArea = True  # allows using area paramater
+    params.filterByArea = True  # allows using area parameter
 
     # these parameters are dependant on image size
-    params.minArea = 30  # min and max areas of pixels for 1 blob
+    params.minArea = 100  # min and max areas of pixels for 1 blob
     params.maxArea = 10000
 
     params.filterByColor = True  # to care about the color

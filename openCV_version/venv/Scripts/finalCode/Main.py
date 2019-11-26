@@ -11,22 +11,24 @@ from CardRotation import *
 from BlobCounting import *
 
 def main():
-    video_capture = cv2.VideoCapture('http://192.168.43.117:4747/mjpegfeed')
+    video_capture = cv2.VideoCapture('http://192.168.43.189:8080/video')
     print("Connected to camera")
 
-    foundCards = []     #List of all detected cards, this list will have the same card repeating many times as it keeps cards from many frames
+    foundCards = []  # List of all detected cards, this list will have the same card repeating many times as it keeps cards from many frames
 
     frameCount = 0
-    frameSkip = 10 #how many frames from camera we skip
-    minCardHeight = 200
-    minCardWidth = 150
+    frameSkip = 10 # how many frames from camera we skip
+    minCardHeight = 250
+    minCardWidth = 200
 
-    #Main loop
+    # Main loop
     while True:
         ret, frame = video_capture.read()
-        frameCount = frameCount + 1 #we iterate frame count for frame skipping
-        if(frameCount % frameSkip == 0):        #we skip frames so the camera feed does not lag behind
-            cv2.imshow("Camera footage", frame)
+        frameCount = frameCount + 1  # we iterate frame count for frame skipping
+        if frameCount % frameSkip == 0 and frame is not None:  # we skip frames so the camera feed does not lag behind
+            # cv2.imshow("Camera footage", frame)
+            # height, width = frame.shape[:2]
+            # cv2.resizeWindow('Camera footage', 660, 360)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
@@ -45,6 +47,7 @@ def main():
                     #cv2.imshow("Card" + str(i), images[i])
 
                     cv2.imshow("Card" + str(i), images[i])
+                    # cv2.imwrite("kings.png", images[i]) # to save it if needed for test
                     detectedCard = analyseCard(images[i])    #Analyse card to see what card it is
                     if (detectedCard != "Error"):            #If we found a valid card
                         detectedCards.append(detectedCard)   #Add to list of cards detected this frame
@@ -126,21 +129,21 @@ def afterRotation(rotated, stringAdd):
 
     #Detect if card is red, we pass corner here as all face cards have red in them
     isRed = checkRed(corner)
-
+    #print("1")
     #split corner image to suit and number
     suitImage, numberImage = splitCornerToSuitAndNumber(corner, isRed)
-
+   # print("2")
     #Rotate images for template matching and suit analysis
     suitImage, numberImage = prepareImageForTemplateMatching(suitImage, numberImage)
-
+    #print("3")
     #cv2.imshow("Suit image " + stringAdd, suitImage)
     #cv2.imshow("Number image " + stringAdd, numberImage)
-
+    #print("4")
     #add border to suit image for suit analysis
     border = 5
     suitImage = cv2.copyMakeBorder(suitImage, border, border, border, border, cv2.BORDER_CONSTANT,
                                    value=[0, 0, 0])
-
+    #print("5")
     #Suit analysis
     suitImage = cv2.cvtColor(suitImage, cv2.COLOR_BGR2GRAY)
     blurredSuit = cv2.GaussianBlur(suitImage, (5, 5), 0)

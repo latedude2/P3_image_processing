@@ -9,31 +9,32 @@ cardSuit = ["h", "d", "s", "c"]
 
 connected = True # for the server to know, when the connection is on and when off to wait for a new connection
 
+
 def main():
-    # Webcam should be connected here
-    while(True): # for more connection to be added after others end
-        HOST = "192.168.43.18"    #Also known as IP
+    # Web cam should be connected here
+    while True: # for more connection to be added after others end
+        HOST = "192.168.43.18"   # Also known as IP
         PORT = 12345
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)   #Create socket
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create socket
         print('Socket created')
         try:
-            s.bind((HOST, PORT))        #Assing IP to socket, no other program can use this port now
+            s.bind((HOST, PORT))        # Assing IP to socket, no other program can use this port now
         except socket.error as err:
             print('Bind failed. Error Code : ' .format(err))
-        s.listen(100)        #How many connections do we take in, set to 100 for testing
+        s.listen(100)        # How many connections do we take in, set to 100 for testing
         print("Socket Listening")
-        conn, addr = s.accept()         #Accept connection from client
+        conn, addr = s.accept()         # Accept connection from client
         print("connection accepted")
         connected = True
-        i = 0       #Used for testing
+        i = 0       # Used for testing
         stringToSend = "nothing"
         while(connected):
             # try-finally block needed, because if it's not there, when connection is cut, the error is thrown
             # to be able not to crash and then try to connect to someone else, we jump out to finally
             try:
-                i = i + 1   #Used for testing
-                #OpenCV stuff should be done here
-                #Card Evaluation should be done here
+                i = i + 1   # Used for testing
+                # OpenCV stuff should be done here
+                # Card Evaluation should be done here
                 data = conn.recv(1024)  # Receive message from client
                 string = data.decode(encoding='UTF-8') #decode the image from bytes to string
                 if (len(string) == 4):

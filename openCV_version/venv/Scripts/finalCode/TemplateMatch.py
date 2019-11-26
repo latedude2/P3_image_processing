@@ -23,7 +23,7 @@ def templateMatch(original, template):
 
         # print(cv2.countNonZero(b)) #the difference in blue channel
 
-        #cv2.imshow("subtracted images", difference)
+        cv2.imshow("subtracted images", difference)
 
         # countNonZero - counts the empty spots in the array of pixels (determines white pixels)
         # less white pixels means pictures are more likely to be equal
@@ -40,7 +40,7 @@ def determineNumber(numberImage, isFaceCard):
     templateQ = cv2.imread("../Images/Templates/Q.png")
     templateJ = cv2.imread("../Images/Templates/J.png")
     number = "CARD NUMBER NOT FOUND "
-    negativeProbability = 999999
+    negativeProbability = 99999
     if not isFaceCard:
         if (templateMatch(numberImage, templateA) < negativeProbability):
             negativeProbability  = templateMatch(numberImage, templateA)
