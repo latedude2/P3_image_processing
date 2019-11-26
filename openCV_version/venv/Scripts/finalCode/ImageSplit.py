@@ -7,6 +7,8 @@ from openCV_version.venv.Scripts.finalCode.DetectRed import checkRed
 
 
 def splitIntoCardImages(img):
+#Splits the image into an array of images that each have 1 card in them
+
     images = []
 
     blur = cv2.GaussianBlur(img, (9, 9), 0)
@@ -37,9 +39,9 @@ def splitIntoCardImages(img):
             extTop = tuple(c[i][c[i][:, :, 1].argmin()][0])
             extBot = tuple(c[i][c[i][:, :, 1].argmax()][0])
 
-            # Used to flatted the array containing the co-ordinates of the vertices.
-
+            #TM - Transform matrix for moving the card to the top left corner
             TM = np.float32([[1, 0, -extLeft[0]], [0, 1, -extTop[1]]])
+            # Crop the card image
             imgT = cv2.warpAffine(img, TM, ((extRight[0] - extLeft[0]), (extBot[1] - extTop[1])))
             if imgT.shape[0] > 200:
                 images.append(imgT)
@@ -47,9 +49,10 @@ def splitIntoCardImages(img):
 
     return images
 
-#returns 2 thresholded images suit, number of the card
-#has to be given colored image of the corner with the suit blob on the left and number blob on right side of image
+
 def splitCornerToSuitAndNumber(img, isRed):
+# returns 2 thresholded images suit, number of the card
+# has to be given colored image of the corner with the suit blob on the left and number blob on right side of image
 
     images = []
     ## convert to hsv
@@ -105,21 +108,20 @@ def splitCornerToSuitAndNumber(img, isRed):
 
 
 def findTwoBiggestImages(images):
+#Returns to biggest images in the list based on area
+
     #if(len(images) < 2):
         #print("Contours failed")
 
+    #find first biggest image
     biggestImage1 = images[0]
-
-    bigImageIndex = 0
     for i in range(len(images)):
         if(images[i].shape[0] * images[i].shape[1] > biggestImage1.shape[0] * biggestImage1.shape[1]):
             biggestImage1 = images[i]
-            bigImageIndex = i
-
-    #print(len(images))
     images.remove(biggestImage1)
     #print(len(images))
 
+    #Create new list that does not have images with holes in them(We are trying to avoid blobs with holes in them) - this might need changing
     imagesToCheck = []
     try:
         for i in range(len(images)):
@@ -131,9 +133,7 @@ def findTwoBiggestImages(images):
         if False:
             print("Failed to remove")
 
-
-
-
+    #find second biggest image
     biggestImage2 = imagesToCheck[0]
     #cv2.imshow("What is left", biggestImage2)
     for i in range(len(imagesToCheck)):

@@ -8,6 +8,8 @@ import imutils
 
 
 def cardOnSide():
+#Testing function
+
     source = "../Images/testImage10.jpg"
 
     img = cv2.imread(source)
@@ -80,13 +82,9 @@ def cardRotation(img):
 
 # cropping the picture based on the edges
 def cardCropped(rotated):
+
     contourX = []  # list of x coordinates of the contours
     contourY = []  # list of y coordinates of the contours
-
-    # making the pictire gray, applying a blur and thresholding it before finding the edges
-
-    blur = cv2.GaussianBlur(rotated, (23, 23), 0)
-    retval, thresh = cv2.threshold(blur, 0.6 * blur.max(), 255, cv2.THRESH_BINARY)
 
     #cv2.imshow("Crop thresh", thresh)
 
@@ -100,7 +98,6 @@ def cardCropped(rotated):
     imask = mask > 0
     green = np.zeros_like(rotated, np.uint8)
     green[imask] = rotated[imask]
-
     rotatedNoGreen = rotated - green
 
     gray = cv2.cvtColor(rotatedNoGreen, cv2.COLOR_BGR2GRAY)
@@ -126,9 +123,8 @@ def cardCropped(rotated):
 
             return imgT
 
-
-
-
+    #This part of code should not be reached
+    print("Card rotation: This part of code should not be reached")
 
     for cnt in contours:
         perimeter = cv2.arcLength(cnt, True)
@@ -174,6 +170,7 @@ def cardCropped(rotated):
     return croppedRotated
 
 def altRotate(img):
+#Alternative rotation method
 
     # read the image
     original = img

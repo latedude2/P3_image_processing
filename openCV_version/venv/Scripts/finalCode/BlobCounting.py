@@ -2,6 +2,10 @@ import cv2
 import numpy as np
 
 def countBlobs(original, isRed):
+#returns the amount of red or black blobs in the image
+#original - colored image of the card
+#isRed - Is the card red
+
     blobCount = 0
 
     median = cv2.medianBlur(original, 5)
