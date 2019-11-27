@@ -4,8 +4,8 @@ import java.util.LinkedList;
 
 public class CombinationChecker {
     //Used to translate the received number into the corresponding combination
-    private String[] possibleCombinations = {"HIGH CARD", "PAIR", "TWO PAIRS", "THREE OF A KIND",
-            "STRAIGHT", "FLUSH", "FULL HOUSE", "FOUR OF A KIND", "STRAIGHT FLUSH", "ROYAL FLUSH"};
+    private String[] possibleCombinations = {"ROYAL FLUSH", "STRAIGHT FLUSH", "FOUR OF A KIND",
+            "FULL HOUSE", "FLUSH", "STRAIGHT", "THREE OF A KIND", "TWO PAIRS", "PAIR", "HIGH CARD"};
 
     private int cardAmount; // this is used to see how many cards make up the given combination
     private String currentCombination; //The name of the current combination
