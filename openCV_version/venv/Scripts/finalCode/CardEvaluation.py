@@ -3,6 +3,33 @@ from treys import Evaluator
 from treys import Card
 from treys import Deck
 
+# needed for the strength of each card to define later
+cardValue = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
+cardSuit = ["h", "d", "s", "c"]
+
+"""
+INFORMATION ABOUT COMBINATIONS:
+
+    Number of Distinct Hand Values:
+    Straight Flush   10 
+    Four of a Kind   156      [(13 choose 2) * (2 choose 1)]
+    Full Houses      156      [(13 choose 2) * (2 choose 1)]
+    Flush            1277     [(13 choose 5) - 10 straight flushes]
+    Straight         10 
+    Three of a Kind  858      [(13 choose 3) * (3 choose 1)]
+    Two Pair         858      [(13 choose 3) * (3 choose 2)]
+    One Pair         2860     [(13 choose 4) * (4 choose 1)]
+    High Card      + 1277     [(13 choose 5) - 10 straights]
+    -------------------------
+    TOTAL            7462
+    Here we create a lookup table which maps:
+        5 card hand's unique prime product => rank in range [1, 7462]
+    Examples:
+    * Royal flush (best hand possible)          => 1
+    * 7-5-4-3-2 unsuited (worst hand possible)  => 7462
+
+"""
+
 def decryptHand(string):
     # string sent should look like "h8s9"
     card = []
@@ -30,8 +57,11 @@ def evaluateHandCards(firstValue, secondValue, firstCard, secondCard):
 
             # if values are already taken, compare them, compute the string and return it
             if firstValueIndex != 100 and secondValueIndex != 100:
-                value = 7642 - (firstValueIndex * secondValueIndex)
-                stringToSend = str("0 " + str(firstCard) + str(secondCard) + " " + str(value))
+                # value is:
+                # all possible combinations - multiplication of two card strengths and 9
+                # 8 is for accounting to the same value cards, which are also possible, such as 8CJD and 8SJC (they're the same strength)
+                value = 7642 - (firstValueIndex * secondValueIndex * 8)
+                stringToSend = str("9 " + str(firstCard) + str(secondCard) + " " + str(value))
                 return str(stringToSend)
 
     # if both cards are the same, there is a pair and another code is done
@@ -41,19 +71,58 @@ def evaluateHandCards(firstValue, secondValue, firstCard, secondCard):
             if value == firstValue:
                 firstValueIndex = i
                 secondValueIndex = i
-                # value = all possible combinations - rank of the strongest high card rank - mulitplication of two card strengths
-                value = 7642 - 182 - (firstValueIndex * secondValueIndex)
-                stringToSend = str("1 " + str(firstCard) + str(secondCard) + " " + str(value))
+                # value is:
+                # all possible combinations - ranks of the high cards - multiplication of two card strengths and 9
+                # 9 is for accounting to the same value pairs, which are also possible, such as ASAD and AHAC (they're the same strength)
+                value = 7642 - 1277 - (firstValueIndex * secondValueIndex * 9)
+                stringToSend = str("8 " + str(firstCard) + str(secondCard) + " " + str(value))
                 return str(stringToSend)
 
 
-def evaluateCards():
+def evaluateCards(boardCards, handCards):
+    # decrypt the two hand cards sent from the client + board cards
+    n = 2
+    str(boardCards).lower()
+    boardCardsSplit = [(boardCards[i:i + n]) for i in range(0, len(boardCards), n)]
+
+
+    str(handCards).lower()
+    handCardsSplit = [(handCards[i:i + n]) for i in range(0, len(handCards), n)]
+
+    handCardsSplit[0] = handCardsSplit[0][1] + handCardsSplit[0][0]
+    handCardsSplit[1] = handCardsSplit[1][1] + handCardsSplit[1][0]
+
+    hand = [
+        Card.new(str(handCardsSplit[0].capitalize())),
+        Card.new(str(handCardsSplit[1].capitalize()))
+    ]
+    board = []
+    i = 0
+    if len(list(boardCardsSplit)) == 3:
+        board = [
+            Card.new(str(boardCardsSplit[0].capitalize())),
+            Card.new(str(boardCardsSplit[1].capitalize())),
+            Card.new(str(boardCardsSplit[2].capitalize()))
+        ]
+    else:
+        if len(list(boardCardsSplit)) == 4:
+            board = [
+                Card.new(str(boardCardsSplit[0].capitalize())),
+                Card.new(str(boardCardsSplit[1].capitalize())),
+                Card.new(str(boardCardsSplit[2].capitalize())),
+                Card.new(str(boardCardsSplit[3].capitalize()))
+            ]
+        else:
+            if len(list(boardCardsSplit)) == 5:
+                board = [
+                    Card.new(str(boardCardsSplit[0].capitalize())),
+                    Card.new(str(boardCardsSplit[1].capitalize())),
+                    Card.new(str(boardCardsSplit[2].capitalize())),
+                    Card.new(str(boardCardsSplit[3].capitalize())),
+                    Card.new(str(boardCardsSplit[4].capitalize()))
+                ]
+
     deck = Deck()
-
-    #For debugging
-    board = deck.draw(5)
-    hand = deck.draw(2)
-
     print(Card.print_pretty_cards(board + hand))
 
     evaluator = Evaluator()
@@ -62,73 +131,82 @@ def evaluateCards():
 
     print("Player 1 hand rank = %d (%s)\n" % (bestScore, evaluator.class_to_string(handType)))
 
+    if(len(board) == 5):
+        for i in range(len(board) + len(hand)):
+            # Make copy of hand and board
+            tempHand = []
+            tempBoard = []
+            for j in range(len(hand)):
+                tempHand.append(hand[j])
+            for j in range(len(board)):
+                tempBoard.append(board[j])
 
-    for i in range(len(board) + len(hand)):
-        # Make copy of hand and board
-        tempHand = []
-        tempBoard = []
-        for j in range(len(hand)):
-            tempHand.append(hand[j])
-        for j in range(len(board)):
-            tempBoard.append(board[j])
+            #First try removing one of the hand cards
+            if(i < 2):
+                tempHand.pop(i)
+                tempHand.append(board[0])
+                tempBoard.pop(0)
+            #Now we try removing board cards
+            else:
+                tempBoard.pop(i - 2)
 
-        #First try removing one of the hand cards
-        if(i < 2):
-            tempHand.pop(i)
-            tempHand.append(board[0])
-            tempBoard.pop(0)
-        #Now we try removing board cards
-        else:
-            tempBoard.pop(i - 2)
-
-        #Find the score
-        score = evaluator.evaluate(tempBoard, tempHand)
-        #If score is same as before, these cards have the best hand
-        if(score == bestScore):
-            # Make copy of best hand and board
-            best6Hand = []
-            best6Board = []
-            for j in range(len(tempHand)):
-                best6Hand.append(tempHand[j])
-            for j in range(len(tempBoard)):
-                best6Board.append(tempBoard[j])
-            break
+            #Find the score
+            score = evaluator.evaluate(tempBoard, tempHand)
+            #If score is same as before, these cards have the best hand
+            if(score == bestScore):
+                # Make copy of best hand and board
+                best6Hand = []
+                best6Board = []
+                for j in range(len(tempHand)):
+                    best6Hand.append(tempHand[j])
+                for j in range(len(tempBoard)):
+                    best6Board.append(tempBoard[j])
+                break
+    else:
+        best6Board = board
+        best6Hand = hand
 
     print(Card.print_pretty_cards(best6Board + best6Hand))
-    #we repeat the process to have the best 5 cards
-    for i in range(len(best6Board) + len(best6Hand)):
-        #Make copy of hand and board
-        tempHand = []
-        tempBoard = []
-        for j in range(len(best6Hand)):
-            tempHand.append(best6Hand[j])
-        for j in range(len(best6Board)):
-            tempBoard.append(best6Board[j])
 
-        if (i < 2):
-            tempHand.pop(i)
-            tempHand.append(best6Board[0])
-            tempBoard.pop(0)
-        else:
-            tempBoard.pop(i - 2)
-        score = evaluator.evaluate(tempBoard, tempHand)
-        if (score == bestScore):
-            # Make copy of best hand and board
-            best5Hand = []
-            best5Board = []
-            for j in range(len(tempHand)):
-                best5Hand.append(tempHand[j])
-            for j in range(len(tempBoard)):
-                best5Board.append(tempBoard[j])
-            break
+    if(len(board) == 4):
+        #we repeat the process to have the best 5 cards
+        for i in range(len(best6Board) + len(best6Hand)):
+            #Make copy of hand and board
+            tempHand = []
+            tempBoard = []
+            for j in range(len(best6Hand)):
+                tempHand.append(best6Hand[j])
+            for j in range(len(best6Board)):
+                tempBoard.append(best6Board[j])
+
+            if (i < 2):
+                tempHand.pop(i)
+                tempHand.append(best6Board[0])
+                tempBoard.pop(0)
+            else:
+                tempBoard.pop(i - 2)
+            score = evaluator.evaluate(tempBoard, tempHand)
+            if (score == bestScore):
+                # Make copy of best hand and board
+                best5Hand = []
+                best5Board = []
+                for j in range(len(tempHand)):
+                    best5Hand.append(tempHand[j])
+                for j in range(len(tempBoard)):
+                    best5Board.append(tempBoard[j])
+                break
+
+    else:
+        best5Board = best6Board
+        best5Hand = best6Hand
 
     print(Card.print_pretty_cards(best5Board + best5Hand))
 
     card1 = convertCardToString(best5Board.__getitem__(0))
     card2 = convertCardToString(best5Board.__getitem__(1))
     card3 = convertCardToString(best5Board.__getitem__(2))
-    card4 = convertCardToString(best5Board.__getitem__(0))
-    card5 = convertCardToString(best5Board.__getitem__(1))
+    card4 = convertCardToString(best5Hand.__getitem__(0))
+    card5 = convertCardToString(best5Hand.__getitem__(1))
 
     handString = card1 + card2 + card3 + card4 + card5
     print(handString)

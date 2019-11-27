@@ -14,15 +14,10 @@ from SuitAnalysis import *
 from CardRotation import *
 from BlobCounting import *
 
-# needed for the strength of each card to define later
-cardValue = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
-cardSuit = ["h", "d", "s", "c"]
-
 connected = True  # for the server to know, when the connection is on and when off to wait for a new connection
 
-
 def main():
-    video_capture = cv2.VideoCapture('http://192.168.43.117:8080/video')
+    video_capture = cv2.VideoCapture('http://192.168.43.87:8080/video')
     print("Connected to camera")
 
     while True: # for more connection to be added after others end
@@ -51,7 +46,7 @@ def main():
                 foundCards = []  # List of all detected cards, this list will have the same card repeating many times as it keeps cards from many frames
 
                 frameCount = 0
-                frameSkip = 10 # how many frames from camera we skip
+                frameSkip = 5 # how many frames from camera we skip
                 minCardHeight = 250
                 minCardWidth = 200
 
@@ -120,7 +115,7 @@ def main():
                         if len(findMostCommonCards(cardCount, foundCards)) >= 5:
                             # stringToSend = decryptHand(handCards)  # making the string that should be sent
                             #stringToSend = "3 " + findMostCommonCards(cardCount, foundCards) + " 4000"
-                            stringSend = evaluateCards(findMostCommonCards(cardCount, foundCards), handCards)
+                            stringToSend = evaluateCards(findMostCommonCards(cardCount, foundCards), handCards)
                             #print(stringToSend)
                             conn.send(bytes(stringToSend + "\r\n", 'UTF-8'))  # Send message to client
 
