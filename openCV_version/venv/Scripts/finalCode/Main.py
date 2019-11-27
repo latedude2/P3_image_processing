@@ -11,7 +11,7 @@ from CardRotation import *
 from BlobCounting import *
 
 def main():
-    video_capture = cv2.VideoCapture('http://192.168.43.117:4747/mjpegfeed')
+    video_capture = cv2.VideoCapture('http://192.168.43.172:8080/video')
     print("Connected to camera")
 
     foundCards = []     #List of all detected cards, this list will have the same card repeating many times as it keeps cards from many frames

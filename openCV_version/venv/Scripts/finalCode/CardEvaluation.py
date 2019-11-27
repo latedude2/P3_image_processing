@@ -126,6 +126,3 @@ def convertCardToString(card):
         raise Exception('intSuit bad. The value of intSuit was: {}'.format(intSuit))
 
     return cardString
-
-
-print(evaluateCards())
