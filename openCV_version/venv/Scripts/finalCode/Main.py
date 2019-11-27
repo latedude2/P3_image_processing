@@ -22,11 +22,11 @@ connected = True  # for the server to know, when the connection is on and when o
 
 
 def main():
-    video_capture = cv2.VideoCapture('http://192.168.43.117:8080/video')
+    video_capture = cv2.VideoCapture('http://192.168.43.172:8080/video')
     print("Connected to camera")
 
     while True: # for more connection to be added after others end
-        HOST = "192.168.43.18"   # Also known as IP
+        HOST = "192.168.43.73"   # Also known as IP
         PORT = 12345
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create socket
         print('Socket created')
@@ -41,7 +41,6 @@ def main():
         connected = True
         i = 0       # Used for testing
         stringToSend = "nothing"
-
         while (connected):
             # try-finally block needed, because if it's not there, when connection is cut, the error is thrown
             # to be able not to crash and then try to connect to someone else, we jump out to finally
@@ -54,7 +53,6 @@ def main():
                 frameSkip = 10 # how many frames from camera we skip
                 minCardHeight = 250
                 minCardWidth = 200
-
                 data = conn.recv(1024)  # Receive message from client
                 handCards = data.decode(encoding='UTF-8')  # decode the image from bytes to string
                 # print(string)
@@ -67,7 +65,7 @@ def main():
                     ret, frame = video_capture.read()
                     frameCount = frameCount + 1  # we iterate frame count for frame skipping
                     if frameCount % frameSkip == 0 and frame is not None:  # we skip frames so the camera feed does not lag behind
-                        # cv2.imshow("Camera footage", frame)
+                        #cv2.imshow("Camera footage", frame)
                         # height, width = frame.shape[:2]
                         # cv2.resizeWindow('Camera footage', 660, 360)
 

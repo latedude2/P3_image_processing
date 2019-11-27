@@ -29,8 +29,8 @@ def countBlobs(original, isRed):
         ## convert to hsv
         hsv = cv2.cvtColor(median, cv2.COLOR_BGR2HSV)
 
-        mask = cv2.inRange(hsv, (0, 100, 25), (20, 255, 255))
-        mask = mask | cv2.inRange(hsv, (170, 100, 25), (180, 255, 255))
+        mask = cv2.inRange(hsv, (0, 150, 25), (20, 255, 255))
+        mask = mask | cv2.inRange(hsv, (170, 150, 25), (180, 255, 255))
 
         ## slice the red
         imask = mask > 0
@@ -49,7 +49,7 @@ def countBlobs(original, isRed):
         im_with_keypoints = cv2.drawKeypoints(threshImg, keypoints, np.array([]), (0, 0, 255),
                                               cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
-        # cv2.imshow("Detected red  Blobs: ", im_with_keypoints)
+        cv2.imshow("Detected red  Blobs: ", im_with_keypoints)
 
         blobCount = len(keypoints)
 
@@ -57,7 +57,7 @@ def countBlobs(original, isRed):
 
         memes, threshImg = cv2.threshold(original, 100, 255, cv2.THRESH_BINARY_INV)
 
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
 
         threshImg = cv2.morphologyEx(threshImg, cv2.MORPH_CLOSE, kernel)
 
@@ -72,6 +72,6 @@ def countBlobs(original, isRed):
 
         cv2.imshow("Detected black Blobs: ", im_with_keypoints)
 
-    print(blobCount)
+    #print(blobCount)
 
     return str(blobCount)

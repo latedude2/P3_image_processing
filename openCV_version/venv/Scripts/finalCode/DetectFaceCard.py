@@ -22,7 +22,7 @@ def find_face_card(image):
     ## convert to hsv
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-    mask = cv2.inRange(hsv, (16, 150, 100), (45, 255, 255)) #Look for colour only existing in face cards
+    mask = cv2.inRange(hsv, (16, 150, 100), (30, 255, 255)) #Look for colour only existing in face cards
 
     ## slice the yellow
     imask = mask > 0
@@ -31,7 +31,7 @@ def find_face_card(image):
 
     memes, threshImg = cv2.threshold(yellow, 0, 255, cv2.THRESH_BINARY)
 
-    # cv2.imshow("Yellow color: ",threshImg)
+    cv2.imshow("Yellow color: ",threshImg)
     params.blobColor = 255
 
     detector = cv2.SimpleBlobDetector_create(params)  # making the detector by the parameters set before

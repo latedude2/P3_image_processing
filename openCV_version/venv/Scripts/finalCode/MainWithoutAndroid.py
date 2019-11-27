@@ -25,78 +25,85 @@ def main():
     video_capture = cv2.VideoCapture('http://192.168.43.87:8080/video')
     print("Connected to camera")
 
+    foundCards = []  # List of all detected cards, this list will have the same card repeating many times as it keeps cards from many frames
 
-    while (True):
-        # try-finally block needed, because if it's not there, when connection is cut, the error is thrown
-        # to be able not to crash and then try to connect to someone else, we jump out to finally
-        try:
-            foundCards = []  # List of all detected cards, this list will have the same card repeating many times as it keeps cards from many frames
+    frameCount = 0
+    frameSkip = 1 # how many frames from camera we skip
+    minCardHeight = 250
+    minCardWidth = 200
+    # Main loop
+    while(True):
+        ret, frame = video_capture.read()
+        frameCount = frameCount + 1  # we iterate frame count for frame skipping
+        if frameCount % frameSkip == 0 and frame is not None:  # we skip frames so the camera feed does not lag behind
+            cv2.imshow("Camera footage", frame)
+            #height, width = frame.shape[:2]
+            #cv2.resizeWindow('Camera footage', 660, 360)
 
-            frameCount = 0
-            frameSkip = 60 # how many frames from camera we skip
-            minCardHeight = 250
-            minCardWidth = 200
-            # Main loop
-            while True:
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
-                ret, frame = video_capture.read()
-                frameCount = frameCount + 1  # we iterate frame count for frame skipping
-                if frameCount % frameSkip == 0 and frame is not None:  # we skip frames so the camera feed does not lag behind
-                    # cv2.imshow("Camera footage", frame)
-                    # height, width = frame.shape[:2]
-                    # cv2.resizeWindow('Camera footage', 660, 360)
+            # Separate cards into separate images
+            images = splitIntoCardImages(frame)
 
-                    if cv2.waitKey(1) & 0xFF == ord('q'):
+            detectedCards = []  #list for keeping cards that were detected this video frame
+            cardCount = 0   #amount of cards in frame
+            for i in range(len(images)):
+                if(images[i].shape[0] > minCardHeight and images[i].shape[1] > minCardWidth):  #This has to be set based on card size on the screen (in pixels)
+                    cardCount = cardCount + 1       #We found a potential card
+
+
+            #for each card looking object
+            for i in range(len(images)):
+                if(images[i].shape[0] > minCardHeight and images[i].shape[1] > minCardWidth):  #This has to be set based on card size on the screen (in pixels)
+                    #print("Card " + str(i))
+                    cv2.imshow("Card" + str(i), images[i])
+
+                    # cv2.imshow("Card" + str(i), images[i])
+                    # cv2.imwrite("kings.png", images[i]) # to save it if needed for test
+                    detectedCard = analyseCard(images[i])    #Analyse card to see what card it is
+                    if (detectedCard != "Error"):            #If we found a valid card
+                        detectedCards.append(detectedCard)   #Add to list of cards detected this frame
+                    else:
+                        detectedCards = []
                         break
 
-                    # Separate cards into separate images
-                    images = splitIntoCardImages(frame)
+            #Add cards detected this frame to all detected cards
+            for i in range(len(detectedCards)):
+                foundCards.append(detectedCards[i])
 
-                    detectedCards = []  #list for keeping cards that were detected this video frame
-                    cardCount = 0   #amount of cards in frame
 
-                    #for each card looking object
-                    for i in range(len(images)):
-                        if(images[i].shape[0] > minCardHeight and images[i].shape[1] > minCardWidth):  #This has to be set based on card size on the screen (in pixels)
-                            cardCount = cardCount + 1       #We found a potential card
-                            #print("Card " + str(i))
-                            #cv2.imshow("Card" + str(i), images[i])
 
-                            # cv2.imshow("Card" + str(i), images[i])
-                            # cv2.imwrite("kings.png", images[i]) # to save it if needed for test
-                            detectedCard = analyseCard(images[i])    #Analyse card to see what card it is
-                            if (detectedCard != "Error"):            #If we found a valid card
-                                detectedCards.append(detectedCard)   #Add to list of cards detected this frame
+            while(len(foundCards) > 25): #remove old cards, we only need recently detected cards
+                foundCards.pop(1)  # remove first card in list
 
-                    #Add cards detected this frame to all detected cards
-                    for i in range(len(detectedCards)):
-                        foundCards.append(detectedCards[i])
+            if cardCount < 3:
+                for k in range(len(foundCards)):
+                    foundCards.pop()
+                    # print("Clear cards")
 
-                    #Remove empty cards (" "), because analyseCards returns an empty card sometimes
-                    foundLength = len(foundCards)
-                    j = 0
-                    while (j < foundLength):
-                        if (foundCards[j] == " "):
-                            foundCards.pop(j)
-                            # as an element is removed
-                            # so decrease the length by 1
-                            foundLength = foundLength - 1
-                            # run loop again to check element
-                            # at same index, when item removed
-                            # next item will shift to the left
-                            continue
-                        j = j + 1
+            # Remove empty cards (" "), because analyseCards returns an empty card sometimes
+            foundLength = len(foundCards)
+            j = 0
+            while (j < foundLength):
+                if (foundCards[j] == " "):
+                    foundCards.pop(j)
+                    # as an element is removed
+                    # so decrease the length by 1
+                    foundLength = foundLength - 1
+                    # run loop again to check element
+                    # at same index, when item removed
+                    # next item will shift to the left
+                    continue
+                j = j + 1
 
-                    while(len(foundCards) > 30): #remove old cards, we only need recently detected cards
-                        foundCards.pop(1)   #remove first card in list
 
-                    print(findMostCommonCards(cardCount, foundCards))
+            print(str(cardCount) + " " + findMostCommonCards(cardCount, foundCards))
 
-        finally:
-            connected = False
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
     video_capture.release()
     cv2.destroyAllWindows()
@@ -118,14 +125,10 @@ def analyseCard(frame):
         green[imask] = frame[imask]
 
         # Rotate cards
-        rotated = cardRotation(frame)
+        rotated = altRotate(frame)
         return afterRotation(rotated, "first")
     except: #If an error is thrown, we try a different rotation algorithm
-        try:
-            rotated = altRotate(frame)
-            return afterRotation(rotated, "alternative")
-        except:
-            return "Error"
+        return "Error"
 
 def afterRotation(rotated, stringAdd):
 #Continue analysis of card after rotation
@@ -148,16 +151,14 @@ def afterRotation(rotated, stringAdd):
 
     #Detect if card is red, we pass corner here as all face cards have red in them
     isRed = checkRed(corner)
-    #print("1")
     #split corner image to suit and number
     suitImage, numberImage = splitCornerToSuitAndNumber(corner, isRed)
-   # print("2")
     #Rotate images for template matching and suit analysis
-    suitImage, numberImage = prepareImageForTemplateMatching(suitImage, numberImage)
-    #print("3")
     #cv2.imshow("Suit image " + stringAdd, suitImage)
-    #cv2.imshow("Number image " + stringAdd, numberImage)
-    #print("4")
+    #zcv2.imshow("Number image " + stringAdd, numberImage)
+
+    suitImage, numberImage = prepareImageForTemplateMatching(suitImage, numberImage)
+
     #add border to suit image for suit analysis
     border = 5
     suitImage = cv2.copyMakeBorder(suitImage, border, border, border, border, cv2.BORDER_CONSTANT,
@@ -208,6 +209,8 @@ def findMostCommonCards(cardCount, foundCards):
     tableString = ""
     for i in range(len(tableCards)):
         tableString += tableCards[i]
+        tableString += " "
+
 
     return tableString
 
