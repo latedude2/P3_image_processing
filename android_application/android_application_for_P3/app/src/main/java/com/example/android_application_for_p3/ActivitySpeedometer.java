@@ -90,7 +90,7 @@ public class ActivitySpeedometer extends AppCompatActivity {
                 Socket socket;
                 try {
                     //create a socket
-                    socket = new Socket("192.168.43.18", 12345);
+                    socket = new Socket("192.168.43.73", 12345);
                     //create input and output streams
                     output = new PrintWriter(socket.getOutputStream());
                     input = new BufferedReader(new InputStreamReader(socket.getInputStream()));

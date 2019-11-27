@@ -22,7 +22,7 @@ connected = True  # for the server to know, when the connection is on and when o
 
 
 def main():
-    video_capture = cv2.VideoCapture('http://192.168.43.172:8080/video')
+    video_capture = cv2.VideoCapture('http://192.168.43.182:8080/video')
     print("Connected to camera")
 
     while True: # for more connection to be added after others end
@@ -45,12 +45,10 @@ def main():
             # try-finally block needed, because if it's not there, when connection is cut, the error is thrown
             # to be able not to crash and then try to connect to someone else, we jump out to finally
             try:
-                i = i + 1  # Used for testing
-
                 foundCards = []  # List of all detected cards, this list will have the same card repeating many times as it keeps cards from many frames
 
                 frameCount = 0
-                frameSkip = 10 # how many frames from camera we skip
+                frameSkip = 1 # how many frames from camera we skip
                 minCardHeight = 250
                 minCardWidth = 200
                 data = conn.recv(1024)  # Receive message from client
@@ -65,7 +63,7 @@ def main():
                     ret, frame = video_capture.read()
                     frameCount = frameCount + 1  # we iterate frame count for frame skipping
                     if frameCount % frameSkip == 0 and frame is not None:  # we skip frames so the camera feed does not lag behind
-                        #cv2.imshow("Camera footage", frame)
+                        cv2.imshow("Camera footage", frame)
                         # height, width = frame.shape[:2]
                         # cv2.resizeWindow('Camera footage', 660, 360)
 
@@ -82,7 +80,7 @@ def main():
                         for i in range(len(images)):
                             if(images[i].shape[0] > minCardHeight and images[i].shape[1] > minCardWidth):  #This has to be set based on card size on the screen (in pixels)
                                 cardCount = cardCount + 1       #We found a potential card
-                                #print("Card " + str(i))
+                                print("Card " + str(i))
                                 #cv2.imshow("Card" + str(i), images[i])
 
                                 # cv2.imshow("Card" + str(i), images[i])
@@ -95,7 +93,17 @@ def main():
                         for i in range(len(detectedCards)):
                             foundCards.append(detectedCards[i])
 
-                        #Remove empty cards (" "), because analyseCards returns an empty card sometimes
+
+
+                        while (len(foundCards) > 25):  # remove old cards, we only need recently detected cards
+                            foundCards.pop(1)  # remove first card in list
+
+                        if cardCount < 3:
+                            for k in range(len(foundCards)):
+                                foundCards.pop()
+                                # print("Clear cards")
+
+                        # Remove empty cards (" "), because analyseCards returns an empty card sometimes
                         foundLength = len(foundCards)
                         j = 0
                         while (j < foundLength):
@@ -110,17 +118,18 @@ def main():
                                 continue
                             j = j + 1
 
-                        while(len(foundCards) > 30): #remove old cards, we only need recently detected cards
-                            foundCards.pop(1)   #remove first card in list
-
                         print(findMostCommonCards(cardCount, foundCards))
 
                         if len(findMostCommonCards(cardCount, foundCards)) >= 5:
                             # stringToSend = decryptHand(handCards)  # making the string that should be sent
                             #stringToSend = "3 " + findMostCommonCards(cardCount, foundCards) + " 4000"
-                            stringSend = evaluateCards(findMostCommonCards(cardCount, foundCards), handCards)
-                            #print(stringToSend)
-                            conn.send(bytes(stringToSend + "\r\n", 'UTF-8'))  # Send message to client
+                            try:
+                                stringSend = evaluateCards(findMostCommonCards(cardCount, foundCards), handCards)
+                                print(stringSend)
+                                conn.send(bytes(stringSend + "\r\n", 'UTF-8'))  # Send message to client
+                            except:
+                                print("Card eval failed")
+
 
             finally:
                 connected = False

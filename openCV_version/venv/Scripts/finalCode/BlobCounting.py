@@ -73,5 +73,7 @@ def countBlobs(original, isRed):
         cv2.imshow("Detected black Blobs: ", im_with_keypoints)
 
     #print(blobCount)
+    if(blobCount == 10):
+        return "T"
 
     return str(blobCount)

@@ -209,9 +209,11 @@ def evaluateCards(boardCards, handCards):
     card5 = convertCardToString(best5Hand.__getitem__(1))
 
     handString = card1 + card2 + card3 + card4 + card5
-    print(handString)
+    print("Hand string:  " + handString)
 
     stringToSend = str(handType) + " " + handString + " " + str(bestScore)
+
+    print("String to send:  " + stringToSend)
 
     return stringToSend
 
