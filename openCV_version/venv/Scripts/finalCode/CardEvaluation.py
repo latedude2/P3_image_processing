@@ -6,6 +6,8 @@ from treys import Deck
 
 def evaluateCards():
     deck = Deck()
+
+    #For debugging
     board = deck.draw(5)
     hand = deck.draw(2)
 
@@ -88,6 +90,10 @@ def evaluateCards():
     handString = card1 + card2 + card3 + card4 + card5
     print(handString)
 
+    stringToSend = str(handType) + " " + handString + " " + str(bestScore)
+
+    return stringToSend
+
 def convertCardToString(card):
     intSuit = Card.get_suit_int(card)  # Spade = 1, heart = 2, diamond = 4, club = 8
     intRank = Card.get_rank_int(card)  # 2 = 0, 3 = 1, 4 = 2, 5 = 3, 6 = 4, 7 = 5, 8 = 6,... J = 9, ... A = 12
@@ -120,3 +126,6 @@ def convertCardToString(card):
         raise Exception('intSuit bad. The value of intSuit was: {}'.format(intSuit))
 
     return cardString
+
+
+print(evaluateCards())
