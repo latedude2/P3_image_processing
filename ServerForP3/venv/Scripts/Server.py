@@ -7,7 +7,7 @@ from treys import Card
 cardValue = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
 cardSuit = ["h", "d", "s", "c"]
 
-connected = True # for the server to know, when the connection is on and when off to wait for a new connection
+connected = True  # for the server to know, when the connection is on and when off to wait for a new connection
 
 
 def main():

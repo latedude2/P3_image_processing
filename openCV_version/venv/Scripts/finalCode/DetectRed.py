@@ -6,7 +6,7 @@ red_uppart = low_up_red, up_up_red = [(170, 135, 100), (180, 255, 255)]
 black = low_black, up_black = [(0, 0, 0), (180, 255, 56)]
 
 def checkRed(original):
-#Returns true if image has red BLOBs
+    # Returns true if image has red BLOBs
 
     median = cv2.medianBlur(original, 5)
 
@@ -38,7 +38,7 @@ def checkRed(original):
 
     memes, threshImg = cv2.threshold(red, 0, 255, cv2.THRESH_BINARY)
 
-    cv2.imshow("Red color: ", threshImg)
+    # cv2.imshow("Red color: ", threshImg)
     params.blobColor = 255
 
     detector = cv2.SimpleBlobDetector_create(params)  # making the detector by the parameters set before

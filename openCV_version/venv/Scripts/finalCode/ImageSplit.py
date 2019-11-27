@@ -80,7 +80,7 @@ def splitCornerToSuitAndNumber(img, isRed):
         memes, threshImg = cv2.threshold(grey, 70, 255, cv2.THRESH_BINARY_INV)
         threshImg = cv2.cvtColor(threshImg, cv2.COLOR_GRAY2BGR)
 
-    cv2.imshow("Corner threshold", threshImg)
+    # cv2.imshow("Corner threshold", threshImg)
 
     grayScale = cv2.cvtColor(threshImg, cv2.COLOR_BGR2GRAY)
 
@@ -156,8 +156,8 @@ def findTwoBiggestImages(images):
         #print(centerPixel[0])
         if (imagesToCheck[i].shape[0] * imagesToCheck[i].shape[1] > biggestImage2.shape[0] * biggestImage2.shape[1]):
             biggestImage2 = imagesToCheck[i]
-    cv2.imshow("number", biggestImage1)
-    cv2.imshow("suit", biggestImage2)
+    # cv2.imshow("number", biggestImage1)
+    # cv2.imshow("suit", biggestImage2)
 
     return biggestImage2, biggestImage1
 

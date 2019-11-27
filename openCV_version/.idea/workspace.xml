@@ -2,16 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1bc7527a-0f74-48fe-bb4d-5de6390c1ff6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ServerForP3/venv/Scripts/Server.py" beforeDir="false" afterPath="$PROJECT_DIR$/../ServerForP3/venv/Scripts/Server.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/venv/Scripts/finalCode/BlobCounting.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/finalCode/BlobCounting.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Scripts/finalCode/CardRotation.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/finalCode/CardRotation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/venv/Scripts/finalCode/DetectFaceCard.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/finalCode/DetectFaceCard.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/venv/Scripts/finalCode/DetectRed.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/finalCode/DetectRed.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/venv/Scripts/finalCode/ImageSplit.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/finalCode/ImageSplit.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/venv/Scripts/finalCode/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/finalCode/Main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Scripts/finalCode/TemplateMatch.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/finalCode/TemplateMatch.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
