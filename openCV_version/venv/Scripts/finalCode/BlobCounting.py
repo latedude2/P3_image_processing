@@ -18,7 +18,7 @@ def countBlobs(original, isRed):
 
     # these parameters are dependant on image size
     params.minArea = 1000  # min and max areas of pixels for 1 blob
-    params.maxArea = 10000
+    params.maxArea = 100000
 
     params.filterByColor = True  # care about the color
     params.filterByCircularity = False  # to not care about circularity (more circular = bigger angles)
@@ -54,9 +54,13 @@ def countBlobs(original, isRed):
         blobCount = len(keypoints)
 
     else:
+
         memes, threshImg = cv2.threshold(original, 100, 255, cv2.THRESH_BINARY_INV)
 
-        grayScale = cv2.cvtColor(threshImg, cv2.COLOR_BGR2GRAY)
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+
+        threshImg = cv2.morphologyEx(threshImg, cv2.MORPH_CLOSE, kernel)
+
         params.blobColor = 255
 
         detector = cv2.SimpleBlobDetector_create(params)  # making the detector by the parameters set before
@@ -64,10 +68,9 @@ def countBlobs(original, isRed):
 
         im_with_keypoints = cv2.drawKeypoints(threshImg, keypoints, np.array([]), (0, 0, 255),
                                               cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-
-        # cv2.imshow("Detected black Blobs: ", im_with_keypoints)
-
         blobCount = len(keypoints)
+
+        cv2.imshow("Detected black Blobs: ", im_with_keypoints)
 
     print(blobCount)
 
