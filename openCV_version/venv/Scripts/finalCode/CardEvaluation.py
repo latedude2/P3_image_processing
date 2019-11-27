@@ -3,6 +3,49 @@ from treys import Evaluator
 from treys import Card
 from treys import Deck
 
+def decryptHand(string):
+    # string sent should look like "h8s9"
+    card = []
+    card.append(string[1] + string[0]) # separate two cards and place them in needed positions
+    card.append(string[3] + string[2])
+
+    # makes the needed string to send
+    stringToSend = evaluateHandCards(string[1].capitalize(), string[3].capitalize(), card[0], card[1])
+    return stringToSend
+
+# makes the needed string that should be sent
+# suits are not needed, so only values of them sent (firstValue and secondValue)
+# also both cards are sent as strings to me the combined string later
+def evaluateHandCards(firstValue, secondValue, firstCard, secondCard):
+    # firstValueIndex is the placement of the card's value according to the strength
+    valueIndexes = firstValueIndex, secondValueIndex = (100, 100) #random can be given, so it could be seen if it's changed when searching
+    i = 0 # used for searching
+    if firstValue != secondValue:  # if both card values are not the same, following code is done
+
+        for value in cardValue:  # checks through each element in the cardValue list, which is defined at the start
+            if value == firstValue:
+                firstValueIndex = i + 1
+            if value == secondValue:
+                secondValueIndex = i + 1
+
+            # if values are already taken, compare them, compute the string and return it
+            if firstValueIndex != 100 and secondValueIndex != 100:
+                value = 7642 - (firstValueIndex * secondValueIndex)
+                stringToSend = str("0 " + str(firstCard) + str(secondCard) + " " + str(value))
+                return str(stringToSend)
+
+    # if both cards are the same, there is a pair and another code is done
+    if firstValue == secondValue:
+        valueIndexes = firstValueIndex, secondValueIndex = (100, 100)
+        for value in cardValue:
+            if value == firstValue:
+                firstValueIndex = i
+                secondValueIndex = i
+                # value = all possible combinations - rank of the strongest high card rank - mulitplication of two card strengths
+                value = 7642 - 182 - (firstValueIndex * secondValueIndex)
+                stringToSend = str("1 " + str(firstCard) + str(secondCard) + " " + str(value))
+                return str(stringToSend)
+
 
 def evaluateCards():
     deck = Deck()
