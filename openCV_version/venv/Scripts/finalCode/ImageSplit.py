@@ -3,7 +3,7 @@ import imutils
 import numpy as np
 from DetectRed import *
 
-from openCV_version.venv.Scripts.finalCode.DetectRed import checkRed
+from DetectRed import checkRed
 
 
 def splitIntoCardImages(img):
@@ -80,32 +80,46 @@ def splitCornerToSuitAndNumber(img, isRed):
         memes, threshImg = cv2.threshold(grey, 70, 255, cv2.THRESH_BINARY_INV)
         threshImg = cv2.cvtColor(threshImg, cv2.COLOR_GRAY2BGR)
 
-    cv2.imshow("Corner threshold", threshImg)
+    # cv2.imshow("Corner threshold", threshImg)
 
     grayScale = cv2.cvtColor(threshImg, cv2.COLOR_BGR2GRAY)
 
     c = cv2.findContours(grayScale.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     c = imutils.grab_contours(c)
+    extRights = []
     for i in range(len(c)):
         perimeter = cv2.arcLength(c[i], True)
         if perimeter > 30 and perimeter < 500:
+            # print(i)
             extLeft = tuple(c[i][c[i][:, :, 0].argmin()][0])
             extRight = tuple(c[i][c[i][:, :, 0].argmax()][0])
             extTop = tuple(c[i][c[i][:, :, 1].argmin()][0])
             extBot = tuple(c[i][c[i][:, :, 1].argmax()][0])
 
-            if(extTop[1] > 2):      #we dont want objects that are touching image top - this causes problems with cards like 9 and 10
+            if(extTop[1] > 2): # we dont want objects that are touching image top - this causes problems with cards like 9 and 10
                 #print("contourTop: " + str(extTop[1]) + " image top: " + str(img.shape[1]))
 
                 # Used to flatted the array containing the co-ordinates of the vertices.
                 TM = np.float32([[1, 0, -extLeft[0]], [0, 1, -extTop[1]]])
                 imgT = cv2.warpAffine(threshImg, TM, ((extRight[0] - extLeft[0]) + 2, (extBot[1] - extTop[1]) + 2))
 
+                extRights.append(extRight[1])
                 #cv2.imshow("Single card pls" + str(i), imgT)
                 images.append(imgT)
 
     return findTwoBiggestImages(images)
+"""
+    val = extRights.index(max(extRights))
+    #print("Rights " and extRights)
+    #print("Images " and len(images))
+    suitImage = images[val-1]
+    numImage = images[val]
+    cv2.imshow("suit image", suitImage)
+    cv2.imshow("num image", numImage)
 
+    images.remove(suitImage)
+    return suitImage, numImage
+"""
 
 def findTwoBiggestImages(images):
 #Returns to biggest images in the list based on area
@@ -122,12 +136,13 @@ def findTwoBiggestImages(images):
     #print(len(images))
 
     #Create new list that does not have images with holes in them(We are trying to avoid blobs with holes in them) - this might need changing
+
     imagesToCheck = []
     try:
         for i in range(len(images)):
             centerPixel = images[i][int(images[i].shape[1] / 2), int(images[i].shape[0] / 2)]
             #print(centerPixel[0])
-            if(centerPixel[0]  > 0):
+            if centerPixel[0] > 0:
                 imagesToCheck.append(images[i])
     except:
         if False:
@@ -141,6 +156,8 @@ def findTwoBiggestImages(images):
         #print(centerPixel[0])
         if (imagesToCheck[i].shape[0] * imagesToCheck[i].shape[1] > biggestImage2.shape[0] * biggestImage2.shape[1]):
             biggestImage2 = imagesToCheck[i]
+    # cv2.imshow("number", biggestImage1)
+    # cv2.imshow("suit", biggestImage2)
 
     return biggestImage2, biggestImage1
 

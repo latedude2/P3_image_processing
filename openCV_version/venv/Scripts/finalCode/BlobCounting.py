@@ -17,7 +17,7 @@ def countBlobs(original, isRed):
     params.filterByArea = True  # allows using area paramater
 
     # these parameters are dependant on image size
-    params.minArea = 500  # min and max areas of pixels for 1 blob
+    params.minArea = 1000  # min and max areas of pixels for 1 blob
     params.maxArea = 10000
 
     params.filterByColor = True  # care about the color
@@ -49,7 +49,7 @@ def countBlobs(original, isRed):
         im_with_keypoints = cv2.drawKeypoints(threshImg, keypoints, np.array([]), (0, 0, 255),
                                               cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
-        cv2.imshow("Detected red  Blobs: ", im_with_keypoints)
+        # cv2.imshow("Detected red  Blobs: ", im_with_keypoints)
 
         blobCount = len(keypoints)
 
@@ -65,7 +65,7 @@ def countBlobs(original, isRed):
         im_with_keypoints = cv2.drawKeypoints(threshImg, keypoints, np.array([]), (0, 0, 255),
                                               cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
-        cv2.imshow("Detected black Blobs: ", im_with_keypoints)
+        # cv2.imshow("Detected black Blobs: ", im_with_keypoints)
 
         blobCount = len(keypoints)
 

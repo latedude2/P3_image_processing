@@ -9,7 +9,6 @@ import imutils
 
 def cardOnSide():
 #Testing function
-
     source = "../Images/testImage10.jpg"
 
     img = cv2.imread(source)
