@@ -21,38 +21,12 @@ public class CombinationChecker {
     }
 
     private void readString (String text){
-        int modeThreshold = 5;
-        String[] readCombinations = new String[modeThreshold]; //used to store the current combination before taking mode
 
         //splitting the received array up for each space
         String[] array = text.split(" ");
 
-        //circling through spots in the array, to constantly update the mode
-        if (modeIndex >= modeThreshold){
-            modeIndex = 0;
-        }
-
-        //Finding the corresponding combination name from a list of names
-        readCombinations[modeIndex] = possibleCombinations[Integer.valueOf(array[0])];
-
-        //finding the the mode of the last five sent combinations
-        int maxCounter = 0; //used to store the amount of cards in current mode
-        for (int i = 0; i < modeThreshold; i++){ //checking though the stored combinations
-            int counter = 0; // to count repetitions of current combination
-
-            // circling through all saved combinations counting the matches
-            for (int j = 0; j < modeThreshold; j++){
-                if (readCombinations[i].equals(readCombinations[j])){
-                    counter++;
-                }
-            }
-            //Checking if the combination we just counted beats the current mode
-            if (counter > maxCounter){
-                maxCounter = counter;
-                //saving the mode
-                currentCombination = readCombinations[i];
-            }
-        }
+        currentCombination = possibleCombinations[Integer.valueOf(array[0])];
+        System.out.println(currentCombination);
 
         int i = 0;
         while(i < array[1].length()-1){
