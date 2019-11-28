@@ -3,7 +3,7 @@ import imutils
 import numpy as np
 from DetectRed import *
 
-from openCV_version.venv.Scripts.finalCode.DetectRed import checkRed
+from DetectRed import checkRed
 
 
 def splitIntoCardImages(img):
@@ -60,7 +60,7 @@ def splitCornerToSuitAndNumber(img, isRed):
     grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     if isRed:
-        minSaturation = 100
+        minSaturation = 170
         maxSaturation = 255
         mask1 = cv2.inRange(hsv, (170, minSaturation, 25), (180, maxSaturation, 255))
         mask2 = cv2.inRange(hsv, (0, minSaturation, 25), (19, maxSaturation, 255))
@@ -79,68 +79,102 @@ def splitCornerToSuitAndNumber(img, isRed):
     else:
         memes, threshImg = cv2.threshold(grey, 70, 255, cv2.THRESH_BINARY_INV)
         threshImg = cv2.cvtColor(threshImg, cv2.COLOR_GRAY2BGR)
-
-    cv2.imshow("Corner threshold", threshImg)
+        #cv2.imshow("Black threshold", threshImg)
 
     grayScale = cv2.cvtColor(threshImg, cv2.COLOR_BGR2GRAY)
 
     c = cv2.findContours(grayScale.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     c = imutils.grab_contours(c)
+
+
     for i in range(len(c)):
         perimeter = cv2.arcLength(c[i], True)
+
         if perimeter > 30 and perimeter < 500:
-            extLeft = tuple(c[i][c[i][:, :, 0].argmin()][0])
-            extRight = tuple(c[i][c[i][:, :, 0].argmax()][0])
-            extTop = tuple(c[i][c[i][:, :, 1].argmin()][0])
-            extBot = tuple(c[i][c[i][:, :, 1].argmax()][0])
+            x, y, w, h = cv2.boundingRect(c[i])
+            if h > 10:
+                # print(i)
+                extLeft = tuple(c[i][c[i][:, :, 0].argmin()][0])
+                extRight = tuple(c[i][c[i][:, :, 0].argmax()][0])
+                extTop = tuple(c[i][c[i][:, :, 1].argmin()][0])
+                extBot = tuple(c[i][c[i][:, :, 1].argmax()][0])
 
-            if(extTop[1] > 2):      #we dont want objects that are touching image top - this causes problems with cards like 9 and 10
-                #print("contourTop: " + str(extTop[1]) + " image top: " + str(img.shape[1]))
+                if(extTop[1] > 2): # we dont want objects that are touching image top - this causes problems with cards like 10 and Queen
+                    #print("contourTop: " + str(extTop[1]) + " image top: " + str(img.shape[1]))
 
-                # Used to flatted the array containing the co-ordinates of the vertices.
-                TM = np.float32([[1, 0, -extLeft[0]], [0, 1, -extTop[1]]])
-                imgT = cv2.warpAffine(threshImg, TM, ((extRight[0] - extLeft[0]) + 2, (extBot[1] - extTop[1]) + 2))
+                    # Used to flatted the array containing the co-ordinates of the vertices.
+                    TM = np.float32([[1, 0, -extLeft[0]], [0, 1, -extTop[1]]])
+                    imgT = cv2.warpAffine(threshImg, TM, ((extRight[0] - extLeft[0]) + 2, (extBot[1] - extTop[1]) + 2))
 
-                #cv2.imshow("Single card pls" + str(i), imgT)
-                images.append(imgT)
+                    #cv2.imshow("Single card pls" + str(i), imgT)
+                    images.append(imgT)
 
     return findTwoBiggestImages(images)
-
 
 def findTwoBiggestImages(images):
 #Returns to biggest images in the list based on area
 
     #if(len(images) < 2):
         #print("Contours failed")
+    #print(len(images))
 
-    #find first biggest image
+#find first biggest image - number
+    biggestImage1 = images[0]
+    for i in range(len(images)):
+        if(images[i].shape[0] * images[i].shape[1] > biggestImage1.shape[0] * biggestImage1.shape[1]):
+            height = images[i].shape[0]
+            width = images[i].shape[1]
+            if(width > height):
+                if( width / height > 1.3):
+                    biggestImage1 = images[i]
+            else:
+                if (height / width > 1.3):
+                    biggestImage1 = images[i]
+
+    images.remove(biggestImage1)
+    #print(len(images))
+
+    '''
+    #find first biggest image - number
     biggestImage1 = images[0]
     for i in range(len(images)):
         if(images[i].shape[0] * images[i].shape[1] > biggestImage1.shape[0] * biggestImage1.shape[1]):
             biggestImage1 = images[i]
     images.remove(biggestImage1)
     #print(len(images))
+    
+    '''
 
+    #cv2.imshow("Number", biggestImage1)
     #Create new list that does not have images with holes in them(We are trying to avoid blobs with holes in them) - this might need changing
+
     imagesToCheck = []
     try:
         for i in range(len(images)):
-            centerPixel = images[i][int(images[i].shape[1] / 2), int(images[i].shape[0] / 2)]
-            #print(centerPixel[0])
-            if(centerPixel[0]  > 0):
+            width = images[i].shape[1]
+            heigth = images[i].shape[0]
+            image = images[i]
+            centerH = int(heigth / 2)
+            centerW = int(width / 2)
+            image_data = np.asarray(image)
+            centerPixel = image_data[centerH, centerW]
+            if centerPixel[0] > 0:
                 imagesToCheck.append(images[i])
     except:
         if False:
             print("Failed to remove")
 
+
+    #print(len(imagesToCheck))
+
     #find second biggest image
     biggestImage2 = imagesToCheck[0]
-    #cv2.imshow("What is left", biggestImage2)
+
     for i in range(len(imagesToCheck)):
-        centerPixel = imagesToCheck[i][int(imagesToCheck[i].shape[0]/2), int(imagesToCheck[i].shape[1]/2)]
-        #print(centerPixel[0])
         if (imagesToCheck[i].shape[0] * imagesToCheck[i].shape[1] > biggestImage2.shape[0] * biggestImage2.shape[1]):
             biggestImage2 = imagesToCheck[i]
+
+    #cv2.imshow("Suit", biggestImage2)
 
     return biggestImage2, biggestImage1
 

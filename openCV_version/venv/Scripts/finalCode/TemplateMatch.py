@@ -23,7 +23,7 @@ def templateMatch(original, template):
 
         # print(cv2.countNonZero(b)) #the difference in blue channel
 
-        #cv2.imshow("subtracted images", difference)
+        cv2.imshow("subtracted images", difference)
 
         # countNonZero - counts the empty spots in the array of pixels (determines white pixels)
         # less white pixels means pictures are more likely to be equal
@@ -40,7 +40,7 @@ def determineNumber(numberImage, isFaceCard):
     templateQ = cv2.imread("../Images/Templates/Q.png")
     templateJ = cv2.imread("../Images/Templates/J.png")
     number = "CARD NUMBER NOT FOUND "
-    negativeProbability = 999999
+    negativeProbability = 99999
     if not isFaceCard:
         if (templateMatch(numberImage, templateA) < negativeProbability):
             negativeProbability  = templateMatch(numberImage, templateA)
@@ -84,24 +84,22 @@ def prepareImageForTemplateMatching(suitImage, numberImage):
 
         c = cv2.findContours(grayScale.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         c = imutils.grab_contours(c)
+        #print("find max contour")
+        # find the biggest area
+        c = max(c, key=cv2.contourArea)
 
-        #print("This should be 1: " + str(len(c)))
-        for i in range(len(c)):
-            perimeter = cv2.arcLength(c[i], True)
-            if perimeter > 30 and perimeter < 500:      #These are important to avoid holes in letters (A, Q)
-                extLeft = tuple(c[i][c[i][:, :, 0].argmin()][0])
-                extRight = tuple(c[i][c[i][:, :, 0].argmax()][0])
-                extTop = tuple(c[i][c[i][:, :, 1].argmin()][0])
-                extBot = tuple(c[i][c[i][:, :, 1].argmax()][0])
+        extLeft = tuple(c[c[:, :, 0].argmin()][0])
+        extRight = tuple(c[c[:, :, 0].argmax()][0])
+        extTop = tuple(c[c[:, :, 1].argmin()][0])
+        extBot = tuple(c[c[:, :, 1].argmax()][0])
 
-                # Used to flatted the array containing the co-ordinates of the vertices.
-                TM = np.float32([[1, 0, -extLeft[0]], [0, 1, -extTop[1]]])
-                imgT = cv2.warpAffine(images[j], TM, ((extRight[0] - extLeft[0]), (extBot[1] - extTop[1])))
+        # Used to flatted the array containing the co-ordinates of the vertices.
+        TM = np.float32([[1, 0, -extLeft[0]], [0, 1, -extTop[1]]])
+        imgT = cv2.warpAffine(images[j], TM, ((extRight[0] - extLeft[0]), (extBot[1] - extTop[1])))
 
-                #cv2.imshow("Single card pls" + str(i), imgT)
-                newImages.append(imgT)
-                #cv2.imshow("Image: " + str(j) + " " + str(i) ,imgT)
-
+        #cv2.imshow("Single card pls" + str(j), imgT)
+        newImages.append(imgT)
+        #cv2.imshow("Image: " + str(j) + " " + str(i) ,imgT)
 
     #We return the bigger image first
     return findTwoBiggestImages(newImages)

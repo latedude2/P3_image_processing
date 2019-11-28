@@ -4,21 +4,19 @@ import java.util.LinkedList;
 
 public class CombinationChecker {
     //Used to translate the received number into the corresponding combination
-    private String[] possibleCombinations = {"HIGH CARD", "PAIR", "TWO PAIRS", "THREE OF A KIND",
-            "STRAIGHT", "FLUSH", "FULL HOUSE", "FOUR OF A KIND", "STRAIGHT FLUSH", "ROYAL FLUSH"};
+    private String[] possibleCombinations = {"ROYAL FLUSH", "STRAIGHT FLUSH", "FOUR OF A KIND",
+            "FULL HOUSE", "FLUSH", "STRAIGHT", "THREE OF A KIND", "TWO PAIRS", "PAIR", "HIGH CARD"};
 
     private int cardAmount; // this is used to see how many cards make up the given combination
     private String currentCombination; //The name of the current combination
     //private String[] currentCards; // The signatures of the cards in the combination
-    private String combinationText; // combination text which should look like "6 5S6C7S8H9D 2254"
-    // this means: "combination number - cards - rank
 
     LinkedList<String> currentCards = new LinkedList<>();
 
     CombinationChecker(String combinationText){
-        this.combinationText = combinationText;
+        // combination text should look like "6 5S6C7S8H9D 2254"
+        // this means: "combination number - cards - rank
         readString(combinationText);
-
     }
 
     private void readString (String text){
@@ -40,7 +38,7 @@ public class CombinationChecker {
 
     String cardNameToViewName(int index){
          // it could be like "6H", but need to make it to h6
-        return currentCards.get(index);
+        return currentCards.get(index).toLowerCase();
     }
 
     //--------------------------------------------//

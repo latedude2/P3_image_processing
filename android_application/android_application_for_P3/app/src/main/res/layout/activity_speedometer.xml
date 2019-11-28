@@ -18,8 +18,16 @@
     <androidx.constraintlayout.widget.Guideline
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/guideline_next_round_button"
+        app:layout_constraintGuide_percent="0.2"
+        android:orientation="horizontal"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/guideline_card_top"
-        app:layout_constraintGuide_percent="0.665"
+        app:layout_constraintGuide_percent="0.69"
         android:orientation="horizontal"
         />
 
@@ -79,7 +87,7 @@
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
         android:adjustViewBounds="true"
-        android:contentDescription="the white circle at the back"
+        android:contentDescription="white circle at the back"
         android:scaleType="centerInside"
         app:layout_constraintBottom_toTopOf="@id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
@@ -100,8 +108,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:rotation="0"
         app:srcCompat="@drawable/arrow_display"
-
-        android:contentDescription="layer with arrow and green bar to be rotated"/>
+        android:contentDescription="layer with arrow and green bar"/>
 
     <ImageView
         android:id="@+id/overlay_disk"
@@ -115,7 +122,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/disk_overlay"
-        android:contentDescription="top layer with the indication knobs"/>
+        android:contentDescription="top layer"/>
 
     <ImageView
         android:id="@+id/card1"
@@ -124,8 +131,7 @@
         app:layout_constraintBottom_toBottomOf="@id/guideline_card_bottom"
         app:layout_constraintEnd_toEndOf="@id/guideline_card_one_two"
         app:layout_constraintStart_toStartOf="@id/guideline_card_left"
-        app:layout_constraintTop_toTopOf="@+id/guideline_card_top"
-        android:src="@drawable/s2" />
+        app:layout_constraintTop_toTopOf="@+id/guideline_card_top" />
 
     <ImageView
         android:id="@+id/card2"
@@ -134,8 +140,7 @@
         app:layout_constraintBottom_toBottomOf="@id/guideline_card_bottom"
         app:layout_constraintEnd_toEndOf="@id/guideline_two_three"
         app:layout_constraintStart_toStartOf="@id/guideline_card_one_two"
-        app:layout_constraintTop_toTopOf="@id/guideline_card_top"
-        android:src="@drawable/d7" />
+        app:layout_constraintTop_toTopOf="@id/guideline_card_top" />
 
     <ImageView
         android:id="@+id/card3"
@@ -144,8 +149,7 @@
         app:layout_constraintBottom_toBottomOf="@id/guideline_card_bottom"
         app:layout_constraintEnd_toEndOf="@id/guideline_three_four"
         app:layout_constraintStart_toStartOf="@id/guideline_two_three"
-        app:layout_constraintTop_toTopOf="@id/guideline_card_top"
-        android:src="@drawable/ct" />
+        app:layout_constraintTop_toTopOf="@id/guideline_card_top" />
 
     <ImageView
         android:id="@+id/card4"
@@ -154,8 +158,7 @@
         app:layout_constraintBottom_toBottomOf="@id/guideline_card_bottom"
         app:layout_constraintEnd_toEndOf="@id/guideline_card_four_five"
         app:layout_constraintStart_toEndOf="@id/guideline_three_four"
-        app:layout_constraintTop_toTopOf="@id/guideline_card_top"
-        android:src="@drawable/sj" />
+        app:layout_constraintTop_toTopOf="@id/guideline_card_top" />
 
     <ImageView
         android:id="@+id/card5"
@@ -164,8 +167,7 @@
         app:layout_constraintBottom_toBottomOf="@id/guideline_card_bottom"
         app:layout_constraintEnd_toStartOf="@id/guideline_card_right"
         app:layout_constraintStart_toEndOf="@id/guideline_card_four_five"
-        app:layout_constraintTop_toTopOf="@+id/guideline_card_top"
-        android:src="@drawable/dq" />
+        app:layout_constraintTop_toTopOf="@+id/guideline_card_top" />
 
     <TextView
         android:id="@+id/combination_text"
@@ -177,5 +179,15 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline_card_top"
         app:layout_constraintEnd_toStartOf="@+id/guideline_card_four_five"
         app:layout_constraintStart_toStartOf="@+id/guideline_card_one_two" />
+
+    <Button
+        android:id="@+id/next_round_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onNextRoundClick"
+        android:text="Next round"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_next_round_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline_card_right" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,7 +24,7 @@ def determineSuit(blur, isRed):
     ret, thresh = cv2.threshold(blur, 200, 200, 200)
 
     # Finding the points where the shape outline changes direction, by making an outline of vectors
-    contours, hierarchy = cv2.findContours(blur, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = cv2.findContours(blur, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
     # saving the positions of the white pixels fom the thresholding
     M = cv2.moments(thresh)

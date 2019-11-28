@@ -8,10 +8,10 @@ def find_face_card(image):
     params = cv2.SimpleBlobDetector_Params()
 
     # define parameters for the blob detector
-    params.filterByArea = True  # allows using area paramater
+    params.filterByArea = True  # allows using area parameter
 
     # these parameters are dependant on image size
-    params.minArea = 30  # min and max areas of pixels for 1 blob
+    params.minArea = 100  # min and max areas of pixels for 1 blob
     params.maxArea = 10000
 
     params.filterByColor = True  # to care about the color
@@ -22,7 +22,7 @@ def find_face_card(image):
     ## convert to hsv
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-    mask = cv2.inRange(hsv, (16, 150, 100), (45, 255, 255)) #Look for colour only existing in face cards
+    mask = cv2.inRange(hsv, (16, 150, 100), (30, 255, 255)) #Look for colour only existing in face cards
 
     ## slice the yellow
     imask = mask > 0

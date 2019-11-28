@@ -7,69 +7,74 @@
     android:background="@color/backgroundColor"
     tools:context=".ActivitySetSuits">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline"
+        app:layout_constraintGuide_percent="0.1"
+        android:orientation="horizontal" />
+
     <TextView
         android:id="@+id/InstructionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="Please Choose the suit"
+        android:text="Please choose the suit"
         android:textColor="@android:color/darker_gray"
-        android:textSize="36sp"
+        android:textSize="40sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/suitS"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
 
     <ImageButton
-        android:id="@+id/suitS"
+        android:id="@+id/suits"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="onSuitClick"
-        app:layout_constraintBottom_toTopOf="@+id/suitD"
-        app:layout_constraintEnd_toStartOf="@+id/suitH"
+        app:layout_constraintBottom_toTopOf="@+id/suitd"
+        app:layout_constraintEnd_toStartOf="@+id/suith"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/InstructionText"
         android:src="@drawable/spade" />
 
     <ImageButton
-        android:id="@+id/suitH"
+        android:id="@+id/suith"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="onSuitClick"
-        app:layout_constraintBottom_toBottomOf="@+id/suitS"
+        app:layout_constraintBottom_toBottomOf="@+id/suits"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/suitS"
-        app:layout_constraintTop_toTopOf="@+id/suitS"
+        app:layout_constraintStart_toEndOf="@+id/suits"
+        app:layout_constraintTop_toTopOf="@+id/suits"
         android:src="@drawable/heart" />
 
     <ImageButton
-        android:id="@+id/suitD"
+        android:id="@+id/suitd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:onClick="onSuitClick"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/suitC"
+        app:layout_constraintEnd_toStartOf="@+id/suitc"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/suitS"
+        app:layout_constraintTop_toBottomOf="@+id/suits"
         android:src="@drawable/diamond" />
 
     <ImageButton
-        android:id="@+id/suitC"
+        android:id="@+id/suitc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:onClick="onSuitClick"
-        app:layout_constraintBottom_toBottomOf="@+id/suitD"
+        app:layout_constraintBottom_toBottomOf="@+id/suitd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/suitD"
-        app:layout_constraintTop_toTopOf="@+id/suitD"
+        app:layout_constraintStart_toEndOf="@+id/suitd"
+        app:layout_constraintTop_toTopOf="@+id/suitd"
         android:src="@drawable/club" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
