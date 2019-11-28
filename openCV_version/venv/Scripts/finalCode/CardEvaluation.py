@@ -46,21 +46,24 @@ def decryptHand(string):
 def evaluateHandCards(firstValue, secondValue, firstCard, secondCard):
     # firstValueIndex is the placement of the card's value according to the strength
     valueIndexes = firstValueIndex, secondValueIndex = (100, 100) #random can be given, so it could be seen if it's changed when searching
-    i = 0 # used for searching
+    i = 0  # used for searching
     if firstValue != secondValue:  # if both card values are not the same, following code is done
 
         for value in cardValue:  # checks through each element in the cardValue list, which is defined at the start
             if value == firstValue:
                 firstValueIndex = i + 1
-            if value == secondValue:
-                secondValueIndex = i + 1
-
+            else:
+                if value == secondValue:
+                    secondValueIndex = i + 1
+                else:
+                    i += 1
             # if values are already taken, compare them, compute the string and return it
             if firstValueIndex != 100 and secondValueIndex != 100:
                 # value is:
                 # all possible combinations - multiplication of two card strengths and 9
                 # 8 is for accounting to the same value cards, which are also possible, such as 8CJD and 8SJC (they're the same strength)
-                value = 7642 - (firstValueIndex * secondValueIndex * 8)
+                value = firstValueIndex * secondValueIndex * 8
+                value = 7642 - value
                 stringToSend = str("9 " + str(firstCard) + str(secondCard) + " " + str(value))
                 return str(stringToSend)
 
@@ -74,9 +77,11 @@ def evaluateHandCards(firstValue, secondValue, firstCard, secondCard):
                 # value is:
                 # all possible combinations - ranks of the high cards - multiplication of two card strengths and 9
                 # 9 is for accounting to the same value pairs, which are also possible, such as ASAD and AHAC (they're the same strength)
-                value = 7642 - 1277 - (firstValueIndex * secondValueIndex * 9)
+                value = 7642 - 1277 - (firstValueIndex * secondValueIndex * 17)
                 stringToSend = str("8 " + str(firstCard) + str(secondCard) + " " + str(value))
                 return str(stringToSend)
+            else:
+                i += 1
 
 
 def evaluateCards(boardCards, handCards):
