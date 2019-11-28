@@ -12,6 +12,7 @@ public class CombinationChecker {
     //private String[] currentCards; // The signatures of the cards in the combination
 
     LinkedList<String> currentCards = new LinkedList<>();
+    int modeIndex = 0;
 
     CombinationChecker(String combinationText){
         // combination text should look like "6 5S6C7S8H9D 2254"
@@ -20,11 +21,39 @@ public class CombinationChecker {
     }
 
     private void readString (String text){
+        int modeThreshold = 5;
+        String[] readCombinations = new String[modeThreshold]; //used to store the current combination before taking mode
+
         //splitting the received array up for each space
         String[] array = text.split(" ");
 
-        //Finding the corresponding combination name from a list of names in order
-        currentCombination = possibleCombinations[Integer.valueOf(array[0])];
+        //circling through spots in the array, to constantly update the mode
+        if (modeIndex >= modeThreshold){
+            modeIndex = 0;
+        }
+
+        //Finding the corresponding combination name from a list of names
+        readCombinations[modeIndex] = possibleCombinations[Integer.valueOf(array[0])];
+
+        //finding the the mode of the last five sent combinations
+        int maxCounter = 0; //used to store the amount of cards in current mode
+        for (int i = 0; i < modeThreshold; i++){ //checking though the stored combinations
+            int counter = 0; // to count repetitions of current combination
+
+            // circling through all saved combinations counting the matches
+            for (int j = 0; j < modeThreshold; j++){
+                if (readCombinations[i].equals(readCombinations[j])){
+                    counter++;
+                }
+            }
+            //Checking if the combination we just counted beats the current mode
+            if (counter > maxCounter){
+                maxCounter = counter;
+                //saving the mode
+                currentCombination = readCombinations[i];
+            }
+        }
+
         int i = 0;
         while(i < array[1].length()-1){
             String temp = String.valueOf(array[1].charAt(i+1)); //first
