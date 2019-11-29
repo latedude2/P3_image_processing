@@ -12,6 +12,7 @@ public class CombinationChecker {
     //private String[] currentCards; // The signatures of the cards in the combination
 
     LinkedList<String> currentCards = new LinkedList<>();
+    int modeIndex = 0;
 
     CombinationChecker(String combinationText){
         // combination text should look like "6 5S6C7S8H9D 2254"
@@ -20,11 +21,13 @@ public class CombinationChecker {
     }
 
     private void readString (String text){
+
         //splitting the received array up for each space
         String[] array = text.split(" ");
 
-        //Finding the corresponding combination name from a list of names in order
         currentCombination = possibleCombinations[Integer.valueOf(array[0])];
+        System.out.println(currentCombination);
+
         int i = 0;
         while(i < array[1].length()-1){
             String temp = String.valueOf(array[1].charAt(i+1)); //first

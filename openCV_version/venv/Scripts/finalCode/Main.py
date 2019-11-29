@@ -24,11 +24,11 @@ boardCardsShown = False
 
 
 def main():
-    video_capture = cv2.VideoCapture('http://192.168.43.182:8080/video')
+    video_capture = cv2.VideoCapture('http://172.20.10.14:8080/video')
     print("Connected to camera")
     while True:  # for more connection to be added after others end
         boardCardsShown = False
-        HOST = "192.168.43.18"   # Also known as IP
+        HOST = "172.20.10.4"   # Also known as IP
         PORT = 12345
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create socket
         print('Socket created')
@@ -83,7 +83,7 @@ def main():
                         if(images[i].shape[0] > minCardHeight and images[i].shape[1] > minCardWidth):  #This has to be set based on card size on the screen (in pixels)
                             cardCount = cardCount + 1       #We found a potential card
                             print("Card " + str(i))
-                            #cv2.imshow("Card" + str(i), images[i])
+                            cv2.imshow("Card" + str(i), images[i])
 
                             # cv2.imshow("Card" + str(i), images[i])
                             # cv2.imwrite("kings.png", images[i]) # to save it if needed for test
@@ -97,7 +97,7 @@ def main():
 
 
 
-                    while (len(foundCards) > 25):  # remove old cards, we only need recently detected cards
+                    while (len(foundCards) > 15):  # remove old cards, we only need recently detected cards
                         foundCards.pop(1)  # remove first card in list
 
                     if cardCount < 3:

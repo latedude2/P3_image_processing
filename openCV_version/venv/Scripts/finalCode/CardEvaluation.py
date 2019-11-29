@@ -131,8 +131,8 @@ def evaluateCards(boardCards, handCards):
     print(Card.print_pretty_cards(board + hand))
 
     evaluator = Evaluator()
-    bestScore = evaluator.evaluate(board, hand)
-    handType = evaluator.get_rank_class(bestScore)
+    bestScore = evaluator.evaluate(board, hand) # takes what is the score of the cards
+    handType = evaluator.get_rank_class(bestScore) # takes what is the hand type of that score
 
     print("Player 1 hand rank = %d (%s)\n" % (bestScore, evaluator.class_to_string(handType)))
 
@@ -173,7 +173,7 @@ def evaluateCards(boardCards, handCards):
 
     print(Card.print_pretty_cards(best6Board + best6Hand))
 
-    if(len(board) == 4):
+    if(len(best6Board) == 4 or len(board) == 4):
         #we repeat the process to have the best 5 cards
         for i in range(len(best6Board) + len(best6Hand)):
             #Make copy of hand and board
@@ -199,6 +199,7 @@ def evaluateCards(boardCards, handCards):
                     best5Hand.append(tempHand[j])
                 for j in range(len(tempBoard)):
                     best5Board.append(tempBoard[j])
+                print("updated best 5 score")
                 break
 
     else:
