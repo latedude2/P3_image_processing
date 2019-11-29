@@ -1,5 +1,7 @@
 package com.example.android_application_for_p3;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 
 public class CombinationChecker {
@@ -35,13 +37,28 @@ public class CombinationChecker {
             i += 2;
             currentCards.add(temp);
         }
-
+        sortCards();
         cardAmount = currentCards.size();
     }
 
     String cardNameToViewName(int index){
          // it could be like "6H", but need to make it to h6
         return currentCards.get(index).toLowerCase();
+    }
+
+    private void sortCards(){
+        //could get like ["s2", "d6", "c8", "ct", "sa"]
+        LinkedList<String> tempCards = new LinkedList<>();
+        tempCards = currentCards;
+        //Collections.sort(currentCards);
+
+        Collections.sort(currentCards, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return Character.compare(o1.charAt(1), o2.charAt(1));
+            }
+        });
+        System.out.println(currentCards);
     }
 
     //--------------------------------------------//
