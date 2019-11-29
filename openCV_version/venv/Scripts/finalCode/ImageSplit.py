@@ -17,7 +17,7 @@ def splitIntoCardImages(img):
     hsv = cv2.cvtColor(blur, cv2.COLOR_BGR2HSV)
 
     ## mask of green (36,25,25) ~ (86, 255,255)
-    mask = cv2.inRange(hsv, (36, 25, 5), (70, 255, 255))
+    mask = cv2.inRange(hsv, (30, 25, 5), (75, 255, 255))
 
     ## slice the green
     imask = mask > 0
@@ -43,7 +43,7 @@ def splitIntoCardImages(img):
             TM = np.float32([[1, 0, -extLeft[0]], [0, 1, -extTop[1]]])
             # Crop the card image
             imgT = cv2.warpAffine(img, TM, ((extRight[0] - extLeft[0]), (extBot[1] - extTop[1])))
-            if imgT.shape[0] > 200:
+            if imgT.shape[0] < 400 and imgT.shape[0] > 150:
                 images.append(imgT)
             #cv2.imshow("Single card pls" + str(i), imgT)
 
@@ -145,7 +145,7 @@ def findTwoBiggestImages(images):
     
     '''
 
-    #cv2.imshow("Number", biggestImage1)
+    cv2.imshow("Number", biggestImage1)
     #Create new list that does not have images with holes in them(We are trying to avoid blobs with holes in them) - this might need changing
 
     imagesToCheck = []

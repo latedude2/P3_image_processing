@@ -32,8 +32,8 @@ public class ActivitySpeedometer extends AppCompatActivity {
 
     boolean roundIsOn; // used to control the threads, so when the round needs to repeat, all threads should be killed
 
-    int modeLength = 5;
-    String[] readCombinations = {" ", " ", " ", " ", " "}; //used to store the current combination before taking mode
+    int modeLength = 3;
+    String[] readCombinations = {" ", " ", " "}; //used to store the current combination before taking mode
     int[] calculatedAngles = new int[modeLength]; //used to find mode of angles
     int modeIndex = 0;
 
