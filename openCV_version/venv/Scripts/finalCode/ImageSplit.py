@@ -145,7 +145,7 @@ def findTwoBiggestImages(images):
     
     '''
 
-    cv2.imshow("Number", biggestImage1)
+    #cv2.imshow("Number", biggestImage1)
     #Create new list that does not have images with holes in them(We are trying to avoid blobs with holes in them) - this might need changing
 
     imagesToCheck = []
