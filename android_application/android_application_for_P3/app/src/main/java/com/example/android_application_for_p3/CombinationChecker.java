@@ -48,9 +48,6 @@ public class CombinationChecker {
 
     private void sortCards(){
         //could get like ["s2", "d6", "c8", "ct", "sa"]
-        LinkedList<String> tempCards = new LinkedList<>();
-        tempCards = currentCards;
-        //Collections.sort(currentCards);
 
         Collections.sort(currentCards, new Comparator<String>() {
             @Override
