@@ -3,8 +3,9 @@ import imutils
 import numpy as np
 from ImageSplit import *
 
+
 def templateMatch(original, template):
-#returns how many pixels don't match
+# returns how many pixels don't match
 
     width = int(template.shape[1])
     height = int(template.shape[0])
@@ -12,8 +13,8 @@ def templateMatch(original, template):
     # resize image
     original = cv2.resize(original, dim, interpolation=cv2.INTER_AREA)
 
-    #cv2.imshow("Original", original)
-    #cv2.imshow("Template", template)
+    cv2.imshow("Original", original)
+    # cv2.imshow("Template", template)
 
     if original.shape == template.shape:  # checks if the size and amount of channels in the images match. Optional.
         difference = cv2.subtract(original, template)  # Calculates the pixel difference between original and template images
@@ -33,40 +34,111 @@ def templateMatch(original, template):
 
 
 def determineNumber(numberImage, isFaceCard):
-#Finds which of the four letters the card is based on amount of pixels that don't match
+    # Finds which of the four letters the card is based on amount of pixels that don't match
 
-    templateA = cv2.imread("../Images/Templates/A.png")
+    widthTopLeft = int(numberImage.shape[0] / 3)
+    heightTopLeft = int(numberImage.shape[1] / 3)
+    topLeftPart = numberImage[0:heightTopLeft, 0:widthTopLeft]
+
+    cv2.imshow("TOP LEFT PART", topLeftPart)
+
     templateK = cv2.imread("../Images/Templates/K.png")
     templateQ = cv2.imread("../Images/Templates/Q.png")
     templateJ = cv2.imread("../Images/Templates/J.png")
     number = "CARD NUMBER NOT FOUND "
-    negativeProbability = 99999
-    if not isFaceCard:
-        if (templateMatch(numberImage, templateA) < negativeProbability):
-            negativeProbability  = templateMatch(numberImage, templateA)
-            number = "A"
+
+    negativeProbabilityking = templateMatch(numberImage, templateK)
+
+    if cv2.inRange(topLeftPart, (200, 200, 200), (255, 255, 255)).any():
+        print("it's probably not a fckn jack")
+        negativeProbabilityjack = templateMatch(numberImage, templateJ)
     else:
-        if (templateMatch(numberImage, templateQ) < negativeProbability):
-            negativeProbabilityqueen = templateMatch(numberImage, templateQ)
-            
-        if (templateMatch(numberImage, templateK) < negativeProbability):
-            negativeProbabilityking = templateMatch(numberImage, templateK)
+        negativeProbabilityjack = 40
+        #negativeProbabilityjack = templateMatch(numberImage, templateJ)
 
-        if (templateMatch(numberImage, templateJ) < negativeProbability):
-            negativeProbabilityjack = templateMatch(numberImage, templateJ)
+    negativeProbabilityqueen = templateMatch(numberImage, templateQ)
 
+    print("KING NEGATIVE")
+    print(negativeProbabilityking)
+    print("QUEEN NEGATIVE")
+    print(negativeProbabilityqueen)
+    print("JACK NEGATIVE")
+    print(negativeProbabilityjack)
 
-
-
-
-        if (negativeProbabilityking < negativeProbabilityqueen and negativeProbabilityking < negativeProbabilityjack):
-            number = "K"
-        elif(negativeProbabilityqueen < negativeProbabilityjack):
-            number = "Q"
-        else:
-            number = "J"
+    if (negativeProbabilityking < negativeProbabilityqueen and negativeProbabilityking < negativeProbabilityjack):
+        number = "K"
+    elif(negativeProbabilityqueen < negativeProbabilityjack):
+        number = "Q"
+    else:
+        number = "J"
 
     return number
+
+def determineNumberasd(numberImage, isFaceCard):
+    card = ""
+
+    original_resized = numberImage  # captured image, got from the camera
+    original = cv2.resize(original_resized, (75, 110))
+
+    all_templates = []  # array to store template images
+    card_name = ["A", "J", "K", "Q"]
+
+    for i in glob.glob("../Images/Templates/*"):  # Return a list of path names in the templates folder
+        template_img = cv2.imread(i)
+        all_templates.append(template_img)
+
+    for template, card_name in zip(all_templates, card_name):  # zip allows to work with more than 1 array/list at a time
+
+        image1 = original.shape  # gives information about size and channels of the images (3 for b g r). Optional.
+        image2 = template.shape
+
+        print(image1)
+        print(image2)
+
+        if original.shape == template.shape:  # checks if the size and amount of channels in the images match. Might not be needed
+            print("same size and channels")
+
+            difference = cv2.subtract(original,
+                                      template)  # Calculates the pixel difference between original and template images
+            # subtracts black pixels as in these pictures they can be either black and white
+
+            b, g, r = cv2.split(
+                difference)  # split an image into three different intensity arrays for each color channel (b g r)
+
+            print(cv2.countNonZero(b))  # the difference in blue channel
+
+            # countNonZero - counts the empty spots in the array of pixels (determines white pixels)
+            # less white pixels means pictures are more likely to be equal
+
+            whitePixelThreshold = 200000
+
+            if cv2.countNonZero(b) <= whitePixelThreshold:  # only needs info from one channel, the images are binary
+                print("equal")
+                print("Matching card " + card_name)
+                card = card_name
+                break
+
+            else:
+                print("not equal")
+
+    # do something with detected images
+    if card == "A":
+        print("Ace")
+
+    elif card == "J":
+        print("Jack")
+
+    elif card == "K":
+        print("King")
+
+    else:
+        print("Queen")
+
+
+    cv2.imshow("Original", original)
+    cv2.imshow("Template", template)
+    cv2.imshow("Subtracted image", difference)
+    return card
 
 def prepareImageForTemplateMatching(suitImage, numberImage):
 #prepares images for template matching and suit analysis by rotating and cropping them

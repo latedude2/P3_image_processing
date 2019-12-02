@@ -24,11 +24,11 @@ boardCardsShown = False
 
 
 def main():
-    video_capture = cv2.VideoCapture('http://172.20.10.14:8080/video')
+    video_capture = cv2.VideoCapture('http://192.168.43.182:8080/video')
     print("Connected to camera")
     while True:  # for more connection to be added after others end
         boardCardsShown = False
-        HOST = "172.20.10.4"   # Also known as IP
+        HOST = "192.168.43.18"   # Also known as IP
         PORT = 12345
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create socket
         print('Socket created')
@@ -210,14 +210,16 @@ def afterRotation(rotated, stringAdd):
     blurredSuit = cv2.GaussianBlur(suitImage, (5, 5), 0)
     cardSuit = determineSuit(blurredSuit, checkRed(corner))
 
+    cv2.imshow("Rotated kinda image I guess help", rotated)
     if(find_face_card(rotated)):
-        #print("Found face")
+        # print("Found face")
         cardNumber = determineNumber(numberImage, True)
+        print("card number is" + cardNumber)
     else:
         cardNumber = countBlobs(rotated, isRed)
 
-    if cardNumber == "1":
-        cardNumber = "A"
+        if cardNumber == "1":
+            cardNumber = "A"
 
     return cardNumber + cardSuit
 

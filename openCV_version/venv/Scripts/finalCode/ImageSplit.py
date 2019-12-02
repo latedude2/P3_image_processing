@@ -60,7 +60,7 @@ def splitCornerToSuitAndNumber(img, isRed):
     grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     if isRed:
-        minSaturation = 170
+        minSaturation = 130
         maxSaturation = 255
         mask1 = cv2.inRange(hsv, (170, minSaturation, 25), (180, maxSaturation, 255))
         mask2 = cv2.inRange(hsv, (0, minSaturation, 25), (19, maxSaturation, 255))
@@ -145,8 +145,9 @@ def findTwoBiggestImages(images):
     
     '''
 
-    #cv2.imshow("Number", biggestImage1)
-    #Create new list that does not have images with holes in them(We are trying to avoid blobs with holes in them) - this might need changing
+    cv2.imshow("Number", biggestImage1)
+    # cv2.imwrite("NumberImage.png", biggestImage1)
+    # Create new list that does not have images with holes in them(We are trying to avoid blobs with holes in them) - this might need changing
 
     imagesToCheck = []
     try:

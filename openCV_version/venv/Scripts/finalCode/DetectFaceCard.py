@@ -1,6 +1,33 @@
 import numpy as np
 import cv2
 
+# defining what means colour blue and yellow with lower and upper borders of them in HSV scale
+blue = low_blue, up_blue = ([100, 130, 100], [132, 255, 255])
+yellow = low_yellow, up_yellow = ([22, 110, 100], [32, 255, 245])
+
+def orig_find_face_card(image):
+    # make lower and upper colour value to identify blue
+    low = np.array(low_blue, dtype="uint8")
+    up = np.array(up_blue, dtype="uint8")
+
+    # this function scans through the image and finds the defined colour
+    # .any() returns a boolean True if the colour is found and False if not
+    if (cv2.inRange(image, low, up).any()):
+        print("it's a face card because blue")
+        return True
+    else:
+        # do the same with yellow colour
+        low = np.array(low_yellow, dtype="uint8")
+        up = np.array(up_yellow, dtype="uint8")
+
+        if (cv2.inRange(image, low, up).any()):
+            print("it's a face card because yellow")
+            return True
+        else:
+            # if non of those colours are found it means that it's not a face card
+            print("not a face card")
+            return False
+
 def find_face_card(image):
 #Returns true if image has yellow BLOBs
 
@@ -22,7 +49,7 @@ def find_face_card(image):
     ## convert to hsv
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-    mask = cv2.inRange(hsv, (16, 150, 100), (30, 255, 255)) #Look for colour only existing in face cards
+    mask = cv2.inRange(hsv, (16, 150, 100), (30, 255, 255))  # Look for colour only existing in face cards
 
     ## slice the yellow
     imask = mask > 0
@@ -31,7 +58,7 @@ def find_face_card(image):
 
     memes, threshImg = cv2.threshold(yellow, 0, 255, cv2.THRESH_BINARY)
 
-    # cv2.imshow("Yellow color: ",threshImg)
+    cv2.imshow("Yellow color: ", threshImg)
     params.blobColor = 255
 
     detector = cv2.SimpleBlobDetector_create(params)  # making the detector by the parameters set before
