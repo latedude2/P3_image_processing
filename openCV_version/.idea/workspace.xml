@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1bc7527a-0f74-48fe-bb4d-5de6390c1ff6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Scripts/finalCode/CardEvaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/finalCode/CardEvaluation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/venv/Scripts/finalCode/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/finalCode/Main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />

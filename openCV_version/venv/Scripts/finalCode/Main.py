@@ -26,7 +26,7 @@ def main():
     print("Connected to camera")
 
     while True: # for more connection to be added after others end
-        HOST = "192.168.43.73"   # Also known as IP
+        HOST = "192.168.43.18"   # Also known as IP
         PORT = 12345
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create socket
         print('Socket created')
