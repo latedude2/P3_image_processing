@@ -17,7 +17,7 @@ def countBlobs(original, isRed):
     params.filterByArea = True  # allows using area paramater
 
     # these parameters are dependant on image size
-    params.minArea = 1000  # min and max areas of pixels for 1 blob
+    params.minArea = 1500  # min and max areas of pixels for 1 blob
     params.maxArea = 100000
 
     params.filterByColor = True  # care about the color

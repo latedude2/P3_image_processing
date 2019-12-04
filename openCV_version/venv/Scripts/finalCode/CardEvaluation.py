@@ -33,7 +33,7 @@ INFORMATION ABOUT COMBINATIONS:
 def decryptHand(string):
     # string sent should look like "h8s9"
     card = []
-    card.append(string[1] + string[0]) # separate two cards and place them in needed positions
+    card.append(string[1] + string[0])  # separate two cards and place them in needed positions
     card.append(string[3] + string[2])
 
     # makes the needed string to send
@@ -74,7 +74,7 @@ def evaluateHandCards(firstValue, secondValue, firstCard, secondCard):
                 # value is:
                 # all possible combinations - ranks of the high cards - multiplication of two card strengths and 9
                 # 9 is for accounting to the same value pairs, which are also possible, such as ASAD and AHAC (they're the same strength)
-                value = 7642 - 1277 - (firstValueIndex * secondValueIndex * 9)
+                value = 7642 - 1277 - (firstValueIndex * secondValueIndex * 17)
                 stringToSend = str("8 " + str(firstCard) + str(secondCard) + " " + str(value))
                 return str(stringToSend)
 
@@ -168,7 +168,7 @@ def evaluateCards(boardCards, handCards):
 
     print(Card.print_pretty_cards(best6Board + best6Hand))
 
-    if(len(board) == 4):
+    if(len(best6Board) == 4 or len(board) == 4):
         #we repeat the process to have the best 5 cards
         for i in range(len(best6Board) + len(best6Hand)):
             #Make copy of hand and board

@@ -19,13 +19,15 @@ cardValue = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
 cardSuit = ["h", "d", "s", "c"]
 
 connected = True  # for the server to know, when the connection is on and when off to wait for a new connection
-
+video_reading = True
+boardCardsShown = False
 
 def main():
     video_capture = cv2.VideoCapture('http://192.168.43.182:8080/video')
     print("Connected to camera")
 
     while True: # for more connection to be added after others end
+        boardCardsShown = False
         HOST = "192.168.43.18"   # Also known as IP
         PORT = 12345
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create socket
@@ -41,7 +43,7 @@ def main():
         connected = True
         i = 0       # Used for testing
         stringToSend = "nothing"
-        while (connected):
+        while connected:
             # try-finally block needed, because if it's not there, when connection is cut, the error is thrown
             # to be able not to crash and then try to connect to someone else, we jump out to finally
             try:
@@ -57,8 +59,9 @@ def main():
                 if len(handCards) == 4:
                     stringToSend = decryptHand(handCards)  # making the string that should be sent
                     conn.send(bytes(str(stringToSend) + "\r\n", 'UTF-8'))  # Send message to client
+                video_reading = True
                 # Main loop
-                while True:
+                while video_reading:
 
                     ret, frame = video_capture.read()
                     frameCount = frameCount + 1  # we iterate frame count for frame skipping
@@ -127,11 +130,17 @@ def main():
                                 stringSend = evaluateCards(findMostCommonCards(cardCount, foundCards), handCards)
                                 print(stringSend)
                                 conn.send(bytes(stringSend + "\r\n", 'UTF-8'))  # Send message to client
+                                boardCardsShown = True
                             except:
                                 print("Card eval failed")
-
+                        #if boardCardsShown and len(findMostCommonCards(cardCount, foundCards)) < 1:
+                         #   connected = False
+                          #  video_reading = False
+                           # boardCardsShown = False
 
             finally:
+                video_reading = False
+                boardCardsShown = False
                 connected = False
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
