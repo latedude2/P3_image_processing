@@ -77,7 +77,7 @@ def splitCornerToSuitAndNumber(img, isRed):
         #cv2.imshow("Red Thresh",threshImg)
 
     else:
-        memes, threshImg = cv2.threshold(grey, 70, 255, cv2.THRESH_BINARY_INV)
+        memes, threshImg = cv2.threshold(grey, 50, 255, cv2.THRESH_BINARY_INV)
         threshImg = cv2.cvtColor(threshImg, cv2.COLOR_GRAY2BGR)
         #cv2.imshow("Black threshold", threshImg)
 
@@ -131,6 +131,7 @@ def findTwoBiggestImages(images):
                 if (height / width > 1.3):
                     biggestImage1 = images[i]
 
+    cv2.imshow("the thing",biggestImage1)
     images.remove(biggestImage1)
     #print(len(images))
 

@@ -3,9 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="1bc7527a-0f74-48fe-bb4d-5de6390c1ff6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Scripts/finalCode/BlobCounting.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/finalCode/BlobCounting.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/venv/Scripts/finalCode/CardEvaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/finalCode/CardEvaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/finalCode/DetectFaceCard.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/finalCode/DetectFaceCard.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/finalCode/DetectRed.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/finalCode/DetectRed.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/finalCode/ImageSplit.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/finalCode/ImageSplit.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/venv/Scripts/finalCode/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/finalCode/Main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/Scripts/finalCode/SuitAnalysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/venv/Scripts/finalCode/SuitAnalysis.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -107,13 +109,23 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/venv/Scripts/finalCode/Main.py</url>
-          <line>141</line>
+          <line>143</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/venv/Scripts/finalCode/Main.py</url>
-          <line>136</line>
-          <option name="timeStamp" value="5" />
+          <line>90</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/Scripts/finalCode/Main.py</url>
+          <line>91</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/Scripts/finalCode/ImageSplit.py</url>
+          <line>111</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

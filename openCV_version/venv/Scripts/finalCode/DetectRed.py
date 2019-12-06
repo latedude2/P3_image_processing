@@ -28,8 +28,8 @@ def checkRed(original):
     ## convert to hsv
     hsv = cv2.cvtColor(median, cv2.COLOR_BGR2HSV)
 
-    mask = cv2.inRange(hsv, (0, 135, 100), (20, 255, 255))
-    mask = mask | cv2.inRange(hsv, (170, 135, 100), (180, 255, 255))
+    mask = cv2.inRange(hsv, (0, 135, 80), (20, 255, 255))
+    mask = mask | cv2.inRange(hsv, (170, 135, 80), (180, 255, 255))
 
     ## slice the red
     imask = mask > 0

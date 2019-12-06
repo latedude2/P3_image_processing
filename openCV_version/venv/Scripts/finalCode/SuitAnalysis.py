@@ -77,13 +77,13 @@ def determineSuit(blur, isRed):
     # Differentiating here will also include color to complete the split of the 4 suits
     # Checking if more points than the threshold percentage are considered close to the center
     if (len(lowPos) >= len(points) * threshold):  # Spade and diamond give many close points, since the closest is similar to all other points
-        #print("spade or diamond")
+        print("spade or diamond")
         if(isRed):
             return "D"
         else:
             return "S"
     elif (len(lowPos) < len(points) * threshold):  # heart and club give few close points, since the closest is an outlier from the other points
-        #print("heart or club")
+        print("heart or club")
         if (isRed):
             return "H"
         else:

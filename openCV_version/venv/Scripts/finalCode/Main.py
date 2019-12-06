@@ -84,12 +84,13 @@ def main():
                             if(images[i].shape[0] > minCardHeight and images[i].shape[1] > minCardWidth):  #This has to be set based on card size on the screen (in pixels)
                                 cardCount = cardCount + 1       #We found a potential card
                                 print("Card " + str(i))
-                                #cv2.imshow("Card" + str(i), images[i])
+                                # cv2.imshow("Card" + str(i), images[i])
 
                                 # cv2.imshow("Card" + str(i), images[i])
                                 # cv2.imwrite("kings.png", images[i]) # to save it if needed for test
                                 detectedCard = analyseCard(images[i])    #Analyse card to see what card it is
                                 if (detectedCard != "Error"):            #If we found a valid card
+                                    print("The card whatever it is found for fuck sake")
                                     detectedCards.append(detectedCard)   #Add to list of cards detected this frame
 
                         #Add cards detected this frame to all detected cards
@@ -104,7 +105,7 @@ def main():
                         if cardCount < 3:
                             for k in range(len(foundCards)):
                                 foundCards.pop()
-                                # print("Clear cards")
+                                print("Clear cards")
 
                         # Remove empty cards (" "), because analyseCards returns an empty card sometimes
                         foundLength = len(foundCards)
@@ -120,6 +121,7 @@ def main():
                                 # next item will shift to the left
                                 continue
                             j = j + 1
+                            print("loop is running")
 
                         print(findMostCommonCards(cardCount, foundCards))
 
@@ -165,15 +167,19 @@ def analyseCard(frame):
         green = np.zeros_like(frame, np.uint8)
         green[imask] = frame[imask]
 
+        cv2.imshow("Frame IMAGE", frame)
         # Rotate cards
-        rotated = cardRotation(frame)
+        # rotated = cardRotation(frame)
+        rotated = np.rot90(frame)
+
+        cv2.imshow("POTENTIALLY ROTATED", rotated)
         return afterRotation(rotated, "first")
-    except: #If an error is thrown, we try a different rotation algorithm
-        try:
-            rotated = altRotate(frame)
-            return afterRotation(rotated, "alternative")
-        except:
-            return "Error"
+    except:  # If an error is thrown, we try a different rotation algorithm
+        #try:
+        #    rotated = altRotate(frame)
+        #    return afterRotation(rotated, "alternative")
+        #except:
+        return "Error"
 
 def afterRotation(rotated, stringAdd):
 #Continue analysis of card after rotation
@@ -188,38 +194,40 @@ def afterRotation(rotated, stringAdd):
     #cv2.imshow("Cropped image " +  stringAdd, rotatedCardImage)
 
     #get the corner image
-    TM = np.float32([[1, 0, 0], [0, 1, - rotatedCardImage.shape[0] / 6 * 4.8]])
-    corner = cv2.warpAffine(rotatedCardImage, TM,
-                            (int(rotatedCardImage.shape[1] / 3.5), int(rotatedCardImage.shape[0] / 5.5)))   #Size of corner image
+    #TM = np.float32([[1, 0, 0], [0, 1, - rotatedCardImage.shape[0] / 6 * 4.8]])
+    #corner = cv2.warpAffine(rotatedCardImage, TM, (int(rotatedCardImage.shape[1] / 3.5), int(rotatedCardImage.shape[0] / 5.5)))   #Size of corner image
 
-    #cv2.imshow("Corner image " +  stringAdd, corner)
+    corner = rotated[int(rotated.shape[0]) - int(rotated.shape[0] / 4.5): int(rotated.shape[0]), 0: int(rotated.shape[1] / 3)].copy()
+
+    cv2.imshow("Corner image " + stringAdd, corner)
 
     #Detect if card is red, we pass corner here as all face cards have red in them
     isRed = checkRed(corner)
-    #print("1")
+    print("1")
     #split corner image to suit and number
     suitImage, numberImage = splitCornerToSuitAndNumber(corner, isRed)
-   # print("2")
+    print("2")
     #Rotate images for template matching and suit analysis
     suitImage, numberImage = prepareImageForTemplateMatching(suitImage, numberImage)
-    #print("3")
+    print("3")
     #cv2.imshow("Suit image " + stringAdd, suitImage)
     #cv2.imshow("Number image " + stringAdd, numberImage)
-    #print("4")
+    print("4")
     #add border to suit image for suit analysis
     border = 5
     suitImage = cv2.copyMakeBorder(suitImage, border, border, border, border, cv2.BORDER_CONSTANT,
                                    value=[0, 0, 0])
-    #print("5")
+    print("5")
     #Suit analysis
     suitImage = cv2.cvtColor(suitImage, cv2.COLOR_BGR2GRAY)
     blurredSuit = cv2.GaussianBlur(suitImage, (5, 5), 0)
     cardSuit = determineSuit(blurredSuit, checkRed(corner))
 
     if(find_face_card(rotated)):
-        #print("Found face")
+        print("Found face")
         cardNumber = determineNumber(numberImage, True)
     else:
+        print("Not a face card")
         cardNumber = countBlobs(rotated, isRed)
 
     if cardNumber == "1":

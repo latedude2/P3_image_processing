@@ -22,7 +22,7 @@ def find_face_card(image):
     ## convert to hsv
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-    mask = cv2.inRange(hsv, (16, 150, 100), (30, 255, 255)) #Look for colour only existing in face cards
+    mask = cv2.inRange(hsv, (16, 180, 100), (30, 255, 255)) #Look for colour only existing in face cards
 
     ## slice the yellow
     imask = mask > 0
