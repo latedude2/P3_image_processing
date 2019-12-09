@@ -31,7 +31,7 @@ def find_face_card(image):
 
     memes, threshImg = cv2.threshold(yellow, 0, 255, cv2.THRESH_BINARY)
 
-    cv2.imshow("Yellow color: ",threshImg)
+    #cv2.imshow("Yellow color: ",threshImg)
     params.blobColor = 255
 
     detector = cv2.SimpleBlobDetector_create(params)  # making the detector by the parameters set before

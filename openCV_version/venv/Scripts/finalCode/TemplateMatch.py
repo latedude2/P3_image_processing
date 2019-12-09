@@ -23,7 +23,7 @@ def templateMatch(original, template):
 
         # print(cv2.countNonZero(b)) #the difference in blue channel
 
-        cv2.imshow("subtracted images", difference)
+        #cv2.imshow("subtracted images", difference)
 
         # countNonZero - counts the empty spots in the array of pixels (determines white pixels)
         # less white pixels means pictures are more likely to be equal

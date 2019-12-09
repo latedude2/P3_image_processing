@@ -23,12 +23,12 @@ video_reading = True
 boardCardsShown = False
 
 def main():
-    video_capture = cv2.VideoCapture('http://192.168.43.182:8080/video')
+    video_capture = cv2.VideoCapture('http://172.20.10.14:8080/video')
     print("Connected to camera")
 
     while True: # for more connection to be added after others end
         boardCardsShown = False
-        HOST = "192.168.43.18"   # Also known as IP
+        HOST = "172.20.10.4"   # Also known as IP
         PORT = 12345
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create socket
         print('Socket created')
@@ -66,7 +66,7 @@ def main():
                     ret, frame = video_capture.read()
                     frameCount = frameCount + 1  # we iterate frame count for frame skipping
                     if frameCount % frameSkip == 0 and frame is not None:  # we skip frames so the camera feed does not lag behind
-                        cv2.imshow("Camera footage", frame)
+                        #cv2.imshow("Camera footage", frame)
                         # height, width = frame.shape[:2]
                         # cv2.resizeWindow('Camera footage', 660, 360)
 
@@ -167,12 +167,12 @@ def analyseCard(frame):
         green = np.zeros_like(frame, np.uint8)
         green[imask] = frame[imask]
 
-        cv2.imshow("Frame IMAGE", frame)
+        #cv2.imshow("Frame IMAGE", frame)
         # Rotate cards
         # rotated = cardRotation(frame)
         rotated = np.rot90(frame)
 
-        cv2.imshow("POTENTIALLY ROTATED", rotated)
+        #cv2.imshow("POTENTIALLY ROTATED", rotated)
         return afterRotation(rotated, "first")
     except:  # If an error is thrown, we try a different rotation algorithm
         #try:
@@ -199,7 +199,7 @@ def afterRotation(rotated, stringAdd):
 
     corner = rotated[int(rotated.shape[0]) - int(rotated.shape[0] / 4.5): int(rotated.shape[0]), 0: int(rotated.shape[1] / 3)].copy()
 
-    cv2.imshow("Corner image " + stringAdd, corner)
+    #cv2.imshow("Corner image " + stringAdd, corner)
 
     #Detect if card is red, we pass corner here as all face cards have red in them
     isRed = checkRed(corner)

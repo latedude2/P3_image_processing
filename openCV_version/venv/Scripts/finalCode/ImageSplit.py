@@ -131,7 +131,7 @@ def findTwoBiggestImages(images):
                 if (height / width > 1.3):
                     biggestImage1 = images[i]
 
-    cv2.imshow("the thing",biggestImage1)
+    #cv2.imshow("the thing",biggestImage1)
     images.remove(biggestImage1)
     #print(len(images))
 

@@ -49,7 +49,7 @@ def countBlobs(original, isRed):
         im_with_keypoints = cv2.drawKeypoints(threshImg, keypoints, np.array([]), (0, 0, 255),
                                               cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
-        cv2.imshow("Detected red  Blobs: ", im_with_keypoints)
+        #cv2.imshow("Detected red  Blobs: ", im_with_keypoints)
 
         blobCount = len(keypoints)
 
@@ -70,7 +70,7 @@ def countBlobs(original, isRed):
                                               cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
         blobCount = len(keypoints)
 
-        cv2.imshow("Detected black Blobs: ", im_with_keypoints)
+        #cv2.imshow("Detected black Blobs: ", im_with_keypoints)
 
     #print(blobCount)
     if(blobCount == 10):
