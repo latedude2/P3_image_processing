@@ -123,7 +123,6 @@ public class ActivitySpeedometer extends AppCompatActivity {
                             @Override
                             public void run() {
                                 //do whatever needed with the views each time the message is received
-                                // that should be displaying the rank, combination name and cards in the views
                                 speedometerView.setRotation(rankChecker.getCombinationAngle()); // rotate the speedometer
                                 combinationTextView.setText(combinationChecker.getCurrentCombination()); // set combination text
 

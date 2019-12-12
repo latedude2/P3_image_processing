@@ -126,9 +126,8 @@ def main():
                         print(findMostCommonCards(cardCount, foundCards))
 
                         if len(findMostCommonCards(cardCount, foundCards)) >= 5:
-                            # stringToSend = decryptHand(handCards)  # making the string that should be sent
-                            #stringToSend = "3 " + findMostCommonCards(cardCount, foundCards) + " 4000"
                             try:
+                                # making the string that should be sent
                                 stringSend = evaluateCards(findMostCommonCards(cardCount, foundCards), handCards)
                                 print(stringSend)
                                 conn.send(bytes(stringSend + "\r\n", 'UTF-8'))  # Send message to client
