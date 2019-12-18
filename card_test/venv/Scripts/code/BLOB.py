@@ -22,7 +22,6 @@ def main():
     del img, binaryImg, medianImg, blobImg  # Deleting the temporary image files to save memory, since we have already shown the output
 
 
-
 def detectBlobs(img, counter):  # This function goes through finding each BLOB and counting them
     pixels = list(img.getdata())  # Creates a 1D list of RGB values for each pixel in the image
     width, height = img.size  # Setting the values for width and height based on the dimensions of the image

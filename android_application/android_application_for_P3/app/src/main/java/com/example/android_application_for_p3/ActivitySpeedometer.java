@@ -32,6 +32,11 @@ public class ActivitySpeedometer extends AppCompatActivity {
 
     boolean roundIsOn; // used to control the threads, so when the round needs to repeat, all threads should be killed
 
+    int modeLength = 3;
+    String[] readCombinations = {" ", " ", " "}; //used to store the current combination before taking mode
+    int[] calculatedAngles = new int[modeLength]; //used to find mode of angles
+    int modeIndex = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,8 +129,17 @@ public class ActivitySpeedometer extends AppCompatActivity {
                             public void run() {
                                 //do whatever needed with the views each time the message is received
                                 // that should be displaying the rank, combination name and cards in the views
-                                speedometerView.setRotation(rankChecker.getCombinationAngle()); // rotate the speedometer
-                                combinationTextView.setText(combinationChecker.getCurrentCombination()); // set combination text
+                                calculatedAngles[modeIndex] = rankChecker.getCombinationAngle();
+                                readCombinations[modeIndex] = combinationChecker.getCurrentCombination();
+
+                                if (modeIndex < modeLength - 1){
+                                    modeIndex++;
+                                }
+                                else { modeIndex = 0; }
+                                System.out.println("index = " + modeIndex);
+
+                                speedometerView.setRotation(findMode(calculatedAngles)); // rotate the speedometer
+                                combinationTextView.setText(findMode(readCombinations)); // set combination text
 
                                 for(int i = 1; i < combinationChecker.getCardAmount()+1; i++){
                                     // take the card id (from 1 up to 5) make id from it and take the needed view
@@ -150,6 +164,58 @@ public class ActivitySpeedometer extends AppCompatActivity {
                 } catch (IOException e) { System.out.println("Receiving message failed"); }
             }
         }
+    }
+
+    static int findMode(int[] list){
+        int mode = list[0];
+
+        //finding the the mode of the combinations
+        int maxCounter = 0; //used to store the amount of cards in current mode
+        for (int i = 0; i < list.length; i++){ //checking though the stored combinations
+            int counter = 0; // to count repetitions of current combination
+
+            // circling through all saved combinations counting the matches
+            for (int j = 0; j < list.length; j++){
+                if (list[i] == list[j] && list[i] != 0){
+                    System.out.println("got here");
+                    counter++;
+                }
+            }
+            //Checking if the combination we just counted beats the current mode
+            if (counter >= maxCounter){
+                maxCounter = counter;
+                //saving the mode
+                mode = list[i];
+            }
+        }
+        System.out.println("angle mode = " + mode);
+        return mode;
+    }
+
+    static String findMode (String[] list){
+        String mode = list[0];
+
+
+        //finding the the mode of the combinations
+        int maxCounter = 0; //used to store the amount of cards in current mode
+        for (int i = 0; i < list.length; i++){ //checking though the stored combinations
+            int counter = 0; // to count repetitions of current combination
+
+            // circling through all saved combinations counting the matches
+            for (int j = 0; j < list.length; j++){
+                if (!list[i].equals(" ") && list[i].equals(list[j])){
+                    counter++;
+                }
+            }
+            //Checking if the combination we just counted beats the current mode
+            if (counter >= maxCounter){
+                maxCounter = counter;
+                //saving the mode
+                mode = list[i];
+            }
+        }
+        System.out.println("combination mode = " + mode);
+        return mode;
     }
 
     //this sends initially selected cards as a String

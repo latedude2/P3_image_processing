@@ -23,7 +23,7 @@ public class RankChecker {
 
     private int findAngle (int rank){
         //calculating how many ranks fit into the same angle
-        float degree = 7642/180;
+        float degree = 7642 / 180;
         //Finding how many angles make up the rank
         float angle = rank/degree;
         //rounding it to a whole angle, since you won't be able to see the small changes
