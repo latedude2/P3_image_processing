@@ -15,8 +15,8 @@ def main():
     medianImg = medianFilter(binaryImg)
     blobImg = detectBlobs(medianImg, counter)  # Applying the BLOB detection, which converts "burned" pixels to pink and counts big BLOBs
 
-    img = Image.open (imgName)  # Opening the original image again, cause we have accidentally changed it along the way
-    detectColor(counter, img, blobImg, 3)  # Detecting the color of a given BLOB
+    #img = Image.open (imgName)  # Opening the original image again, cause we have accidentally changed it along the way
+    #detectColor(counter, img, blobImg, 3)  # Detecting the color of a given BLOB
 
     blobImg.show()
     del img, binaryImg, medianImg, blobImg  # Deleting the temporary image files to save memory, since we have already shown the output
@@ -166,41 +166,15 @@ def medianFilter(img):
             xPos = 0  # resetting our x position when we cross the edge
             yPos += 1  # adding to our y position, since we are now in the next row of pixels
 
-        if (xPos - 1 >= 0 and yPos - 1 >= 0):  # Checking that we aren't looking for a pixel outside the image
-            if (pixels[listPos - 1 - width] == (255, 255, 255)):  # Checking if the pixel above to the left is white
-                whiteCounter += 1  # counting the white pixel
+        for yn in range(-1, 2):
+            for xn in range(-1, 2):
 
-        if (yPos - 1 >= 0):  # Checking that we aren't looking for a pixel outside the image
-            if (pixels[listPos - width] == (255, 255, 255)):  # Checking if the pixel above is white
-                whiteCounter += 1  # counting the white pixel
+                # Avoiding counting pixels that don't exist
+                if ( width > xPos + xn >= 0 and height > yPos + yn >= 0):
 
-        if (yPos - 1 >= 0 and xPos + 1 < width):  # Checking that we aren't looking for a pixel outside the image
-            if (pixels[listPos + 1 - width] == (255, 255, 255)):  # Checking if the pixel above to the right is white
-                whiteCounter += 1  # counting the white pixel
-
-        if (xPos - 1 >= 0):  # Checking that we aren't looking for a pixel outside the image
-            if (pixels[listPos - 1] == (255, 255, 255)):  # Checking if the pixel to the left is white
-                whiteCounter += 1  # counting the white pixel
-
-        # We don't need to check if we are outside the image, since this is just our current pixel
-        if (pixels[listPos] == (255, 255, 255)):  # Checking if the current pixel is white
-                whiteCounter += 1  # counting the white pixel
-
-        if (xPos + 1 < width):  # Checking that we aren't looking for a pixel outside the image
-            if (pixels[listPos + 1] == (255, 255, 255)):  # Checking if the pixel to the right is white
-                whiteCounter += 1  # counting the white pixel
-
-        if (yPos + 1 < height and xPos - 1 >= 0):  # Checking that we aren't looking for a pixel outside the image
-            if (pixels[listPos - 1 + width] == (255, 255, 255)):  # Checking if the pixel below to the left is white
-                whiteCounter += 1  # counting the white pixel
-
-        if (yPos + 1 < height):  # Checking that we aren't looking for a pixel outside the image
-            if (pixels[listPos + width] == (255, 255, 255)):  # Checking if the pixel below is white
-                whiteCounter += 1  # counting the white pixel
-
-        if (xPos + 1 < width and yPos + 1 < height):  # Checking that we aren't looking for a pixel outside the image
-            if (pixels[listPos + 1 + width] == (255, 255, 255)):  # Checking if the pixel below to the right is white
-                whiteCounter += 1  # counting the white pixel
+                    #  For each pixel in the 8-cennection kernel checking if it is white
+                    if (pixels[listPos + xn + (yn * width)] == (255, 255, 255)):
+                        whiteCounter += 1 #  counting white pixel
 
         if (whiteCounter >= 5):  # Checking if more than half of the pixels where white
             value = 255
@@ -290,3 +264,42 @@ def detectColor (counter, originalImg, blobImg, blobNum):
 
 if __name__ == '__main__':
     main()
+
+
+"""
+        if (xPos - 1 >= 0 and yPos - 1 >= 0):  # Checking that we aren't looking for a pixel outside the image
+            if (pixels[listPos - 1 - width] == (255, 255, 255)):  # Checking if the pixel above to the left is white
+                whiteCounter += 1  # counting the white pixel
+
+        if (yPos - 1 >= 0):  # Checking that we aren't looking for a pixel outside the image
+            if (pixels[listPos - width] == (255, 255, 255)):  # Checking if the pixel above is white
+                whiteCounter += 1  # counting the white pixel
+
+        if (yPos - 1 >= 0 and xPos + 1 < width):  # Checking that we aren't looking for a pixel outside the image
+            if (pixels[listPos + 1 - width] == (255, 255, 255)):  # Checking if the pixel above to the right is white
+                whiteCounter += 1  # counting the white pixel
+
+        if (xPos - 1 >= 0):  # Checking that we aren't looking for a pixel outside the image
+            if (pixels[listPos - 1] == (255, 255, 255)):  # Checking if the pixel to the left is white
+                whiteCounter += 1  # counting the white pixel
+
+        # We don't need to check if we are outside the image, since this is just our current pixel
+        if (pixels[listPos] == (255, 255, 255)):  # Checking if the current pixel is white
+                whiteCounter += 1  # counting the white pixel
+
+        if (xPos + 1 < width):  # Checking that we aren't looking for a pixel outside the image
+            if (pixels[listPos + 1] == (255, 255, 255)):  # Checking if the pixel to the right is white
+                whiteCounter += 1  # counting the white pixel
+
+        if (yPos + 1 < height and xPos - 1 >= 0):  # Checking that we aren't looking for a pixel outside the image
+            if (pixels[listPos - 1 + width] == (255, 255, 255)):  # Checking if the pixel below to the left is white
+                whiteCounter += 1  # counting the white pixel
+
+        if (yPos + 1 < height):  # Checking that we aren't looking for a pixel outside the image
+            if (pixels[listPos + width] == (255, 255, 255)):  # Checking if the pixel below is white
+                whiteCounter += 1  # counting the white pixel
+
+        if (xPos + 1 < width and yPos + 1 < height):  # Checking that we aren't looking for a pixel outside the image
+            if (pixels[listPos + 1 + width] == (255, 255, 255)):  # Checking if the pixel below to the right is white
+                whiteCounter += 1  # counting the white pixel
+"""

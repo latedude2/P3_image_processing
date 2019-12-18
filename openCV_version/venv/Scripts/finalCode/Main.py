@@ -23,7 +23,7 @@ video_reading = True
 boardCardsShown = False
 
 def main():
-    video_capture = cv2.VideoCapture('http://172.20.10.14:8080/video')
+    video_capture = cv2.VideoCapture('http://172.20.10.12:8080/video')
     print("Connected to camera")
 
     while True: # for more connection to be added after others end
@@ -90,7 +90,7 @@ def main():
                                 # cv2.imwrite("kings.png", images[i]) # to save it if needed for test
                                 detectedCard = analyseCard(images[i])    #Analyse card to see what card it is
                                 if (detectedCard != "Error"):            #If we found a valid card
-                                    print("The card whatever it is found for fuck sake")
+                                    #print("The card whatever it is found for fuck sake")
                                     detectedCards.append(detectedCard)   #Add to list of cards detected this frame
 
                         #Add cards detected this frame to all detected cards
@@ -105,7 +105,7 @@ def main():
                         if cardCount < 3:
                             for k in range(len(foundCards)):
                                 foundCards.pop()
-                                print("Clear cards")
+                                #print("Clear cards")
 
                         # Remove empty cards (" "), because analyseCards returns an empty card sometimes
                         foundLength = len(foundCards)
@@ -121,7 +121,7 @@ def main():
                                 # next item will shift to the left
                                 continue
                             j = j + 1
-                            print("loop is running")
+                            #print("loop is running")
 
                         print(findMostCommonCards(cardCount, foundCards))
 
@@ -203,31 +203,31 @@ def afterRotation(rotated, stringAdd):
 
     #Detect if card is red, we pass corner here as all face cards have red in them
     isRed = checkRed(corner)
-    print("1")
+    #print("1")
     #split corner image to suit and number
     suitImage, numberImage = splitCornerToSuitAndNumber(corner, isRed)
-    print("2")
+    #print("2")
     #Rotate images for template matching and suit analysis
     suitImage, numberImage = prepareImageForTemplateMatching(suitImage, numberImage)
-    print("3")
+    #print("3")
     #cv2.imshow("Suit image " + stringAdd, suitImage)
     #cv2.imshow("Number image " + stringAdd, numberImage)
-    print("4")
+    #print("4")
     #add border to suit image for suit analysis
     border = 5
     suitImage = cv2.copyMakeBorder(suitImage, border, border, border, border, cv2.BORDER_CONSTANT,
                                    value=[0, 0, 0])
-    print("5")
+    #print("5")
     #Suit analysis
     suitImage = cv2.cvtColor(suitImage, cv2.COLOR_BGR2GRAY)
     blurredSuit = cv2.GaussianBlur(suitImage, (5, 5), 0)
     cardSuit = determineSuit(blurredSuit, checkRed(corner))
 
     if(find_face_card(rotated)):
-        print("Found face")
+        #print("Found face")
         cardNumber = determineNumber(numberImage, True)
     else:
-        print("Not a face card")
+        #print("Not a face card")
         cardNumber = countBlobs(rotated, isRed)
 
     if cardNumber == "1":
