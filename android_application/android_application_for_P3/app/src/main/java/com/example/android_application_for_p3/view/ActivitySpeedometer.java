@@ -1,4 +1,4 @@
-package com.example.android_application_for_p3;
+package com.example.android_application_for_p3.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +7,10 @@ import android.content.*;
 import android.os.*;
 import android.view.View;
 import android.widget.*;
+
+import com.example.android_application_for_p3.data.CombinationChecker;
+import com.example.android_application_for_p3.R;
+import com.example.android_application_for_p3.data.RankChecker;
 
 import java.io.*;
 import java.net.Socket;
@@ -95,18 +99,11 @@ public class ActivitySpeedometer extends AppCompatActivity {
                 Socket socket;
                 try {
                     //create a socket
-                    socket = new Socket("172.20.10.4", 12345);
+                    socket = new Socket("192.168.43.18", 12345);
                     //create input and output streams
                     output = new PrintWriter(socket.getOutputStream());
                     input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     new Thread(new ReceiveMessageThread()).start();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // do whatever you need with the layout views immediately after connection
-                            // probably not needed
-                        }
-                    });
                 } catch (IOException e) { System.out.println("Connection to the server failed"); }
             }
         }
@@ -171,21 +168,21 @@ public class ActivitySpeedometer extends AppCompatActivity {
 
         //finding the the mode of the combinations
         int maxCounter = 0; //used to store the amount of cards in current mode
-        for (int i = 0; i < list.length; i++){ //checking though the stored combinations
+        for (int value : list) { //checking though the stored combinations
             int counter = 0; // to count repetitions of current combination
 
             // circling through all saved combinations counting the matches
-            for (int j = 0; j < list.length; j++){
-                if (list[i] == list[j] && list[i] != 0){
+            for (int i : list) {
+                if (value == i && value != 0) {
                     System.out.println("got here");
                     counter++;
                 }
             }
             //Checking if the combination we just counted beats the current mode
-            if (counter >= maxCounter){
+            if (counter >= maxCounter) {
                 maxCounter = counter;
                 //saving the mode
-                mode = list[i];
+                mode = value;
             }
         }
         System.out.println("angle mode = " + mode);
@@ -198,20 +195,20 @@ public class ActivitySpeedometer extends AppCompatActivity {
 
         //finding the the mode of the combinations
         int maxCounter = 0; //used to store the amount of cards in current mode
-        for (int i = 0; i < list.length; i++){ //checking though the stored combinations
+        for (String s : list) { //checking though the stored combinations
             int counter = 0; // to count repetitions of current combination
 
             // circling through all saved combinations counting the matches
-            for (int j = 0; j < list.length; j++){
-                if (!list[i].equals(" ") && list[i].equals(list[j])){
+            for (String value : list) {
+                if (!s.equals(" ") && s.equals(value)) {
                     counter++;
                 }
             }
             //Checking if the combination we just counted beats the current mode
-            if (counter >= maxCounter){
+            if (counter >= maxCounter) {
                 maxCounter = counter;
                 //saving the mode
-                mode = list[i];
+                mode = s;
             }
         }
         System.out.println("combination mode = " + mode);

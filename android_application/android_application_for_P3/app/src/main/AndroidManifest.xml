@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ActivityCardInput"
+            android:name=".view.ActivityCardInput"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,13 +23,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ActivitySetSuits"
+            android:name=".view.ActivitySetSuits"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".ActivitySetValue"
+            android:name=".view.ActivitySetValue"
             android:screenOrientation="landscape"></activity>
         <activity
-            android:name=".ActivitySpeedometer"
+            android:name=".view.ActivitySpeedometer"
             android:screenOrientation="landscape" />
 
     </application>

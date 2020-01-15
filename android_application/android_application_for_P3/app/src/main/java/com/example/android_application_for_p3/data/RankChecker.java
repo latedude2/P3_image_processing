@@ -1,23 +1,18 @@
-package com.example.android_application_for_p3;
+package com.example.android_application_for_p3.data;
 
 public class RankChecker {
-    int combinationRank; //rank of the combination, where 1 is Royal Flush and 7642 is worst possible
-    int combinationAngle; // rank translated to the angle in the speedometer
-    String combinationText; // combination text which should look like "6 5S 6C 7S 8H 9D 2254"
-    // this means: "combination number - cards - rank
+    private int combinationAngle; // rank translated to the angle in the speedometer
 
-    RankChecker(String combinationText) {
-        this.combinationText = combinationText;
-        combinationRank = findRank(combinationText);
+    public RankChecker(String combinationText) {
+        //rank of the combination, where 1 is Royal Flush and 7642 is worst possible
+        int combinationRank = findRank(combinationText);
         combinationAngle = findAngle(7643 - combinationRank);
     }
 
     private int findRank (String text) {
         int rank;
         String[] array = text.split(" ");
-
         rank = Integer.parseInt(array[array.length - 1]);
-
         return rank;
     }
 
@@ -29,13 +24,6 @@ public class RankChecker {
         //rounding it to a whole angle, since you won't be able to see the small changes
         return Math.round(angle);
     }
-//--------------------------------------------//
-    //-------------- GETTERS ----------------//
-
-    public int getCombinationRank() {
-        return combinationRank;
-    }
-
 
     public int getCombinationAngle() {
         return combinationAngle;

@@ -1,4 +1,4 @@
-package com.example.android_application_for_p3;
+package com.example.android_application_for_p3.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
+
+import com.example.android_application_for_p3.R;
 
 public class ActivityCardInput extends AppCompatActivity {
 
@@ -30,34 +32,35 @@ public class ActivityCardInput extends AppCompatActivity {
             Intent intentBefore = getIntent();
             cards = intentBefore.getStringExtra("cards"); // takes the name of currently chosen card
             cardIndex = intentBefore.getStringExtra("cardIndex"); // takes the card, which should be changed
-            if (cardIndex.equals("1")){ // checks if that card is on the left
-                //card1 = cards; // if yes, card on the left takes the name of the chosen card
-                card2 = intentBefore.getStringExtra("card2"); // card's on the right value is taken
-                if(!card2.equals("")) // if card on the right is not empty it displays the card which was there before
-                    displayCard("2", card2);
-                if(cards.equals(card2)){
-                    displayCard(cardIndex, "card_back");
-                    Toast.makeText(this, "Incorrect choice. Try again", Toast.LENGTH_LONG).show();
-                } else {
-                    card1 = cards;
-                    displayCard(cardIndex, card1); // the card which was now chosen is displayed
-                    handCards = card1 + card2; // handCards is updated
-                }
+            if (cardIndex != null) {
+                if (cardIndex.equals("1")){ // checks if that card is on the left
+                    //card1 = cards; // if yes, card on the left takes the name of the chosen card
+                    card2 = intentBefore.getStringExtra("card2"); // card's on the right value is taken
+                    // if card on the right is not empty it displays the card which was there before
+                    if (card2 != null && !card2.equals("")) displayCard("2", card2);
+                    if(cards.equals(card2)){
+                        displayCard(cardIndex, "card_back");
+                        Toast.makeText(this, "Incorrect choice. Try again", Toast.LENGTH_LONG).show();
+                    } else {
+                        card1 = cards;
+                        displayCard(cardIndex, card1); // the card which was now chosen is displayed
+                        handCards = card1 + card2; // handCards is updated
+                    }
 
-                // kind of explained but from the other card above ^^^^^^^^^^^^
-            } else if (cardIndex.equals("2")){
-                card1 = intentBefore.getStringExtra("card1");
-                if(!card1.equals(""))
-                    displayCard("1", card1);
-                if (cards.equals(card1)){
-                    displayCard(cardIndex, "card_back");
-                    Toast.makeText(this, "Incorrect choice. Try again", Toast.LENGTH_LONG).show();
-                } else {
-                    card2 = cards;
-                    displayCard(cardIndex, card2);
-                    handCards = card1 + card2;
-                }
+                    // kind of explained but from the other card above ^^^^^^^^^^^^
+                } else if (cardIndex.equals("2")){
+                    card1 = intentBefore.getStringExtra("card1");
+                    if (card1 != null && !card1.equals("")) displayCard("1", card1);
+                    if (cards.equals(card1)){
+                        displayCard(cardIndex, "card_back");
+                        Toast.makeText(this, "Incorrect choice. Try again", Toast.LENGTH_LONG).show();
+                    } else {
+                        card2 = cards;
+                        displayCard(cardIndex, card2);
+                        handCards = card1 + card2;
+                    }
 
+                }
             }
         }
         if (handCards.length() == 4){

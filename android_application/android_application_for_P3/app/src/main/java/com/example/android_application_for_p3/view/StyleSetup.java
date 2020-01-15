@@ -1,13 +1,15 @@
-package com.example.android_application_for_p3;
+package com.example.android_application_for_p3.view;
 
 import androidx.appcompat.app.ActionBar;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-class StyleSetup {
+import com.example.android_application_for_p3.R;
 
-    StyleSetup(AppCompatActivity activity, ActionBar actionBar){
+public class StyleSetup {
+
+    public StyleSetup(AppCompatActivity activity, ActionBar actionBar){
         setup(activity, actionBar);
     }
 

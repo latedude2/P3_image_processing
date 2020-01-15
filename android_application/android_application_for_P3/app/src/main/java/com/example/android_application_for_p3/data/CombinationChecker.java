@@ -1,4 +1,4 @@
-package com.example.android_application_for_p3;
+package com.example.android_application_for_p3.data;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,9 +13,9 @@ public class CombinationChecker {
     private String currentCombination; //The name of the current combination
     //private String[] currentCards; // The signatures of the cards in the combination
 
-    LinkedList<String> currentCards = new LinkedList<>();
+    private LinkedList<String> currentCards = new LinkedList<>();
 
-    CombinationChecker(String combinationText){
+    public CombinationChecker(String combinationText){
         // combination text should look like "6 5S6C7S8H9D 2254"
         // this means: "combination number - cards - rank
         readString(combinationText);
@@ -38,7 +38,7 @@ public class CombinationChecker {
         cardAmount = currentCards.size();
     }
 
-    String cardNameToViewName(int index){
+    public String cardNameToViewName(int index){
          // it could be like "6H", but need to make it to h6
         return currentCards.get(index).toLowerCase();
     }
@@ -64,9 +64,5 @@ public class CombinationChecker {
 
     public String getCurrentCombination() {
         return currentCombination;
-    }
-
-    public LinkedList<String> getCurrentCards() {
-        return currentCards;
     }
 }

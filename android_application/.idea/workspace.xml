@@ -6,7 +6,13 @@
     </shared>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="68e772d2-1c4c-4f9e-b903-24379fb0dc79" name="Default Changelist" comment="" />
+    <list default="true" id="68e772d2-1c4c-4f9e-b903-24379fb0dc79" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../card_test/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../card_test/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../openCV_version/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../openCV_version/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../openCV_version/.idea/openCV_version.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../openCV_version/.idea/openCV_version.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../openCV_version/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../openCV_version/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../openCV_version/venv/Scripts/finalCode/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../openCV_version/venv/Scripts/finalCode/Main.py" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/build/classes/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,7 +23,7 @@
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_2_API_27" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Nexus_7_Tablet_API_29" />
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
@@ -42,9 +48,9 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-9" />
-    <option name="width" value="978" />
-    <option name="height" value="1039" />
+    <option name="x" value="-10" />
+    <option name="width" value="979" />
+    <option name="height" value="1040" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -52,7 +58,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -107,6 +112,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -202,10 +208,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.13752665" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.13959731" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />

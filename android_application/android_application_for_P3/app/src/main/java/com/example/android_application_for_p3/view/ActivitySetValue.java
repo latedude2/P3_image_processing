@@ -1,10 +1,12 @@
-package com.example.android_application_for_p3;
+package com.example.android_application_for_p3.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import com.example.android_application_for_p3.R;
 
 public class ActivitySetValue extends AppCompatActivity {
 
