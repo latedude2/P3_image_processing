@@ -52,7 +52,6 @@ public class CombinationChecker {
                 return Character.compare(o1.charAt(1), o2.charAt(1));
             }
         });
-        System.out.println(currentCards);
     }
 
     //--------------------------------------------//

@@ -2,7 +2,6 @@ package com.example.android_application_for_p3.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.*;
 import android.os.*;
 import android.view.View;
@@ -16,7 +15,6 @@ import java.io.*;
 import java.net.Socket;
 import java.util.*;
 
-@SuppressLint("SetTextI18n")    //This line is used to avoid IDE complaining about setText method
 public class ActivitySpeedometer extends AppCompatActivity {
     // to handle threads to go from other threads to the main thread
     final Handler handler = new Handler();
@@ -174,7 +172,6 @@ public class ActivitySpeedometer extends AppCompatActivity {
             // circling through all saved combinations counting the matches
             for (int i : list) {
                 if (value == i && value != 0) {
-                    System.out.println("got here");
                     counter++;
                 }
             }
@@ -185,7 +182,6 @@ public class ActivitySpeedometer extends AppCompatActivity {
                 mode = value;
             }
         }
-        System.out.println("angle mode = " + mode);
         return mode;
     }
 
@@ -211,7 +207,6 @@ public class ActivitySpeedometer extends AppCompatActivity {
                 mode = s;
             }
         }
-        System.out.println("combination mode = " + mode);
         return mode;
     }
 

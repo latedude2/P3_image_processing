@@ -10,10 +10,8 @@ public class RankChecker {
     }
 
     private int findRank (String text) {
-        int rank;
         String[] array = text.split(" ");
-        rank = Integer.parseInt(array[array.length - 1]);
-        return rank;
+        return Integer.parseInt(array[array.length - 1]);
     }
 
     private int findAngle (int rank){
