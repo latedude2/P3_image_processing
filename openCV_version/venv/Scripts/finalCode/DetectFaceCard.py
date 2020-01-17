@@ -56,7 +56,7 @@ def find_face_card(image):
     yellow = np.zeros_like(image, np.uint8)
     yellow[imask] = image[imask]
 
-    memes, threshImg = cv2.threshold(yellow, 0, 255, cv2.THRESH_BINARY)
+    usedThresh, threshImg = cv2.threshold(yellow, 0, 255, cv2.THRESH_BINARY)
 
     cv2.imshow("Yellow color: ", threshImg)
     params.blobColor = 255
@@ -64,10 +64,6 @@ def find_face_card(image):
     detector = cv2.SimpleBlobDetector_create(params)  # making the detector by the parameters set before
     keypoints = detector.detect(threshImg)  # detecting the blobs
 
-    im_with_keypoints = cv2.drawKeypoints(threshImg, keypoints, np.array([]), (0, 0, 255),
-                                          cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-
-    #cv2.imshow("Detected blue: ", im_with_keypoints)
     blobCount = len(keypoints)
 
     if(blobCount > 0):

@@ -1,13 +1,3 @@
-import cv2
-import numpy as np
-import socket   # library for socket networking
-import treys
-from treys import Evaluator
-from treys import Card
-from ImageSplit import *
-from CardEvaluation import *
-from BackgroundSubtraction import *
-from DetectRed import *
 from DetectFaceCard import *
 from TemplateMatch import *
 from SuitAnalysis import *
@@ -19,7 +9,6 @@ cardValue = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
 cardSuit = ["h", "d", "s", "c"]
 
 connected = True  # for the server to know, when the connection is on and when off to wait for a new connection
-
 
 def main():
     video_capture = cv2.VideoCapture('http://192.168.43.87:8080/video')

@@ -1,28 +1,8 @@
-from imutils import perspective
 from imutils import contours
 import cv2
 import numpy as np
-import statistics
 import math
 import imutils
-
-
-def cardOnSide():
-#Testing function
-    source = "../Images/testImage10.jpg"
-
-    img = cv2.imread(source)
-    rotated = cardRotation(img)
-    cropped = cardCropped(rotated)
-
-    #cv2.imshow('Rotated', rotated)
-    #cv2.imshow('Cropped', cropped)
-
-    while True:
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            return
-    cv2.waitKey(0)
-    cv2.destroyAllWindows
 
 
 # Finds the angle of the card using Hough traslation algorithm.

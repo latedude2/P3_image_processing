@@ -36,16 +36,11 @@ def checkRed(original):
     red = np.zeros_like(original, np.uint8)
     red[imask] = original[imask]
 
-    memes, threshImg = cv2.threshold(red, 0, 255, cv2.THRESH_BINARY)
-
-    # cv2.imshow("Red color: ", threshImg)
+    usedThresh, threshImg = cv2.threshold(red, 0, 255, cv2.THRESH_BINARY)
     params.blobColor = 255
 
     detector = cv2.SimpleBlobDetector_create(params)  # making the detector by the parameters set before
     keypoints = detector.detect(threshImg)  # detecting the blobs
-
-    #im_with_keypoints = cv2.drawKeypoints(threshImg, keypoints, np.array([]), (0, 0, 255),cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-    #cv2.imshow("Detected red  Blobs: ", im_with_keypoints)
 
     blobCount = len(keypoints)
 

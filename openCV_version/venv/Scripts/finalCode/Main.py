@@ -1,13 +1,5 @@
-import cv2
-import numpy as np
 import socket   # library for socket networking
-import treys
-from treys import Evaluator
-from treys import Card
-from ImageSplit import *
 from CardEvaluation import *
-from BackgroundSubtraction import *
-from DetectRed import *
 from DetectFaceCard import *
 from TemplateMatch import *
 from SuitAnalysis import *
@@ -33,7 +25,7 @@ def main():
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Create socket
         print('Socket created')
         try:
-            s.bind((HOST, PORT))        # Assing IP to socket, no other program can use this port now
+            s.bind((HOST, PORT))        # Assign IP to socket, no other program can use this port now
         except socket.error as err:
             print('Bind failed. Error Code : ' .format(err))
         s.listen(100)        # How many connections do we take in, set to 100 for testing
@@ -41,8 +33,6 @@ def main():
         conn, addr = s.accept()         # Accept connection from client
         print("connection accepted")
         connected = True
-        i = 0       # Used for testing
-        stringToSend = "nothing"
         while connected:
             # try-finally block needed, because if it's not there, when connection is cut, the error is thrown
             # to be able not to crash and then try to connect to someone else, we jump out to finally
@@ -54,27 +44,20 @@ def main():
             minCardWidth = 200
             data = conn.recv(1024)  # Receive message from client
             handCards = data.decode(encoding='UTF-8')  # decode the image from bytes to string
-            # print(string)
             if len(handCards) == 4:
-                stringToSend = decryptHand(handCards)  # making the string that should be sent
+                stringToSend = convertHandStringForSending(handCards)  # making the string that should be sent
                 conn.send(bytes(str(stringToSend) + "\r\n", 'UTF-8'))  # Send message to client
             video_reading = True
             # Main loop
             while video_reading:
-
                 ret, frame = video_capture.read()
                 frameCount = frameCount + 1  # we iterate frame count for frame skipping
                 if frameCount % frameSkip == 0 and frame is not None:  # we skip frames so the camera feed does not lag behind
-                    # cv2.imshow("Camera footage", frame)
-                    # height, width = frame.shape[:2]
-                    # cv2.resizeWindow('Camera footage', 660, 360)
-
                     if cv2.waitKey(1) & 0xFF == ord('q'):
                         break
 
                     # Separate cards into separate images
                     images = splitIntoCardImages(frame)
-
                     detectedCards = []  #list for keeping cards that were detected this video frame
                     cardCount = 0   #amount of cards in frame
 
@@ -85,8 +68,6 @@ def main():
                             print("Card " + str(i))
                             cv2.imshow("Card" + str(i), images[i])
 
-                            # cv2.imshow("Card" + str(i), images[i])
-                            # cv2.imwrite("kings.png", images[i]) # to save it if needed for test
                             detectedCard = analyseCard(images[i])    #Analyse card to see what card it is
                             if (detectedCard != "Error"):            #If we found a valid card
                                 detectedCards.append(detectedCard)   #Add to list of cards detected this frame
@@ -95,15 +76,12 @@ def main():
                     for i in range(len(detectedCards)):
                         foundCards.append(detectedCards[i])
 
-
-
                     while (len(foundCards) > 15):  # remove old cards, we only need recently detected cards
                         foundCards.pop(1)  # remove first card in list
 
                     if cardCount < 3:
                         for k in range(len(foundCards)):
                             foundCards.pop()
-                            # print("Clear cards")
 
                     # Remove empty cards (" "), because analyseCards returns an empty card sometimes
                     foundLength = len(foundCards)
@@ -135,11 +113,6 @@ def main():
                         video_reading = False
                         boardCardsShown = False
 
-
-
-        #if cv2.waitKey(1) and 0xFF == ord('q'):
-        #    break
-
     video_capture.release()
     cv2.destroyAllWindows()
 
@@ -167,62 +140,44 @@ def analyseCard(frame):
             rotated = altRotate(frame)
             return afterRotation(rotated, "alternative")
         except:
-            return "Error"
+            return "Error: Rotation attempts failed"
 
 def afterRotation(rotated, stringAdd):
 #Continue analysis of card after rotation
 #rotated - image of rotated card
 #stringAdd - Adding string to distinguish which rotation algorithm has produced the images (Debugging)
 
-    #cv2.imshow("Rotated image " + stringAdd, rotated)
-
     #We crop the rotated card
     rotatedCardImage = cardCropped(rotated)
-
-    #cv2.imshow("Cropped image " +  stringAdd, rotatedCardImage)
 
     #get the corner image
     TM = np.float32([[1, 0, 0], [0, 1, - rotatedCardImage.shape[0] / 6 * 4.8]])
     corner = cv2.warpAffine(rotatedCardImage, TM,
                             (int(rotatedCardImage.shape[1] / 3.5), int(rotatedCardImage.shape[0] / 5.5)))   #Size of corner image
 
-    #cv2.imshow("Corner image " +  stringAdd, corner)
-
     #Detect if card is red, we pass corner here as all face cards have red in them
     isRed = checkRed(corner)
-    #print("1")
     #split corner image to suit and number
     suitImage, numberImage = splitCornerToSuitAndNumber(corner, isRed)
-   # print("2")
     #Rotate images for template matching and suit analysis
     suitImage, numberImage = prepareImageForTemplateMatching(suitImage, numberImage)
-    #print("3")
-    #cv2.imshow("Suit image " + stringAdd, suitImage)
-    #cv2.imshow("Number image " + stringAdd, numberImage)
-    #print("4")
     #add border to suit image for suit analysis
     border = 5
-    suitImage = cv2.copyMakeBorder(suitImage, border, border, border, border, cv2.BORDER_CONSTANT,
-                                   value=[0, 0, 0])
-    #print("5")
+    suitImage = cv2.copyMakeBorder(suitImage, border, border, border, border, cv2.BORDER_CONSTANT, value=[0, 0, 0])
     #Suit analysis
     suitImage = cv2.cvtColor(suitImage, cv2.COLOR_BGR2GRAY)
     blurredSuit = cv2.GaussianBlur(suitImage, (5, 5), 0)
     cardSuit = determineSuit(blurredSuit, checkRed(corner))
 
-    cv2.imshow("Rotated kinda image I guess help", rotated)
+    cv2.imshow("Rotated image", rotated)
     if(find_face_card(rotated)):
-        # print("Found face")
         cardNumber = determineNumber(numberImage, True)
         print("card number is" + cardNumber)
     else:
         cardNumber = countBlobs(rotated, isRed)
-
         if cardNumber == "1":
             cardNumber = "A"
-
     return cardNumber + cardSuit
-
 
 def findMostCommonCards(cardCount, foundCards):
     # Returns cardCount different most common cards
@@ -269,7 +224,6 @@ def mostFrequent(List):
         return card
 
     return ""
-
 
 if __name__ == "__main__":
     main()

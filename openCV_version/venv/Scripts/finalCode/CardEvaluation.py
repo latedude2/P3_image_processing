@@ -27,29 +27,26 @@ INFORMATION ABOUT COMBINATIONS:
     Examples:
     * Royal flush (best hand possible)          => 1
     * 7-5-4-3-2 unsuited (worst hand possible)  => 7462
-
 """
 
-def decryptHand(string):
+def convertHandStringForSending(input):
     # string sent should look like "h8s9"
     card = []
-    card.append(string[1] + string[0]) # separate two cards and place them in needed positions
-    card.append(string[3] + string[2])
+    card.append(input[1] + input[0]) # separate two cards and place them in needed positions
+    card.append(input[3] + input[2])
 
     # makes the needed string to send
-    stringToSend = evaluateHandCards(string[1].capitalize(), string[3].capitalize(), card[0], card[1])
-    return stringToSend
+    return evaluateHandCards(input[1].capitalize(), input[3].capitalize(), card[0], card[1])
 
 # makes the needed string that should be sent
 # suits are not needed, so only values of them sent (firstValue and secondValue)
-# also both cards are sent as strings to me the combined string later
+# also both cards are sent as strings to be combined later
 def evaluateHandCards(firstValue, secondValue, firstCard, secondCard):
     # firstValueIndex is the placement of the card's value according to the strength
-    valueIndexes = firstValueIndex, secondValueIndex = (100, 100) #random can be given, so it could be seen if it's changed when searching
+    firstValueIndex, secondValueIndex = (100, 100) #random can be given, so it could be seen if it's changed when searching
     i = 0  # used for searching
-    if firstValue != secondValue:  # if both card values are not the same, following code is done
-
-        for value in cardValue:  # checks through each element in the cardValue list, which is defined at the start
+    if firstValue != secondValue:  # if both card values are not equal
+        for value in cardValue:
             if value == firstValue:
                 firstValueIndex = i + 1
             else:
@@ -67,9 +64,8 @@ def evaluateHandCards(firstValue, secondValue, firstCard, secondCard):
                 stringToSend = str("9 " + str(firstCard) + str(secondCard) + " " + str(value))
                 return str(stringToSend)
 
-    # if both cards are the same, there is a pair and another code is done
-    if firstValue == secondValue:
-        valueIndexes = firstValueIndex, secondValueIndex = (100, 100)
+    # if both cards are the same, there is a pair
+    elif firstValue == secondValue:
         for value in cardValue:
             if value == firstValue:
                 firstValueIndex = i
@@ -86,13 +82,12 @@ def evaluateHandCards(firstValue, secondValue, firstCard, secondCard):
 
 def evaluateCards(boardCards, handCards):
     # decrypt the two hand cards sent from the client + board cards
-    n = 2
+    step = 2
     str(boardCards).lower()
-    boardCardsSplit = [(boardCards[i:i + n]) for i in range(0, len(boardCards), n)]
-
+    boardCardsSplit = [(boardCards[i:i + step]) for i in range(0, len(boardCards), step)]
 
     str(handCards).lower()
-    handCardsSplit = [(handCards[i:i + n]) for i in range(0, len(handCards), n)]
+    handCardsSplit = [(handCards[i:i + step]) for i in range(0, len(handCards), step)]
 
     handCardsSplit[0] = handCardsSplit[0][1] + handCardsSplit[0][0]
     handCardsSplit[1] = handCardsSplit[1][1] + handCardsSplit[1][0]
@@ -102,7 +97,6 @@ def evaluateCards(boardCards, handCards):
         Card.new(str(handCardsSplit[1].capitalize()))
     ]
     board = []
-    i = 0
     if len(list(boardCardsSplit)) == 3:
         board = [
             Card.new(str(boardCardsSplit[0].capitalize())),
@@ -126,8 +120,6 @@ def evaluateCards(boardCards, handCards):
                     Card.new(str(boardCardsSplit[3].capitalize())),
                     Card.new(str(boardCardsSplit[4].capitalize()))
                 ]
-
-    deck = Deck()
     print(Card.print_pretty_cards(board + hand))
 
     evaluator = Evaluator()
